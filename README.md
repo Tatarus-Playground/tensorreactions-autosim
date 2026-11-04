@@ -4,6 +4,8 @@ My own TensorReactions reactions that drive TensorACR's AutoSim: kill times, ful
 
 Store modules and other authors' profiles are not included.
 
+> **Disclaimer:** these draws use Anyone's Party Roster function (AnyoneCore), so AnyoneCore with a filled-in Party Roster is needed for them to work.
+
 ## Layout
 
 ```
