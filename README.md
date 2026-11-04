@@ -6,29 +6,18 @@ Store modules and other authors' profiles are not included.
 
 > **Disclaimer:** these draws use Anyone's Party Roster function (AnyoneCore), so AnyoneCore with a filled-in Party Roster is needed for them to work.
 
-## Layout
+## Files
 
-```
-timeline/<profile>/   AutoSim reactions from a timeline profile (one folder per fight profile)
-general/<profile>/    AutoSim reactions from a general (per-job) profile
-draws/<profile>/      role draws (arrows, circles, callouts) from a timeline profile
-tools/                export script
-```
+Each file is one profile in TensorReactions' own save format, holding only these reactions and their folders.
 
-Each profile folder holds:
-
-- one `.lua` file per reaction: a short header (event, timeline mechanic, offsets, conditions) followed by the reaction's Lua
-- `_profile_subset.lua`: the same reactions in TensorReactions' own save format, including their folders
-
-| Folder | Fight / timeline | Job |
+| File | Fight / timeline | Contents |
 |---|---|---|
-| `timeline/Tataru-Zelen` | Zelenia EX | Viper, Black Mage |
-| `timeline/TataruNecron` | Necron EX | Viper, Black Mage |
-| `general/blm` | Countdown / pre-pull helpers | Black Mage |
-| `draws/Tataru-Zelen` | Zelenia EX role draws (90 reactions) | Any job |
+| `timeline/Tataru-Zelen.lua` | Zelenia EX | AutoSim for Viper and Black Mage (12 reactions) and role draws for any job (90 reactions) |
+| `timeline/TataruNecron.lua` | Necron EX | AutoSim for Viper and Black Mage (10 reactions) |
+| `general/blm.lua` | Any fight | Black Mage countdown / pre-pull helpers (3 reactions) |
 
-## Using a reaction
+`tools/export_autosim.py` is the script that builds these files from the live profiles.
 
-Open the reaction's `.lua` file, then create a reaction in TensorReactions with the event, timeline mechanic, offsets and conditions from the header and paste in the Lua.
+## Using the reactions
 
-To bring in a whole set at once, merge the entries from `_profile_subset.lua` into the matching profile file in `TensorReactions/TimelineReactions` or `TensorReactions/GeneralReactions`. Close the game or reload TensorReactions first, and keep a backup of the profile.
+Copy a timeline file into `TensorReactions/TimelineReactions` (or the general file into `TensorReactions/GeneralReactions`) and select it as the profile for that fight or job. To add the reactions to a profile you already have, merge the entries into that profile file instead. Close the game or reload TensorReactions first, and keep a backup of the profile.

@@ -188,36 +188,30 @@ def describe(it):
             body.append("-- [action] " + ", ".join("%s=%s" % (k, ad[k]) for k in ad if k not in ("uuid", "version") and not isinstance(ad[k], (dict, list, LT))))
     return "\n".join(lines) + "\n\n" + "\n\n".join(body).rstrip() + "\n"
 
-def export(kind, src_dir, dst_dir, summary, pickers=None):
+def export(kind, src_dir, dst_dir, summary):
     for fn in sorted(os.listdir(src_dir)):
         p = os.path.join(src_dir, fn)
         if not (fn.endswith(".lua") and os.path.isfile(p)): continue
         if fn.lower() in SKIPFILES: continue
         name = fn[:-4].strip()
-        if pickers is not None:
-            if name not in pickers: continue
-            chooser = pickers[name]
-        else:
-            if INCLUDE.get(kind) and name not in INCLUDE[kind]: continue
-            chooser = pick
+        if INCLUDE.get(kind) and name not in INCLUDE[kind]: continue
         try:
             prof = load(p)
         except Exception as e:
             summary.append((kind, fn, "PARSE ERROR " + str(e)[:80], 0)); continue
-        sel = chooser(prof)
+        # AutoSim reactions, plus the profile's draw folder when it has one in DRAWS
+        sel = pick(prof)
+        if kind == "timeline" and name in DRAWS:
+            seen = {id(it) for _, it in sel}
+            sel += [(b, it) for b, it in pick_draws(DRAWS[name])(prof) if id(it) not in seen]
         if not sel: continue
-        od = os.path.join(dst_dir, safe(fn[:-4])); os.makedirs(od, exist_ok=True)
+        os.makedirs(dst_dir, exist_ok=True)
         folders = {}
         for b, it in items_of(prof):
             if own(it) and it.get("objectType") == "folder": folders.setdefault(b, []).append(it)
-        used = set(); buckets = {}
+        buckets = {}
         for b, it in sel:
             buckets.setdefault(b, []).append(it)
-            fnm = safe(it["data"].get("name", "reaction"))
-            while fnm.lower() in used: fnm += "_"
-            used.add(fnm.lower())
-            with open(os.path.join(od, fnm + ".lua"), "w", encoding="utf-8", newline="\n") as fh:
-                fh.write(describe(it))
         def fold_for(b, its):
             names = set()
             for it in its:
@@ -234,7 +228,7 @@ def export(kind, src_dir, dst_dir, summary, pickers=None):
         else:
             its = [it for _, it in sel]
             nat = fold_for(None, its) + its
-        with open(os.path.join(od, "_profile_subset.lua"), "w", encoding="utf-8", newline="\n") as fh:
+        with open(os.path.join(dst_dir, safe(name) + ".lua"), "w", encoding="utf-8", newline="\n") as fh:
             fh.write("local tbl = " + ser(nat, 1) + "\n\nreturn tbl\n")
         summary.append((kind, fn, prof.get("timelineName", "") if isinstance(prof, LT) else "", len(sel)))
 
@@ -246,6 +240,4 @@ if __name__ == "__main__":
     S = []
     export("timeline", os.path.join(ROOT, "TimelineReactions"), os.path.join(OUT, "timeline"), S)
     export("general", os.path.join(ROOT, "GeneralReactions"), os.path.join(OUT, "general"), S)
-    export("draws", os.path.join(ROOT, "TimelineReactions"), os.path.join(OUT, "draws"), S,
-           {k: pick_draws(v) for k, v in DRAWS.items()})
     for s in S: print(s)
