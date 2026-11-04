@@ -149,6 +149,21 @@ def pick(profile):
                 sel.append((b, it)); ids.add(id(it))
     return sel
 
+# Draw folders published in draws/ (profile file name -> display folder); disabled "(old)" copies are skipped
+DRAWS = {"Tataru-Zelen": "Role Draws"}
+
+def pick_draws(folder):
+    def pick(profile):
+        out = []
+        for b, it in items_of(profile):
+            if not own(it) or it.get("objectType") == "folder": continue
+            d = it.get("data", {})
+            path = d.get("displayPath") or ""
+            if (path == folder or path.startswith(folder + "/")) and d.get("enabled", True) is not False:
+                out.append((b, it))
+        return out
+    return pick
+
 def safe(n): return re.sub(r'[\\/:*?"<>|]+', '_', n).strip().rstrip('.') or "unnamed"
 
 def describe(it):
@@ -173,17 +188,23 @@ def describe(it):
             body.append("-- [action] " + ", ".join("%s=%s" % (k, ad[k]) for k in ad if k not in ("uuid", "version") and not isinstance(ad[k], (dict, list, LT))))
     return "\n".join(lines) + "\n\n" + "\n\n".join(body).rstrip() + "\n"
 
-def export(kind, src_dir, dst_dir, summary):
+def export(kind, src_dir, dst_dir, summary, pickers=None):
     for fn in sorted(os.listdir(src_dir)):
         p = os.path.join(src_dir, fn)
         if not (fn.endswith(".lua") and os.path.isfile(p)): continue
         if fn.lower() in SKIPFILES: continue
-        if INCLUDE.get(kind) and fn[:-4].strip() not in INCLUDE[kind]: continue
+        name = fn[:-4].strip()
+        if pickers is not None:
+            if name not in pickers: continue
+            chooser = pickers[name]
+        else:
+            if INCLUDE.get(kind) and name not in INCLUDE[kind]: continue
+            chooser = pick
         try:
             prof = load(p)
         except Exception as e:
             summary.append((kind, fn, "PARSE ERROR " + str(e)[:80], 0)); continue
-        sel = pick(prof)
+        sel = chooser(prof)
         if not sel: continue
         od = os.path.join(dst_dir, safe(fn[:-4])); os.makedirs(od, exist_ok=True)
         folders = {}
@@ -219,10 +240,12 @@ def export(kind, src_dir, dst_dir, summary):
 
 if __name__ == "__main__":
     OUT = sys.argv[1]
-    for sub in ("timeline", "general"):
+    for sub in ("timeline", "general", "draws"):
         if os.path.exists(os.path.join(OUT, sub)): shutil.rmtree(os.path.join(OUT, sub))
     os.makedirs(OUT, exist_ok=True)
     S = []
     export("timeline", os.path.join(ROOT, "TimelineReactions"), os.path.join(OUT, "timeline"), S)
     export("general", os.path.join(ROOT, "GeneralReactions"), os.path.join(OUT, "general"), S)
+    export("draws", os.path.join(ROOT, "TimelineReactions"), os.path.join(OUT, "draws"), S,
+           {k: pick_draws(v) for k, v in DRAWS.items()})
     for s in S: print(s)

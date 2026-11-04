@@ -9,8 +9,9 @@ Store modules and other authors' profiles are not included.
 ## Layout
 
 ```
-timeline/<profile>/   reactions from a timeline profile (one folder per fight profile)
-general/<profile>/    reactions from a general (per-job) profile
+timeline/<profile>/   AutoSim reactions from a timeline profile (one folder per fight profile)
+general/<profile>/    AutoSim reactions from a general (per-job) profile
+draws/<profile>/      role draws (arrows, circles, callouts) from a timeline profile
 tools/                export script
 ```
 
@@ -24,6 +25,7 @@ Each profile folder holds:
 | `timeline/Tataru-Zelen` | Zelenia EX | Viper, Black Mage |
 | `timeline/TataruNecron` | Necron EX | Viper, Black Mage |
 | `general/blm` | Countdown / pre-pull helpers | Black Mage |
+| `draws/Tataru-Zelen` | Zelenia EX role draws (90 reactions) | Any job |
 
 ## Using a reaction
 
