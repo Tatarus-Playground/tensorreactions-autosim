@@ -1,6 +1,6 @@
 # TensorReactions AutoSim reactions
 
-My own TensorReactions reactions that drive TensorACR's AutoSim: kill times, full/melee/caster downtime windows, timing uncertainty, the syncs that move those windows to the real boss casts, and the Burn on/off helpers that go with them.
+My own TensorReactions reactions that drive TensorACR's AutoSim: kill times, full/melee/caster downtime windows, timing uncertainty, the syncs that move those windows to the real boss casts, and the Burn on/off helpers that go with them. It also has my Zelenia EX role draws.
 
 Store modules and other authors' profiles are not included.
 
