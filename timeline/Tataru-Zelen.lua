@@ -780,34 +780,6 @@ local tbl =
 		{
 			data = 
 			{
-				name = "BLM Addle - Stock Break x5",
-				uuid = "ac873a9b-807b-b2cc-8f8b-cfd2578d252c",
-				version = 2,
-			},
-			inheritedObjectUUID = "920cb62e-7560-2176-b4f6-4497f5f540cf",
-			inheritedOverwrites = 
-			{
-				enabled = false,
-			},
-		},
-		
-		{
-			data = 
-			{
-				name = "BLM Manaward - Stock Break x5 (1)",
-				uuid = "f697c34d-feec-f15a-b25b-6f00b5b5d6ac",
-				version = 2,
-			},
-			inheritedObjectUUID = "966f0c79-a6ad-7c00-adea-9ed391bc6f68",
-			inheritedOverwrites = 
-			{
-				enabled = false,
-			},
-		},
-		
-		{
-			data = 
-			{
 				displayPath = "",
 				name = "VPR Optimization",
 				uuid = "1640618e-287a-8d97-a1ed-0e6f58c13835",
@@ -3120,34 +3092,6 @@ local tbl =
 		{
 			data = 
 			{
-				name = "BLM Addle - Stock Break x5 (2)",
-				uuid = "c2c6f520-dc9f-dd61-96df-b0e2faa0d29f",
-				version = 2,
-			},
-			inheritedObjectUUID = "d31ed0f8-d244-80af-90af-34d1449f8388",
-			inheritedOverwrites = 
-			{
-				enabled = false,
-			},
-		},
-		
-		{
-			data = 
-			{
-				name = "BLM Manaward - Stock Break x5 (2)",
-				uuid = "3fb6622c-52d5-d7bb-8f78-75f0de9c73b2",
-				version = 2,
-			},
-			inheritedObjectUUID = "a4a72861-f800-c109-b13b-326a21455931",
-			inheritedOverwrites = 
-			{
-				enabled = false,
-			},
-		},
-		
-		{
-			data = 
-			{
 				displayPath = "",
 				name = "VPR Optimization",
 				uuid = "6e7a51dd-66cb-874f-9cee-84967d87a5f9",
@@ -4284,20 +4228,6 @@ local tbl =
 	},
 	[82] = 
 	{
-		
-		{
-			data = 
-			{
-				name = "BLM Addle - Stock Break x5 (3)",
-				uuid = "a91a03ca-3b3c-1f5c-9594-5bfd3c561d59",
-				version = 2,
-			},
-			inheritedObjectUUID = "2d16fa46-3c42-06a7-a605-9b5ecd89b2c2",
-			inheritedOverwrites = 
-			{
-				enabled = false,
-			},
-		},
 		
 		{
 			data = 
@@ -5765,20 +5695,6 @@ local tbl =
 	},
 	[118] = 
 	{
-		
-		{
-			data = 
-			{
-				name = "BLM Manaward - Stock Break x5 (3)",
-				uuid = "b6dd366a-ee46-45ce-a214-7e3808e9ce8f",
-				version = 2,
-			},
-			inheritedObjectUUID = "a3d7c574-bd6d-abec-b17a-ff10af7a1014",
-			inheritedOverwrites = 
-			{
-				enabled = false,
-			},
-		},
 		
 		{
 			data = 

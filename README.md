@@ -8,7 +8,7 @@ Store modules and other authors' profiles are not included.
 
 ## Files
 
-Each timeline file is a full copy of my live profile in TensorReactions' own save format. It only references store reactions (to switch some of them off) and does not contain their code.
+Each timeline file is my live profile in TensorReactions' own save format, built by `tools/strip_inherited.py`. It holds only my own reactions and no store code.
 
 | File | Fight / timeline | Contents |
 |---|---|---|
