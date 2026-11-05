@@ -28,8 +28,6 @@ Copy a timeline file into `TensorReactions/TimelineReactions` (or the general fi
 ### 2026-11-06
 
 - **Necron EX (`TataruNecron.lua`):** new Memento Mori spread markers for Smite of Gloom. You get an arrow and circle to your own role slot's spot: tanks on the dark side, everyone else on the light side. The side is read from the Memento Mori cast, so the markers flip when the dark side is east.
-- **Necron EX (`TataruNecron.lua`):** removed the inheritance of Anyone's store profile again. The profile is standalone and no store install is needed. My 39 reactions are unchanged.
-- **Necron EX (`TataruNecron.lua`):** the profile now inherits Anyone's store profile `extremes\necron\main`, so the store reactions run next to mine. My 39 reactions are unchanged.
 
 ### 2026-11-05
 
