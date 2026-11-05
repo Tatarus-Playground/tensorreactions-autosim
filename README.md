@@ -8,12 +8,12 @@ Store modules and other authors' profiles are not included.
 
 ## Files
 
-Each timeline file is a full copy of my live profile in TensorReactions' own save format. It only references store reactions to switch some of them off and does not contain their code.
+Each timeline file is a full copy of my live profile in TensorReactions' own save format. It only references store reactions and profiles (to switch some reactions off, or to inherit a store profile) and does not contain their code.
 
 | File | Fight / timeline | Contents |
 |---|---|---|
 | `timeline/Tataru-Zelen.lua` | Zelenia EX | AutoSim for Viper and Black Mage (10 reactions) and role draws for any job (98 reactions) |
-| `timeline/TataruNecron.lua` | Necron EX | AutoSim for Viper and Black Mage (9 reactions) and role draws for any job (30 reactions) |
+| `timeline/TataruNecron.lua` | Necron EX | AutoSim for Viper and Black Mage (9 reactions) and role draws for any job (30 reactions). Inherits Anyone's store profile `extremes\necron\main`, which must be installed from the store. |
 | `timeline/Arkveld.lua` | Guardian Arkveld EX | Arkveld helper for any job (92 reactions): limit cut arrows, tower picker and puddle countdown, role-based safety arrows |
 | `general/blm.lua` | Any fight | Black Mage countdown / pre-pull helpers (3 reactions) |
 
@@ -24,6 +24,10 @@ Each timeline file is a full copy of my live profile in TensorReactions' own sav
 Copy a timeline file into `TensorReactions/TimelineReactions` (or the general file into `TensorReactions/GeneralReactions`) and select it as the profile for that fight or job. To add the reactions to a profile you already have, merge the entries into that profile file instead. Close the game or reload TensorReactions first, and keep a backup of the profile.
 
 ## Changelog
+
+### 2026-11-06
+
+- **Necron EX (`TataruNecron.lua`):** the profile now inherits Anyone's store profile `extremes\necron\main`, so the store reactions run next to mine. My 39 reactions are unchanged.
 
 ### 2026-11-05
 
