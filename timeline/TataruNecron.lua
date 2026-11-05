@@ -396,6 +396,86 @@ local tbl =
 			},
 		},
 	},
+	[9] = 
+	{
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "Role Draws",
+				uuid = "2c5265fb-33bf-de5a-a654-4eebe5851a59",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Memento Mori cast started: 44566 = dark side west, 44565 = dark side east (from 40 pulls of logs)\nlocal e = eventArgs\nif not e then return end\nlocal id = e.spellID\nif id ~= 44565 and id ~= 44566 then return end\nTensorNecMM = {darkWest = (id == 44566), t = Now()}\nself.used = true\n",
+							name = "[Draw] Memento Mori - side (cast start)",
+							uuid = "fbe1d02b-741d-ac3d-81ed-7727b0f33e23",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 3,
+				mechanicTime = 52.4,
+				name = "[Draw] Memento Mori - side (cast start)",
+				timeRange = true,
+				timelineIndex = 9,
+				timerEndOffset = 1,
+				timerStartOffset = -9,
+				uuid = "5bbc3d18-e85f-fecc-9ca2-01df47c636b0",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Memento Mori spread spot: arrow + circle to your own spot for Smite of Gloom.\n-- Tanks spread on the dark side, everyone else on the light side (player positions from logs, center 100,100).\n-- Offsets are for dark side west; x is mirrored when the dark side is east.\nlocal s = TensorNecMM\nif not s or Now() - s.t > 16000 then return end\nlocal SPOTS = {T1={-17,4},T2={-7,4},M1={6.5,-14.5},M2={17.3,-14.5},H1={6.5,1},H2={17.3,1},R1={6.5,14.5},R2={17.3,14.5}}\nlocal R = AnyoneCore and AnyoneCore.Roster\nlocal slot = R and R.mySlot and R.mySlot()\nif not slot and GetCurrentRole then local r = GetCurrentRole(); slot = (r == \"MT\" and \"T1\") or (r == \"OT\" and \"T2\") or r end\nlocal o = slot and SPOTS[slot]\nif not o then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\nlocal ox = s.darkWest and o[1] or -o[1]\nlocal dest = {x = 100 + ox, y = p.pos.y, z = 100 + o[2]}\nlocal g = TensorCore.getCachedDrawer(0x7733FF33, 0xAA33FF33, 0xFF33FF33, 0xFF000000, 2)\nlocal flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal d = TensorCore.getDistance2d(p.pos, dest)\nif d > 0.8 then\n  local tip = math.min(1.5, d * 0.35)\n  g:addArrow(p.pos.x, p.pos.y, p.pos.z, TensorCore.getHeadingToTarget(p.pos, dest), math.max(0.1, d - tip), 0.65, tip, 1.3, false, flags)\nend\ng:addCircle(dest.x, dest.y, dest.z, 0.65, false, flags)\n",
+							name = "[Draw] Memento Mori - spread spot",
+							uuid = "82aa3efc-c9e9-669b-87ad-14786eb5b012",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 12,
+				loop = true,
+				mechanicTime = 52.4,
+				name = "[Draw] Memento Mori - spread spot",
+				timeRange = true,
+				timelineIndex = 9,
+				timerEndOffset = 8,
+				timerStartOffset = -5,
+				uuid = "a5cbcae2-1176-049d-a0fd-0ea31d7eec64",
+				version = 2,
+			},
+		},
+	},
 	[13] = 
 	{
 		
