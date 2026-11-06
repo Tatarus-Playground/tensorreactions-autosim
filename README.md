@@ -1,6 +1,6 @@
 # TensorReactions AutoSim reactions
 
-My own TensorReactions reactions that drive TensorACR's AutoSim: kill times, full/melee/caster downtime windows, timing uncertainty, the syncs that move those windows to the real boss casts, and the Burn on/off helpers that go with them. It also has my role draws for Zelenia EX and Necron EX, and an Arkveld EX helper.
+My own TensorReactions reactions that drive TensorACR's AutoSim: kill times, full/melee/caster downtime windows, timing uncertainty, the syncs that move those windows to the real boss casts, and the Burn on/off helpers that go with them. It also has my role draws for Zelenia EX and Necron EX, an Arkveld EX helper, and a universal AutoSim for M9S that works for any job.
 
 Store modules and other authors' profiles are not included.
 
@@ -15,6 +15,7 @@ Each timeline file is my live profile in TensorReactions' own save format, built
 | `TimelineReactions/Tataru/Tataru-Zelen.lua` | Zelenia EX | AutoSim for Viper and Black Mage (10 reactions) and role draws for any job (98 reactions) |
 | `TimelineReactions/Tataru/TataruNecron.lua` | Necron EX | AutoSim for Viper and Black Mage (9 reactions) and role draws for any job (35 reactions) |
 | `TimelineReactions/Tataru/Arkveld.lua` | Guardian Arkveld EX | Arkveld helper for any job (92 reactions): limit cut arrows, tower picker and puddle countdown, role-based safety arrows |
+| `TimelineReactions/Tataru/M9S autosim.lua` | M9S (Vamp Fatale) | Universal AutoSim for any job (3 reactions): kill time, melee and caster/movement downtime, timing uncertainty, cast and boss-return syncs |
 | `GeneralReactions/Tataru/blm.lua` | Any fight | Black Mage countdown / pre-pull helpers (3 reactions) |
 
 `GeneralReactions/Tataru/blm.lua` is built from the live profile by `tools/export_autosim.py`.
@@ -40,6 +41,7 @@ Copy a file from `TimelineReactions/Tataru` into `TensorReactions/TimelineReacti
 
 ### 2026-11-06
 
+- **M9S (`M9S autosim.lua`, new):** universal AutoSim for any job. Kill time is 549s (FFLogs median of about 3700 kills). It sets melee downtime for the three Vamp Stomps and Aetherletting, 16 caster/movement windows, and timing uncertainty around the Coffinmaker add. Every window is re-timed on the real boss casts. There is no full downtime, because the Coffinmaker can be attacked while the boss is away. Not tested in a live pull yet.
 - **Repository layout:** the files moved to `TimelineReactions/Tataru/` and `GeneralReactions/Tataru/`, so AnyoneCore's Third Party feature can install and auto-update them. If you copied files from the old `timeline/` or `general/` folders, use the new paths.
 - **Necron EX (`TataruNecron.lua`):** Grand Cross route for every role slot. It reads the tower set and whether you are targeted, so it shows when to soak and when to bait, and it waits out the puddle wave before moving. It replaces the route copied from my own clears.
 - **Necron EX (`TataruNecron.lua`):** End's Embrace 2 spread and hand bait spots are fixed. The safe lane (north, middle or south) is read from the specter tethers. Healers and ranged now each have their own spot, and both draws stay up until their mechanic goes off.
