@@ -1,6 +1,6 @@
 # TensorReactions AutoSim reactions
 
-My own TensorReactions reactions that drive TensorACR's AutoSim: kill times, full/melee/caster downtime windows, timing uncertainty, the syncs that move those windows to the real boss casts, and the Burn on/off helpers that go with them. It also has my role draws for Zelenia EX and Necron EX, an Arkveld EX helper, and universal AutoSims for M9S, M10S and M11S that work for any job (M10S and M11S also have role draws).
+My own TensorReactions reactions that drive TensorACR's AutoSim: kill times, full/melee/caster downtime windows, timing uncertainty, the syncs that move those windows to the real boss casts, and the Burn on/off helpers that go with them. It also has my role draws for Zelenia EX and Necron EX, an Arkveld EX helper, and universal AutoSims for M9S, M10S, M11S and M12S phase 1 that work for any job (M10S and M11S also have role draws).
 
 Store modules and other authors' profiles are not included.
 
@@ -18,6 +18,7 @@ Each timeline file is my live profile in TensorReactions' own save format, built
 | `TimelineReactions/Tataru/M9S autosim.lua` | M9S (Vamp Fatale) | Universal AutoSim for any job (3 reactions): kill time, melee and caster/movement downtime, timing uncertainty, cast and boss-return syncs |
 | `TimelineReactions/Tataru/M10s autosim.lua` | M10S (Red Hot and Deep Blue) | Universal AutoSim for any job (3 reactions), Black Mage Auto LB with a Stun phase after Arena Split (3 reactions), and role draws for any job (9 reactions): Alley-oop clock spots, Insane Air boss-landing arrows, Arena Split spots |
 | `TimelineReactions/Tataru/M11s Autosim.lua` | M11S (The Tyrant) | Universal AutoSim for any job (3 reactions) incl. Stun phases for the knock-ups, and role draws for any job (11 reactions): Assault Evolved sword / scythe spots, Ultimate Trophy Weapons + tornado baits, Dance of Domination pair stacks, Meteorain |
+| `TimelineReactions/Tataru/M12s Phase 1 Autosim phasings .lua` | M12S phase 1 (Lindwurm) | Universal AutoSim for any job (3 reactions): phase-1 kill time, Act 3 full downtime, melee and caster/movement windows, Stun for the Cruel Coil and Raptor Knuckles knockbacks |
 | `GeneralReactions/Tataru/blm.lua` | Any fight | Black Mage countdown / pre-pull helpers (3 reactions) |
 
 `GeneralReactions/Tataru/blm.lua` is built from the live profile by `tools/export_autosim.py`.
@@ -43,6 +44,7 @@ Copy a file from `TimelineReactions/Tataru` into `TensorReactions/TimelineReacti
 
 ### 2026-11-06
 
+- **M12S phase 1 (`M12s Phase 1 Autosim phasings .lua`, new):** universal AutoSim for any job. Phase-1 kill time 418s (FFLogs median), full downtime during Grotesquerie: Act 3, 7 melee and 13 caster/movement windows re-timed on the real boss casts, a Stun for the Cruel Coil knockback, and a Stun added live whenever a Raptor Knuckles knockback happens. Not tested in a live pull yet.
 - **M11S (`M11s Autosim.lua`, new):**
   - Universal AutoSim for any job: kill time 633s, 9 melee and 15 caster/movement windows re-timed on the real boss casts, and Stun phases while you are knocked into the air at Flatliner and the three platform Explosions. No full downtime (the boss is always targetable).
   - Role draws (Party Roster slot): Assault Evolved sword (light-party stack, G1 left / G2 right) and scythe (role protean spot) shown as soon as the weapons appear, the same for all 6 Ultimate Trophy Weapons plus your tornado bait spot, Dance of Domination pair stacks rotated to the open side, and every Meteorain step including the tank tether spots.
