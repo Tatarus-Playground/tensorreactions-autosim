@@ -46,6 +46,7 @@ Copy a file from `TimelineReactions/Tataru` into `TensorReactions/TimelineReacti
 
 ### 2026-11-06
 
+- **Guardian Arkveld EX (`Arkveld.lua`):** the tower picker now says who each tower is for and which waymark it is next to, for example "Small tower NW - R1 (by 1)", "Small tower NE - R2 / H2 (by 2)" and "Big tower NW - MT (between D and 1)". Settings are now saved with FileSave/FileLoad in `TensorReactions\Settings\Arkveld.settings.lua`, the same folder as the Zelenia settings. A choice saved in the old `ArkveldEX_settings.lua` is still read.
 - **Zelenia EX (`Tataru-Zelen.lua`):** new Bloom 2 safe side arrow. A big arrow and marker point to the one safe side (east B or west D) from the moment the first Alexandrian Thunder IV is cast until it hits. The side comes from her attack pattern (in or out first) and the floor pattern, using the same rule as cactbot. If the side isn't known for sure, no arrow is shown. The Bloom 2 route arrows now use the same side and no longer guess from where you stand.
 - **Zelenia EX (`Tataru-Zelen.lua`):** new pre-pull settings window to choose where DPS go for Bloom 4 Thorns: **DPS B** (east, supports D) or **DPS D** (west, supports B). The Thorns arrow follows your choice. The window closes 3 seconds after combat starts and comes back after a wipe. Your choice is saved with FileSave/FileLoad in `TensorReactions\Settings\Tataru-Zelen.settings.lua`, so it is kept across reloads and updates.
 - **M4S (`M4S autosim.lua`):** role safespot draws (Party Roster slot). You get an arrow and circle to your own spot for:
