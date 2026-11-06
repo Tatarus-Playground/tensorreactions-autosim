@@ -25,6 +25,19 @@ Each timeline file is my live profile in TensorReactions' own save format, built
 
 `GeneralReactions/Tataru/blm.lua` is built from the live profile by `tools/export_autosim.py`.
 
+## Arkveld Tower names
+
+The tower picker in the Arkveld EX helper names each tower by who takes it and the closest waymark (A north, B east, C south, D west, 1 NW, 2 NE, 3 SE, 4 SW).
+
+| Tower | For | Waymark |
+|---|---|---|
+| Big tower NW | MT | between D and 1 |
+| Big tower SE | OT | between B and 3 |
+| Small tower NW | R1 | by 1 |
+| Small tower NE | R2 / H2 | by 2 |
+| Small tower SE | M2 | by 3 |
+| Small tower SW | M1 / H1 | by 4 |
+
 ## Using the reactions
 
 ### Auto-updates with AnyoneCore (recommended)
