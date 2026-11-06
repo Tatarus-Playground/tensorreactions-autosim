@@ -2,6 +2,8 @@
 
 My own TensorReactions reactions that drive TensorACR's AutoSim: kill times, full/melee/caster downtime windows, timing uncertainty, the syncs that move those windows to the real boss casts, and the Burn on/off helpers that go with them. It also has my role draws for Zelenia EX and Necron EX, an Arkveld EX helper, and universal AutoSims for M4S, M9S, M10S, M11S and M12S (both phases) that work for any job (M4S, M10S and M11S also have role draws).
 
+The draws follow whichever strat is currently popular in EU for each fight, such as Hector or LPDU.
+
 Store modules and other authors' profiles are not included.
 
 > **Disclaimer:** these draws use Anyone's Party Roster function (AnyoneCore), so AnyoneCore with a filled-in Party Roster is needed for them to work.
