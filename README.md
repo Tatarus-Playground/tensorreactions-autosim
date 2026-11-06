@@ -1,6 +1,6 @@
 # TensorReactions AutoSim reactions
 
-My own TensorReactions reactions that drive TensorACR's AutoSim: kill times, full/melee/caster downtime windows, timing uncertainty, the syncs that move those windows to the real boss casts, and the Burn on/off helpers that go with them. It also has my role draws for Zelenia EX and Necron EX, an Arkveld EX helper, and a universal AutoSim for M9S that works for any job.
+My own TensorReactions reactions that drive TensorACR's AutoSim: kill times, full/melee/caster downtime windows, timing uncertainty, the syncs that move those windows to the real boss casts, and the Burn on/off helpers that go with them. It also has my role draws for Zelenia EX and Necron EX, an Arkveld EX helper, and universal AutoSims for M9S and M10S that work for any job (M10S also has role draws).
 
 Store modules and other authors' profiles are not included.
 
@@ -16,6 +16,7 @@ Each timeline file is my live profile in TensorReactions' own save format, built
 | `TimelineReactions/Tataru/TataruNecron.lua` | Necron EX | AutoSim for Viper and Black Mage (9 reactions) and role draws for any job (35 reactions) |
 | `TimelineReactions/Tataru/Arkveld.lua` | Guardian Arkveld EX | Arkveld helper for any job (92 reactions): limit cut arrows, tower picker and puddle countdown, role-based safety arrows |
 | `TimelineReactions/Tataru/M9S autosim.lua` | M9S (Vamp Fatale) | Universal AutoSim for any job (3 reactions): kill time, melee and caster/movement downtime, timing uncertainty, cast and boss-return syncs |
+| `TimelineReactions/Tataru/M10s autosim.lua` | M10S (Red Hot and Deep Blue) | Universal AutoSim for any job (3 reactions), Black Mage Auto LB with a Stun phase after Arena Split (3 reactions), and role draws for any job (9 reactions): Alley-oop clock spots, Insane Air boss-landing arrows, Arena Split spots |
 | `GeneralReactions/Tataru/blm.lua` | Any fight | Black Mage countdown / pre-pull helpers (3 reactions) |
 
 `GeneralReactions/Tataru/blm.lua` is built from the live profile by `tools/export_autosim.py`.
@@ -41,6 +42,11 @@ Copy a file from `TimelineReactions/Tataru` into `TensorReactions/TimelineReacti
 
 ### 2026-11-06
 
+- **M10S (`M10s autosim.lua`, new):**
+  - Universal AutoSim for any job: kill time 543s (FFLogs median), full downtime for the boss swaps and Xtreme Spectacular, 7 melee and 20 caster/movement windows re-timed on the real boss casts, plus a setup that also works without a countdown.
+  - Black Mage: after Arena Split, while both bosses are targetable and fit in one Meteor, it turns on TensorNuke4's Auto LB and plans a Stun phase for the LB animation.
+  - Role draws (Party Roster slot): Alley-oop Double-dip / Reverse clock spots, an arrow to where your boss lands in Insane Air 1 and 2, and Arena Split puddle, protean (mirrored by Deep Blue's side), pair stack and knockback / light-party stack spots.
+  - Not tested in a live pull yet.
 - **M9S (`M9S autosim.lua`, new):** universal AutoSim for any job. Kill time is 549s (FFLogs median of about 3700 kills). It sets melee downtime for the three Vamp Stomps and Aetherletting, 16 caster/movement windows, and timing uncertainty around the Coffinmaker add. Every window is re-timed on the real boss casts. There is no full downtime, because the Coffinmaker can be attacked while the boss is away. Not tested in a live pull yet.
 - **Repository layout:** the files moved to `TimelineReactions/Tataru/` and `GeneralReactions/Tataru/`, so AnyoneCore's Third Party feature can install and auto-update them. If you copied files from the old `timeline/` or `general/` folders, use the new paths.
 - **Necron EX (`TataruNecron.lua`):** Grand Cross route for every role slot. It reads the tower set and whether you are targeted, so it shows when to soak and when to bait, and it waits out the puddle wave before moving. It replaces the route copied from my own clears.
