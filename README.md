@@ -1,6 +1,6 @@
 # TensorReactions AutoSim reactions
 
-My own TensorReactions reactions that drive TensorACR's AutoSim: kill times, full/melee/caster downtime windows, timing uncertainty, the syncs that move those windows to the real boss casts, and the Burn on/off helpers that go with them. It also has my role draws for Zelenia EX and Necron EX, an Arkveld EX helper, and universal AutoSims for M4S, M9S, M10S, M11S and M12S (both phases) that work for any job (M10S and M11S also have role draws).
+My own TensorReactions reactions that drive TensorACR's AutoSim: kill times, full/melee/caster downtime windows, timing uncertainty, the syncs that move those windows to the real boss casts, and the Burn on/off helpers that go with them. It also has my role draws for Zelenia EX and Necron EX, an Arkveld EX helper, and universal AutoSims for M4S, M9S, M10S, M11S and M12S (both phases) that work for any job (M4S, M10S and M11S also have role draws).
 
 Store modules and other authors' profiles are not included.
 
@@ -15,7 +15,7 @@ Each timeline file is my live profile in TensorReactions' own save format, built
 | `TimelineReactions/Tataru/Tataru-Zelen.lua` | Zelenia EX | AutoSim for Viper and Black Mage (10 reactions) and role draws for any job (98 reactions) |
 | `TimelineReactions/Tataru/TataruNecron.lua` | Necron EX | AutoSim for Viper and Black Mage (9 reactions) and role draws for any job (35 reactions) |
 | `TimelineReactions/Tataru/Arkveld.lua` | Guardian Arkveld EX | Arkveld helper for any job (92 reactions): limit cut arrows, tower picker and puddle countdown, role-based safety arrows |
-| `TimelineReactions/Tataru/M4S autosim.lua` | M4S (Wicked Thunder) | Universal AutoSim for any job (3 reactions): kill time, phase-transition full downtime, melee and caster/movement windows re-timed on the real boss abilities |
+| `TimelineReactions/Tataru/M4S autosim.lua` | M4S (Wicked Thunder) | Universal AutoSim for any job (3 reactions): kill time, phase-transition full downtime, melee and caster/movement windows re-timed on the real boss abilities. Role safespot draws for any job (78 reactions): an arrow and circle to your Party Roster slot's spot for every mechanic from Bewitching Flight to Sword Quiver |
 | `TimelineReactions/Tataru/M9S autosim.lua` | M9S (Vamp Fatale) | Universal AutoSim for any job (3 reactions): kill time, melee and caster/movement downtime, timing uncertainty, cast and boss-return syncs |
 | `TimelineReactions/Tataru/M10s autosim.lua` | M10S (Red Hot and Deep Blue) | Universal AutoSim for any job (3 reactions), Black Mage Auto LB with a Stun phase after Arena Split (3 reactions), and role draws for any job (9 reactions): Alley-oop clock spots, Insane Air boss-landing arrows, Arena Split spots |
 | `TimelineReactions/Tataru/M11s Autosim.lua` | M11S (The Tyrant) | Universal AutoSim for any job (3 reactions) incl. Stun phases for the knock-ups, and role draws for any job (11 reactions): Assault Evolved sword / scythe spots, Ultimate Trophy Weapons + tornado baits, Dance of Domination pair stacks, Meteorain |
@@ -46,6 +46,9 @@ Copy a file from `TimelineReactions/Tataru` into `TensorReactions/TimelineReacti
 
 ### 2026-11-06
 
+- **M4S (`M4S autosim.lua`):** role safespot draws (Party Roster slot). You get an arrow and circle to your own spot for:
+  - Bewitching Flight, Electrifying Witch Hunt (first spreads and near/far baits), Narrowing/Widening Witch Hunt (in/out and baits), Electrope Edge 1 and 2 (safe quadrant, debuff corners, spread/partners), Stampeding Thunder column and Electron Stream / cannon debuffs, and the transition cones with Conduction Point.
+  - Sabertail light-party stacks, every Wicked Special, both Mustard Bombs, all three Tail Thrusts (fire/water), Twilight and Midnight Sabbath, Raining Swords towers and Chain Lightning safe swords, Sunrise Sabbath cannons/towers, and Sword Quiver partner stacks.
 - **M4S (`M4S autosim.lua`, new):** universal AutoSim for any job. Kill time 712s (FFLogs median), full downtime for the phase 1 to phase 2 transition, 3 melee and 19 caster/movement windows taken from real kills and re-timed when each boss ability lands. No Stun phases, since no knockback stops the whole party.
 - **M12S phase 2 (`M12s Autosim Phase 2.lua`, new):** universal AutoSim for any job. Phase-2 kill time 526s (FFLogs median), no full downtime (Lindwurm stays targetable), 5 melee and 17 caster/movement windows re-timed on the real boss casts. No Stun phases, since no knockback hits the whole party.
 - **M12S phase 1 (`M12s Phase 1 Autosim phasings .lua`, new):** universal AutoSim for any job. Phase-1 kill time 418s (FFLogs median), full downtime during Grotesquerie: Act 3, 7 melee and 13 caster/movement windows re-timed on the real boss casts, a Stun for the Cruel Coil knockback, and a Stun added live whenever a Raptor Knuckles knockback happens.
