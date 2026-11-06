@@ -1,4 +1,4 @@
-"""Export your own AutoSim reactions from TensorReactions profiles into this repository.
+"""Export the general AutoSim profile (blm) into this repository's GeneralReactions/Tataru folder.
 
 Usage (from the repository root):
     py -3 tools/export_autosim.py .
@@ -233,11 +233,10 @@ def export(kind, src_dir, dst_dir, summary):
         summary.append((kind, fn, prof.get("timelineName", "") if isinstance(prof, LT) else "", len(sel)))
 
 if __name__ == "__main__":
-    OUT = sys.argv[1]
-    for sub in ("timeline", "general", "draws"):
-        if os.path.exists(os.path.join(OUT, sub)): shutil.rmtree(os.path.join(OUT, sub))
+    # Only the general profile is exported here; the timeline files are written by strip_inherited.py.
+    # Output goes to GeneralReactions/Tataru, the layout AnyoneCore's Third Party updater installs.
+    OUT = os.path.join(sys.argv[1], "GeneralReactions", "Tataru")
     os.makedirs(OUT, exist_ok=True)
     S = []
-    export("timeline", os.path.join(ROOT, "TimelineReactions"), os.path.join(OUT, "timeline"), S)
-    export("general", os.path.join(ROOT, "GeneralReactions"), os.path.join(OUT, "general"), S)
+    export("general", os.path.join(ROOT, "GeneralReactions"), OUT, S)
     for s in S: print(s)
