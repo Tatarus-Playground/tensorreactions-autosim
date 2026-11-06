@@ -945,8 +945,8 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- Grand Cross: green circle where you stood in your clears, arrow, countdown to the next move\nlocal s = data.necgc\nif not s then return end\nlocal el = (Now() - s.t0) / 1000\nlocal R = {{0, 13.8, 100, 100}, {13.8, 17.8, 95, 95}, {17.8, 32.0, 100.8, 93.4},\n           {32.0, 37.6, 100, 100}, {37.6, 42.8, 94.5, 94.5}, {42.8, 48.0, 100, 100}}\nlocal cur, nxt\nfor i = 1, #R do\n  if el >= R[i][1] and el < R[i][2] then cur, nxt = R[i], R[i + 1] break end\nend\nif not cur then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\nlocal px, py, pz = p.pos.x, p.pos.y, p.pos.z\nlocal flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal g = TensorCore.getCachedDrawer(0x5533FF33, 0x8833FF33, 0xFF33FF33, 0xFF000000, 2)\nlocal x, z = cur[3], cur[4]\nlocal d = TensorCore.getDistance2d2(px, py, pz, x, py, z)\nif d > 0.8 then\n  local tip = math.min(1.5, d * 0.35)\n  g:addArrow(px, py, pz, TensorCore.getHeadingToTarget2(px, py, pz, x, py, z), math.max(0.1, d - tip), 0.65, tip, 1.3, false, flags)\nend\ng:addCircle(x, py, z, 1.0, false, flags)\nif nxt then\n  TensorCore.getCachedDrawer(0x1133FF33, 0x2233FF33, 0x4433FF33, 0x8833FF33, 1):addCircle(nxt[3], py, nxt[4], 0.8, false, flags)\nend\n-- countdown (seconds until you move to the next spot), drawn under the green circle\nlocal n = math.max(0, math.ceil(cur[2] - el))\nif n > 99 then n = 99 end\nlocal A, B, C, Dd, E, F, G = {-1,1,1,1}, {1,1,1,0}, {1,0,1,-1}, {-1,-1,1,-1}, {-1,0,-1,-1}, {-1,1,-1,0}, {-1,0,1,0}\nlocal DIG = data.necgcDig\nif not DIG then\n  DIG = {[0]={A,B,C,Dd,E,F}, [1]={B,C}, [2]={A,B,G,E,Dd}, [3]={A,B,G,C,Dd}, [4]={F,G,B,C}, [5]={A,F,G,C,Dd},\n         [6]={A,F,G,E,C,Dd}, [7]={A,B,C}, [8]={A,B,C,Dd,E,F,G}, [9]={A,B,C,Dd,F,G}}\n  data.necgcDig = DIG\nend\nlocal dr = TensorCore.getStaticDrawer(0xFF33FF33, 4)\nlocal function digit(k, cx, cz)\n  for _, sg in ipairs(DIG[k]) do dr:addLine(cx + sg[1] * 0.45, py, cz - sg[2] * 0.8, cx + sg[3] * 0.45, py, cz - sg[4] * 0.8, 4) end\nend\nif n >= 10 then digit(math.floor(n / 10), x - 0.6, z + 2.2); digit(n % 10, x + 0.6, z + 2.2) else digit(n, x, z + 2.2) end\n",
-							name = "[Draw] Grand Cross 1 - your route (from clears)",
+							actionLua = "-- Grand Cross route for your role slot (Anyone roster): green circle + arrow + countdown to the next move.\n-- Your intercard: T1/M1 NW, T2/M2 NE, H1/R1 SW, H2/R2 SE. Your cardinal is the one clockwise from it.\n-- Towers: if set 1 did not target you, stand on set 1's tower type; if it did, stand on the other type.\n-- Not targeted = soak the tower (6.5 out), targeted = bait 8 out. Set 2 uses its own targets on the same spot.\n-- Holds your intercard until 17.4 s so you dodge the puddle wave. Rules from 32 logged pulls.\nlocal s = data.necgc\nif not s then return end\nlocal el = (Now() - s.t0) / 1000\nif el < 0 or el >= 48 then return end\nlocal K = data.necgcK\nif not K then\n  local A, B, C, Dd, E, F, G = {-1,1,1,1}, {1,1,1,0}, {1,0,1,-1}, {-1,-1,1,-1}, {-1,0,-1,-1}, {-1,1,-1,0}, {-1,0,1,0}\n  K = {\n    IC = {T1 = {-1, -1}, M1 = {-1, -1}, T2 = {1, -1}, M2 = {1, -1}, H2 = {1, 1}, R2 = {1, 1}, H1 = {-1, 1}, R1 = {-1, 1}},\n    DIG = {[0]={A,B,C,Dd,E,F}, [1]={B,C}, [2]={A,B,G,E,Dd}, [3]={A,B,G,C,Dd}, [4]={F,G,B,C}, [5]={A,F,G,C,Dd},\n           [6]={A,F,G,E,C,Dd}, [7]={A,B,C}, [8]={A,B,C,Dd,E,F,G}, [9]={A,B,C,Dd,F,G}},\n    flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY,\n  }\n  -- spot on your cardinal (card = true) or your intercard, r yalms from center\n  function K.spot(ic, card, r)\n    if card then\n      if ic[1] == ic[2] then return 100, 100 + ic[2] * r end\n      return 100 + ic[1] * r, 100\n    end\n    local k = r * 0.7071\n    return 100 + ic[1] * k, 100 + ic[2] * k\n  end\n  function K.hit(s, set)\n    if not (set and s.tg) then return false end\n    for i = 1, #s.tg do if math.abs(s.tg[i] - set.t) < 2000 then return true end end\n    return false\n  end\n  function K.digit(dr, k, cx, cz, py)\n    for _, sg in ipairs(K.DIG[k]) do dr:addLine(cx + sg[1] * 0.45, py, cz - sg[2] * 0.8, cx + sg[3] * 0.45, py, cz - sg[4] * 0.8, 4) end\n  end\n  data.necgcK = K\nend\nlocal RT = s.route\nif not RT then\n  local Ro = AnyoneCore and AnyoneCore.Roster\n  local slot = Ro and Ro.mySlot and Ro.mySlot()\n  if not slot and GetCurrentRole then local r = GetCurrentRole(); slot = (r == \"MT\" and \"T1\") or (r == \"OT\" and \"T2\") or r end\n  local ic = slot and K.IC[slot]\n  if not ic then return end\n  local pre = {100 + ic[1] * 5, 100 + ic[2] * 5}   -- per-axis offsets: about 7 out on your intercard\n  RT = {{0, 13.8, 100, 100}}\n  local s1, s2 = s.sets and s.sets[1], s.sets and s.sets[2]\n  if s1 then\n    local tg1 = K.hit(s, s1)\n    local myCard = (s1.card and not tg1) or (not s1.card and tg1)\n    local tg2 = not tg1\n    if s2 then tg2 = K.hit(s, s2) end\n    local ax, az = K.spot(ic, myCard, tg1 and 8 or 6.5)\n    local bx, bz = K.spot(ic, myCard, tg2 and 8 or 6.5)\n    RT[2] = {13.8, 17.4, pre[1], pre[2]}\n    RT[3] = {17.4, 21.5, ax, az}\n    RT[4] = {21.5, 32.4, bx, bz}\n  else\n    RT[2] = {13.8, 32.4, pre[1], pre[2]}   -- towers not seen yet: hold your intercard\n  end\n  RT[#RT + 1] = {32.4, 37.6, 100, 100}\n  RT[#RT + 1] = {37.6, 42.8, 100 + ic[1] * 5.6, 100 + ic[2] * 5.6}\n  RT[#RT + 1] = {42.8, 48.0, 100, 100}\n  s.route = RT\nend\nlocal cur, nxt\nfor i = 1, #RT do\n  if el >= RT[i][1] and el < RT[i][2] then cur, nxt = RT[i], RT[i + 1] break end\nend\nif not cur then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\nlocal px, py, pz = p.pos.x, p.pos.y, p.pos.z\nlocal flags = K.flags\nlocal g = TensorCore.getCachedDrawer(0x5533FF33, 0x8833FF33, 0xFF33FF33, 0xFF000000, 2)\nlocal x, z = cur[3], cur[4]\nlocal d = TensorCore.getDistance2d2(px, py, pz, x, py, z)\nif d > 0.8 then\n  local tip = math.min(1.5, d * 0.35)\n  g:addArrow(px, py, pz, TensorCore.getHeadingToTarget2(px, py, pz, x, py, z), math.max(0.1, d - tip), 0.65, tip, 1.3, false, flags)\nend\ng:addCircle(x, py, z, 1.0, false, flags)\nif nxt then\n  TensorCore.getCachedDrawer(0x1133FF33, 0x2233FF33, 0x4433FF33, 0x8833FF33, 1):addCircle(nxt[3], py, nxt[4], 0.8, false, flags)\nend\n-- countdown (seconds until you move to the next spot), drawn under the green circle\nlocal n = math.max(0, math.ceil(cur[2] - el))\nif n > 99 then n = 99 end\nlocal dr = TensorCore.getStaticDrawer(0xFF33FF33, 4)\nif n >= 10 then K.digit(dr, math.floor(n / 10), x - 0.6, z + 2.2, py); K.digit(dr, n % 10, x + 0.6, z + 2.2, py) else K.digit(dr, n, x, z + 2.2, py) end\n",
+							name = "[Draw] Grand Cross 1 - your route (all roles)",
 							uuid = "619ec442-86db-88ef-983c-f6beeaa6ae40",
 							version = 2.1,
 						},
@@ -959,12 +959,46 @@ local tbl =
 				eventType = 12,
 				loop = true,
 				mechanicTime = 140.2,
-				name = "[Draw] Grand Cross 1 - your route (from clears)",
+				name = "[Draw] Grand Cross 1 - your route (all roles)",
 				timeRange = true,
 				timelineIndex = 27,
 				timerEndOffset = 41,
 				timerStartOffset = -7.5,
 				uuid = "807bb018-e292-8d81-925e-320e33ec5c60",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Grand Cross towers: remember each tower set (time + cardinal/intercard) and when you were targeted by a bait\n-- 44573 Shock = towers (helper sits on the tower), 44572 Grand Cross = bait on 4 players\nself.used = true\nlocal e = eventArgs\nlocal s = data.necgc\nif not (e and s) then return end\nlocal id = e.spellID\nif id == 44573 then\n  local last = s.sets and s.sets[#s.sets]\n  if last and Now() - last.t < 3000 then return end\n  local ent = TensorCore.mGetEntity(e.entityID)\n  if not (ent and ent.pos) then return end\n  local dx, dz = ent.pos.x - 100, ent.pos.z - 100\n  s.sets = s.sets or {}\n  s.sets[#s.sets + 1] = {t = Now(), card = (math.abs(dx) < 1 or math.abs(dz) < 1)}\n  s.route = nil\nelseif id == 44572 then\n  local p = TensorCore.mGetPlayer()\n  if p and e.targetID == p.id then\n    s.tg = s.tg or {}\n    s.tg[#s.tg + 1] = Now()\n    s.route = nil\n  end\nend\n",
+							name = "[Draw] Grand Cross 1 - towers and baits (capture)",
+							uuid = "8f3929b4-9208-19a9-9e27-96e08ed573d8",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 3,
+				loop = true,
+				mechanicTime = 140.2,
+				name = "[Draw] Grand Cross 1 - towers and baits (capture)",
+				timeRange = true,
+				timelineIndex = 27,
+				timerEndOffset = 23,
+				timerStartOffset = 7,
+				uuid = "67c4a30f-be1e-c86d-bbd2-3ea7df45cc20",
 				version = 2,
 			},
 		},
@@ -1479,8 +1513,8 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- End's Embrace 2 - Specter spread (front lane): arrow + circle to your own spot (screenshot positions, center assumed 100,100)\nlocal SPOTS = {T1={-17.1,-13.4},M1={-5.6,-13.4},M2={6.5,-13.4},T2={16.6,-13.4},R1={-17.1,-6.1},H1={-5.6,-6.1},H2={6.5,-6.1},R2={16.6,-6.1}}\nlocal R = AnyoneCore and AnyoneCore.Roster\nlocal slot = R and R.mySlot and R.mySlot()\nif not slot and GetCurrentRole then local r = GetCurrentRole(); slot = (r == \"MT\" and \"T1\") or (r == \"OT\" and \"T2\") or r end\nlocal o = slot and SPOTS[slot]\nif not o then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\nlocal dest = {x = 100 + o[1], y = p.pos.y, z = 100 + o[2]}\nlocal g = TensorCore.getCachedDrawer(0x7733FF33, 0xAA33FF33, 0xFF33FF33, 0xFF000000, 2)\nlocal flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal d = TensorCore.getDistance2d(p.pos, dest)\nif d > 0.8 then\n  local tip = math.min(1.5, d * 0.35)\n  g:addArrow(p.pos.x, p.pos.y, p.pos.z, TensorCore.getHeadingToTarget(p.pos, dest), math.max(0.1, d - tip), 0.65, tip, 1.3, false, flags)\nend\ng:addCircle(dest.x, dest.y, dest.z, 0.65, false, flags)\n",
-							name = "[Draw] End's Embrace 2 - Specter spread (front lane)",
+							actionLua = "-- End's Embrace 2 - spread spot in the safe lane (from the specter tethers), held until the hands drop.\n-- Grid from 19 logged pulls: top row T1 M1 M2 T2 at lane-3, bottom row R1 H1 H2 R2 at lane+4, x = 85 / 94 / 106 / 115.\nlocal s = data.necee2\nlocal L = s and s.lane\nif not L or Now() - s.t > 30000 then return end\nlocal COL = {T1 = {85, -3}, M1 = {94, -3}, M2 = {106, -3}, T2 = {115, -3}, R1 = {85, 4}, H1 = {94, 4}, H2 = {106, 4}, R2 = {115, 4}}\nlocal Ro = AnyoneCore and AnyoneCore.Roster\nlocal slot = Ro and Ro.mySlot and Ro.mySlot()\nif not slot and GetCurrentRole then local r = GetCurrentRole(); slot = (r == \"MT\" and \"T1\") or (r == \"OT\" and \"T2\") or r end\nlocal o = slot and COL[slot]\nif not o then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\nlocal dest = {x = o[1], y = p.pos.y, z = L + o[2]}\nlocal g = TensorCore.getCachedDrawer(0x7733FF33, 0xAA33FF33, 0xFF33FF33, 0xFF000000, 2)\nlocal flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal d = TensorCore.getDistance2d(p.pos, dest)\nif d > 0.8 then\n  local tip = math.min(1.5, d * 0.35)\n  g:addArrow(p.pos.x, p.pos.y, p.pos.z, TensorCore.getHeadingToTarget(p.pos, dest), math.max(0.1, d - tip), 0.65, tip, 1.3, false, flags)\nend\ng:addCircle(dest.x, dest.y, dest.z, 0.65, false, flags)\n",
+							name = "[Draw] End's Embrace 2 - spread spot (safe lane)",
 							uuid = "d85a32e1-bb2a-c123-bdf6-32bec02f8df0",
 							version = 2.1,
 						},
@@ -1493,12 +1527,46 @@ local tbl =
 				eventType = 12,
 				loop = true,
 				mechanicTime = 321,
-				name = "[Draw] End's Embrace 2 - Specter spread (front lane)",
+				name = "[Draw] End's Embrace 2 - spread spot (safe lane)",
 				timeRange = true,
 				timelineIndex = 56,
-				timerEndOffset = 2,
+				timerEndOffset = 8.2,
 				timerStartOffset = -8,
 				uuid = "126d6771-99fe-3bd2-acd8-a21e36a525c4",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- End's Embrace 2: the two Looming Specters tether (102) at lanes z = 90 / 100 / 110; the lane with no specter is safe\nself.used = true\nlocal e = eventArgs\nif not e or e.newTetherID ~= 102 then return end\nlocal ent = TensorCore.mGetEntity(e.sourceEntityID)\nif not (ent and ent.pos) then return end\nlocal z = math.floor(ent.pos.z / 10 + 0.5) * 10\nif z ~= 90 and z ~= 100 and z ~= 110 then return end\nlocal s = data.necee2\nif not s or Now() - s.t > 20000 then s = {t = Now(), z = {}}; data.necee2 = s end\ns.z[z] = true\nlocal n, safe = 0, nil\nfor _, L in ipairs({90, 100, 110}) do\n  if s.z[L] then n = n + 1 else safe = L end\nend\nif n == 2 then s.lane = safe end\n",
+							name = "[Draw] End's Embrace 2 - safe lane (specter tethers)",
+							uuid = "86c3d3bd-78a6-48a5-bf6c-52309ffd6f9f",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 15,
+				loop = true,
+				mechanicTime = 321,
+				name = "[Draw] End's Embrace 2 - safe lane (specter tethers)",
+				timeRange = true,
+				timelineIndex = 56,
+				timerEndOffset = -6,
+				timerStartOffset = -14,
+				uuid = "83f22863-9388-9356-841c-ada274cd9fd7",
 				version = 2,
 			},
 		},
@@ -1526,7 +1594,7 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- End's Embrace 2 - hand bait: arrow + circle to your own spot (screenshot positions, center assumed 100,100)\nlocal SPOTS = {T1={-11.6,-14.5},M1={-11.6,-14.5},T2={11.6,-14.5},M2={11.6,-14.5},H1={-11.6,1.7},R1={-11.6,1.7},H2={11.1,1.7},R2={11.1,1.7}}\nlocal R = AnyoneCore and AnyoneCore.Roster\nlocal slot = R and R.mySlot and R.mySlot()\nif not slot and GetCurrentRole then local r = GetCurrentRole(); slot = (r == \"MT\" and \"T1\") or (r == \"OT\" and \"T2\") or r end\nlocal o = slot and SPOTS[slot]\nif not o then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\nlocal dest = {x = 100 + o[1], y = p.pos.y, z = 100 + o[2]}\nlocal g = TensorCore.getCachedDrawer(0x7733FF33, 0xAA33FF33, 0xFF33FF33, 0xFF000000, 2)\nlocal flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal d = TensorCore.getDistance2d(p.pos, dest)\nif d > 0.8 then\n  local tip = math.min(1.5, d * 0.35)\n  g:addArrow(p.pos.x, p.pos.y, p.pos.z, TensorCore.getHeadingToTarget(p.pos, dest), math.max(0.1, d - tip), 0.65, tip, 1.3, false, flags)\nend\ng:addCircle(dest.x, dest.y, dest.z, 0.65, false, flags)\n",
+							actionLua = "-- End's Embrace 2 - hand bait: after the hands drop, take your line AoE away from the party.\n-- Top row (T1 M1 M2 T2) goes north, bottom row (R1 H1 H2 R2) goes south, each in its own column (19 logged pulls).\n-- Lane from the specter tethers; spots stay inside the arena (z 85-115).\nlocal s = data.necee2\nlocal L = s and s.lane\nif not L or Now() - s.t > 40000 then return end\nlocal COL = {T1 = {85, -1}, M1 = {94, -1}, M2 = {106, -1}, T2 = {115, -1}, R1 = {85, 1}, H1 = {94, 1}, H2 = {106, 1}, R2 = {115, 1}}\nlocal Ro = AnyoneCore and AnyoneCore.Roster\nlocal slot = Ro and Ro.mySlot and Ro.mySlot()\nif not slot and GetCurrentRole then local r = GetCurrentRole(); slot = (r == \"MT\" and \"T1\") or (r == \"OT\" and \"T2\") or r end\nlocal o = slot and COL[slot]\nif not o then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\nlocal z = (o[2] < 0) and math.max(L - 9.5, 85.5) or math.min(L + 10.5, 114)\nlocal dest = {x = o[1], y = p.pos.y, z = z}\nlocal g = TensorCore.getCachedDrawer(0x7733FF33, 0xAA33FF33, 0xFF33FF33, 0xFF000000, 2)\nlocal flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal d = TensorCore.getDistance2d(p.pos, dest)\nif d > 0.8 then\n  local tip = math.min(1.5, d * 0.35)\n  g:addArrow(p.pos.x, p.pos.y, p.pos.z, TensorCore.getHeadingToTarget(p.pos, dest), math.max(0.1, d - tip), 0.65, tip, 1.3, false, flags)\nend\ng:addCircle(dest.x, dest.y, dest.z, 0.65, false, flags)\n",
 							name = "[Draw] End's Embrace 2 - hand bait",
 							uuid = "83d26686-f51c-1765-9d98-0e5372f0454a",
 							version = 2.1,
@@ -1543,8 +1611,8 @@ local tbl =
 				name = "[Draw] End's Embrace 2 - hand bait",
 				timeRange = true,
 				timelineIndex = 57,
-				timerEndOffset = 5,
-				timerStartOffset = -3,
+				timerEndOffset = 6.2,
+				timerStartOffset = 0.1,
 				uuid = "c3f285bc-bb30-5618-8393-9547883c5f8d",
 				version = 2,
 			},
@@ -2391,8 +2459,8 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- Grand Cross: green circle where you stood in your clears, arrow, countdown to the next move\nlocal s = data.necgc\nif not s then return end\nlocal el = (Now() - s.t0) / 1000\nlocal R = {{0, 13.8, 100, 100}, {13.8, 17.8, 95, 95}, {17.8, 32.0, 100.8, 93.4},\n           {32.0, 37.6, 100, 100}, {37.6, 42.8, 94.5, 94.5}, {42.8, 48.0, 100, 100}}\nlocal cur, nxt\nfor i = 1, #R do\n  if el >= R[i][1] and el < R[i][2] then cur, nxt = R[i], R[i + 1] break end\nend\nif not cur then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\nlocal px, py, pz = p.pos.x, p.pos.y, p.pos.z\nlocal flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal g = TensorCore.getCachedDrawer(0x5533FF33, 0x8833FF33, 0xFF33FF33, 0xFF000000, 2)\nlocal x, z = cur[3], cur[4]\nlocal d = TensorCore.getDistance2d2(px, py, pz, x, py, z)\nif d > 0.8 then\n  local tip = math.min(1.5, d * 0.35)\n  g:addArrow(px, py, pz, TensorCore.getHeadingToTarget2(px, py, pz, x, py, z), math.max(0.1, d - tip), 0.65, tip, 1.3, false, flags)\nend\ng:addCircle(x, py, z, 1.0, false, flags)\nif nxt then\n  TensorCore.getCachedDrawer(0x1133FF33, 0x2233FF33, 0x4433FF33, 0x8833FF33, 1):addCircle(nxt[3], py, nxt[4], 0.8, false, flags)\nend\n-- countdown (seconds until you move to the next spot), drawn under the green circle\nlocal n = math.max(0, math.ceil(cur[2] - el))\nif n > 99 then n = 99 end\nlocal A, B, C, Dd, E, F, G = {-1,1,1,1}, {1,1,1,0}, {1,0,1,-1}, {-1,-1,1,-1}, {-1,0,-1,-1}, {-1,1,-1,0}, {-1,0,1,0}\nlocal DIG = data.necgcDig\nif not DIG then\n  DIG = {[0]={A,B,C,Dd,E,F}, [1]={B,C}, [2]={A,B,G,E,Dd}, [3]={A,B,G,C,Dd}, [4]={F,G,B,C}, [5]={A,F,G,C,Dd},\n         [6]={A,F,G,E,C,Dd}, [7]={A,B,C}, [8]={A,B,C,Dd,E,F,G}, [9]={A,B,C,Dd,F,G}}\n  data.necgcDig = DIG\nend\nlocal dr = TensorCore.getStaticDrawer(0xFF33FF33, 4)\nlocal function digit(k, cx, cz)\n  for _, sg in ipairs(DIG[k]) do dr:addLine(cx + sg[1] * 0.45, py, cz - sg[2] * 0.8, cx + sg[3] * 0.45, py, cz - sg[4] * 0.8, 4) end\nend\nif n >= 10 then digit(math.floor(n / 10), x - 0.6, z + 2.2); digit(n % 10, x + 0.6, z + 2.2) else digit(n, x, z + 2.2) end\n",
-							name = "[Draw] Grand Cross 2 - your route (from clears)",
+							actionLua = "-- Grand Cross route for your role slot (Anyone roster): green circle + arrow + countdown to the next move.\n-- Your intercard: T1/M1 NW, T2/M2 NE, H1/R1 SW, H2/R2 SE. Your cardinal is the one clockwise from it.\n-- Towers: if set 1 did not target you, stand on set 1's tower type; if it did, stand on the other type.\n-- Not targeted = soak the tower (6.5 out), targeted = bait 8 out. Set 2 uses its own targets on the same spot.\n-- Holds your intercard until 17.4 s so you dodge the puddle wave. Rules from 32 logged pulls.\nlocal s = data.necgc\nif not s then return end\nlocal el = (Now() - s.t0) / 1000\nif el < 0 or el >= 48 then return end\nlocal K = data.necgcK\nif not K then\n  local A, B, C, Dd, E, F, G = {-1,1,1,1}, {1,1,1,0}, {1,0,1,-1}, {-1,-1,1,-1}, {-1,0,-1,-1}, {-1,1,-1,0}, {-1,0,1,0}\n  K = {\n    IC = {T1 = {-1, -1}, M1 = {-1, -1}, T2 = {1, -1}, M2 = {1, -1}, H2 = {1, 1}, R2 = {1, 1}, H1 = {-1, 1}, R1 = {-1, 1}},\n    DIG = {[0]={A,B,C,Dd,E,F}, [1]={B,C}, [2]={A,B,G,E,Dd}, [3]={A,B,G,C,Dd}, [4]={F,G,B,C}, [5]={A,F,G,C,Dd},\n           [6]={A,F,G,E,C,Dd}, [7]={A,B,C}, [8]={A,B,C,Dd,E,F,G}, [9]={A,B,C,Dd,F,G}},\n    flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY,\n  }\n  -- spot on your cardinal (card = true) or your intercard, r yalms from center\n  function K.spot(ic, card, r)\n    if card then\n      if ic[1] == ic[2] then return 100, 100 + ic[2] * r end\n      return 100 + ic[1] * r, 100\n    end\n    local k = r * 0.7071\n    return 100 + ic[1] * k, 100 + ic[2] * k\n  end\n  function K.hit(s, set)\n    if not (set and s.tg) then return false end\n    for i = 1, #s.tg do if math.abs(s.tg[i] - set.t) < 2000 then return true end end\n    return false\n  end\n  function K.digit(dr, k, cx, cz, py)\n    for _, sg in ipairs(K.DIG[k]) do dr:addLine(cx + sg[1] * 0.45, py, cz - sg[2] * 0.8, cx + sg[3] * 0.45, py, cz - sg[4] * 0.8, 4) end\n  end\n  data.necgcK = K\nend\nlocal RT = s.route\nif not RT then\n  local Ro = AnyoneCore and AnyoneCore.Roster\n  local slot = Ro and Ro.mySlot and Ro.mySlot()\n  if not slot and GetCurrentRole then local r = GetCurrentRole(); slot = (r == \"MT\" and \"T1\") or (r == \"OT\" and \"T2\") or r end\n  local ic = slot and K.IC[slot]\n  if not ic then return end\n  local pre = {100 + ic[1] * 5, 100 + ic[2] * 5}   -- per-axis offsets: about 7 out on your intercard\n  RT = {{0, 13.8, 100, 100}}\n  local s1, s2 = s.sets and s.sets[1], s.sets and s.sets[2]\n  if s1 then\n    local tg1 = K.hit(s, s1)\n    local myCard = (s1.card and not tg1) or (not s1.card and tg1)\n    local tg2 = not tg1\n    if s2 then tg2 = K.hit(s, s2) end\n    local ax, az = K.spot(ic, myCard, tg1 and 8 or 6.5)\n    local bx, bz = K.spot(ic, myCard, tg2 and 8 or 6.5)\n    RT[2] = {13.8, 17.4, pre[1], pre[2]}\n    RT[3] = {17.4, 21.5, ax, az}\n    RT[4] = {21.5, 32.4, bx, bz}\n  else\n    RT[2] = {13.8, 32.4, pre[1], pre[2]}   -- towers not seen yet: hold your intercard\n  end\n  RT[#RT + 1] = {32.4, 37.6, 100, 100}\n  RT[#RT + 1] = {37.6, 42.8, 100 + ic[1] * 5.6, 100 + ic[2] * 5.6}\n  RT[#RT + 1] = {42.8, 48.0, 100, 100}\n  s.route = RT\nend\nlocal cur, nxt\nfor i = 1, #RT do\n  if el >= RT[i][1] and el < RT[i][2] then cur, nxt = RT[i], RT[i + 1] break end\nend\nif not cur then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\nlocal px, py, pz = p.pos.x, p.pos.y, p.pos.z\nlocal flags = K.flags\nlocal g = TensorCore.getCachedDrawer(0x5533FF33, 0x8833FF33, 0xFF33FF33, 0xFF000000, 2)\nlocal x, z = cur[3], cur[4]\nlocal d = TensorCore.getDistance2d2(px, py, pz, x, py, z)\nif d > 0.8 then\n  local tip = math.min(1.5, d * 0.35)\n  g:addArrow(px, py, pz, TensorCore.getHeadingToTarget2(px, py, pz, x, py, z), math.max(0.1, d - tip), 0.65, tip, 1.3, false, flags)\nend\ng:addCircle(x, py, z, 1.0, false, flags)\nif nxt then\n  TensorCore.getCachedDrawer(0x1133FF33, 0x2233FF33, 0x4433FF33, 0x8833FF33, 1):addCircle(nxt[3], py, nxt[4], 0.8, false, flags)\nend\n-- countdown (seconds until you move to the next spot), drawn under the green circle\nlocal n = math.max(0, math.ceil(cur[2] - el))\nif n > 99 then n = 99 end\nlocal dr = TensorCore.getStaticDrawer(0xFF33FF33, 4)\nif n >= 10 then K.digit(dr, math.floor(n / 10), x - 0.6, z + 2.2, py); K.digit(dr, n % 10, x + 0.6, z + 2.2, py) else K.digit(dr, n, x, z + 2.2, py) end\n",
+							name = "[Draw] Grand Cross 2 - your route (all roles)",
 							uuid = "3bcd59cd-f8cf-f39a-8487-772c8f61ccbb",
 							version = 2.1,
 						},
@@ -2405,12 +2473,46 @@ local tbl =
 				eventType = 12,
 				loop = true,
 				mechanicTime = 605.2,
-				name = "[Draw] Grand Cross 2 - your route (from clears)",
+				name = "[Draw] Grand Cross 2 - your route (all roles)",
 				timeRange = true,
 				timelineIndex = 110,
 				timerEndOffset = 41,
 				timerStartOffset = -7.5,
 				uuid = "a4c5ad7a-05df-d11a-9059-1c5022d3eceb",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Grand Cross towers: remember each tower set (time + cardinal/intercard) and when you were targeted by a bait\n-- 44573 Shock = towers (helper sits on the tower), 44572 Grand Cross = bait on 4 players\nself.used = true\nlocal e = eventArgs\nlocal s = data.necgc\nif not (e and s) then return end\nlocal id = e.spellID\nif id == 44573 then\n  local last = s.sets and s.sets[#s.sets]\n  if last and Now() - last.t < 3000 then return end\n  local ent = TensorCore.mGetEntity(e.entityID)\n  if not (ent and ent.pos) then return end\n  local dx, dz = ent.pos.x - 100, ent.pos.z - 100\n  s.sets = s.sets or {}\n  s.sets[#s.sets + 1] = {t = Now(), card = (math.abs(dx) < 1 or math.abs(dz) < 1)}\n  s.route = nil\nelseif id == 44572 then\n  local p = TensorCore.mGetPlayer()\n  if p and e.targetID == p.id then\n    s.tg = s.tg or {}\n    s.tg[#s.tg + 1] = Now()\n    s.route = nil\n  end\nend\n",
+							name = "[Draw] Grand Cross 2 - towers and baits (capture)",
+							uuid = "1d5bd445-3f72-f3a5-b8a3-d06fd9e7c387",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 3,
+				loop = true,
+				mechanicTime = 605.2,
+				name = "[Draw] Grand Cross 2 - towers and baits (capture)",
+				timeRange = true,
+				timelineIndex = 110,
+				timerEndOffset = 23,
+				timerStartOffset = 7,
+				uuid = "d7623e6d-67fe-360f-bb7f-84c584a1a320",
 				version = 2,
 			},
 		},

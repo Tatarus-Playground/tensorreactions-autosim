@@ -13,7 +13,7 @@ Each timeline file is my live profile in TensorReactions' own save format, built
 | File | Fight / timeline | Contents |
 |---|---|---|
 | `timeline/Tataru-Zelen.lua` | Zelenia EX | AutoSim for Viper and Black Mage (10 reactions) and role draws for any job (98 reactions) |
-| `timeline/TataruNecron.lua` | Necron EX | AutoSim for Viper and Black Mage (9 reactions) and role draws for any job (32 reactions) |
+| `timeline/TataruNecron.lua` | Necron EX | AutoSim for Viper and Black Mage (9 reactions) and role draws for any job (35 reactions) |
 | `timeline/Arkveld.lua` | Guardian Arkveld EX | Arkveld helper for any job (92 reactions): limit cut arrows, tower picker and puddle countdown, role-based safety arrows |
 | `general/blm.lua` | Any fight | Black Mage countdown / pre-pull helpers (3 reactions) |
 
@@ -27,6 +27,8 @@ Copy a timeline file into `TensorReactions/TimelineReactions` (or the general fi
 
 ### 2026-11-06
 
+- **Necron EX (`TataruNecron.lua`):** Grand Cross route for every role slot. It reads the tower set and whether you are targeted, so it shows when to soak and when to bait, and it waits out the puddle wave before moving. It replaces the route copied from my own clears.
+- **Necron EX (`TataruNecron.lua`):** End's Embrace 2 spread and hand bait spots are fixed. The safe lane (north, middle or south) is read from the specter tethers. Healers and ranged now each have their own spot, and both draws stay up until their mechanic goes off.
 - **Necron EX (`TataruNecron.lua`):** new Memento Mori spread markers for Smite of Gloom. You get an arrow and circle to your own role slot's spot: tanks on the dark side, everyone else on the light side. The side is read from the Memento Mori cast, so the markers flip when the dark side is east.
 
 ### 2026-11-05
