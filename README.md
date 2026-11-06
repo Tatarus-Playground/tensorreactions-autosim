@@ -12,7 +12,7 @@ Each timeline file is my live profile in TensorReactions' own save format, built
 
 | File | Fight / timeline | Contents |
 |---|---|---|
-| `TimelineReactions/Tataru/Tataru-Zelen.lua` | Zelenia EX | AutoSim for Viper and Black Mage (10 reactions) and role draws for any job (98 reactions) |
+| `TimelineReactions/Tataru/Tataru-Zelen.lua` | Zelenia EX | AutoSim for Viper and Black Mage (10 reactions) and role draws for any job (99 reactions), including a pre-pull settings window for the Bloom 4 Thorns DPS side |
 | `TimelineReactions/Tataru/TataruNecron.lua` | Necron EX | AutoSim for Viper and Black Mage (9 reactions) and role draws for any job (35 reactions) |
 | `TimelineReactions/Tataru/Arkveld.lua` | Guardian Arkveld EX | Arkveld helper for any job (92 reactions): limit cut arrows, tower picker and puddle countdown, role-based safety arrows |
 | `TimelineReactions/Tataru/M4S autosim.lua` | M4S (Wicked Thunder) | Universal AutoSim for any job (3 reactions): kill time, phase-transition full downtime, melee and caster/movement windows re-timed on the real boss abilities. Role safespot draws for any job (78 reactions): an arrow and circle to your Party Roster slot's spot for every mechanic from Bewitching Flight to Sword Quiver |
@@ -46,6 +46,7 @@ Copy a file from `TimelineReactions/Tataru` into `TensorReactions/TimelineReacti
 
 ### 2026-11-06
 
+- **Zelenia EX (`Tataru-Zelen.lua`):** new pre-pull settings window to choose where DPS go for Bloom 4 Thorns: **DPS B** (east, supports D) or **DPS D** (west, supports B). The Thorns arrow follows your choice. The window closes 3 seconds after combat starts and comes back after a wipe. Your choice is saved with FileSave/FileLoad in `TensorReactions\Settings\Tataru-Zelen.settings.lua`, so it is kept across reloads and updates.
 - **M4S (`M4S autosim.lua`):** role safespot draws (Party Roster slot). You get an arrow and circle to your own spot for:
   - Bewitching Flight, Electrifying Witch Hunt (first spreads and near/far baits), Narrowing/Widening Witch Hunt (in/out and baits), Electrope Edge 1 and 2 (safe quadrant, debuff corners, spread/partners), Stampeding Thunder column and Electron Stream / cannon debuffs, and the transition cones with Conduction Point.
   - Sabertail light-party stacks, every Wicked Special, both Mustard Bombs, all three Tail Thrusts (fire/water), Twilight and Midnight Sabbath, Raining Swords towers and Chain Lightning safe swords, Sunrise Sabbath cannons/towers, and Sword Quiver partner stacks.
