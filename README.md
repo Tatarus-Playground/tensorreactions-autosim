@@ -59,6 +59,10 @@ Copy a file from `TimelineReactions/Tataru` into `TensorReactions/TimelineReacti
 
 ## Changelog
 
+### 2026-11-07
+
+- **Zelenia EX (`Tataru-Zelen.lua`):** Bloom 2 safe side reworked. The floor pattern is now read straight from the arena floor, and the side follows the same rule as cactbot and BossMod: floor with inner WNW red goes west when in is safe first and east when out is safe first, and the other floor is the mirror. The old guess from the Bloom 1 pulse is gone (it was right in only about 6 of 10 recorded pulls). If the floor can't be read, the arrow turns white and the route arrows take the east route (ESE, then ESE in the other ring, then ENE after the second Thunder IV), which was clean on both floors in every recorded pull.
+
 ### 2026-11-06
 
 - **Guardian Arkveld EX (`Arkveld.lua`):** the tower picker now says who each tower is for and which waymark it is next to, for example "Small tower NW - R1 (by 1)", "Small tower NE - R2 / H2 (by 2)" and "Big tower NW - MT (between D and 1)". Settings are now saved with FileSave/FileLoad in `TensorReactions\Settings\Arkveld.settings.lua`, the same folder as the Zelenia settings. A choice saved in the old `ArkveldEX_settings.lua` is still read.
