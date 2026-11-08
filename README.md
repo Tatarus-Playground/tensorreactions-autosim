@@ -42,12 +42,6 @@ The tower picker in the Arkveld EX helper names each tower by who takes it and t
 | Small tower SE | M2 | by 3 |
 | Small tower SW | M1 / H1 | by 4 |
 
-## Strat sources
-
-- M11S Meteorain: [Toxic Friends - M11S](https://raidplan.io/plan/HJAbE7fuWodELUSB) on RaidPlan (slides 11-13), by Cute Animal @ Omega and Toxic Friends. Its Arena Split plan: [raidplan.io/plan/B82fx_zDqUMr5KFC](https://raidplan.io/plan/B82fx_zDqUMr5KFC).
-
-Screenshots of these plans are not included in this repository, because the plans carry no license that allows redistributing them. Open the links above to see them.
-
 ## Using the reactions
 
 ### Auto-updates with AnyoneCore (recommended)
