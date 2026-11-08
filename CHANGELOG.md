@@ -4,6 +4,7 @@ Newest changes first.
 
 ## 2026-11-08
 
+- **M11S (`M11s Autosim.lua`):** the weapon draws are turned off: the Assault Evolved 1 and 2 sword / scythe spots and the Ultimate Trophy Weapons sword / scythe spot. The tornado bait draw stays on.
 - **M11S (`M11s Autosim.lua`):** Meteorain draws added back, following the [Toxic Friends M11S plan](https://raidplan.io/plan/HJAbE7fuWodELUSB) (slides 11-13):
   - Your spot for each Meteorain step (Party Roster slot), with the start of Meteorain and the tank tethers tracked.
   - Melee DPS: image markers on the M1 and M2 spots, which turn green when you stand in yours.

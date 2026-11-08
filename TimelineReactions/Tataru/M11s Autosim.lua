@@ -293,6 +293,7 @@ local tbl =
 				{
 				},
 				displayPath = "Role Draws",
+				enabled = false,
 				eventType = 12,
 				loop = true,
 				mechanicTime = 47.765,
@@ -340,6 +341,7 @@ local tbl =
 				{
 				},
 				displayPath = "Role Draws",
+				enabled = false,
 				eventType = 12,
 				loop = true,
 				mechanicTime = 92.436,
@@ -434,6 +436,7 @@ local tbl =
 				{
 				},
 				displayPath = "Role Draws",
+				enabled = false,
 				eventType = 12,
 				loop = true,
 				mechanicTime = 191.903,
