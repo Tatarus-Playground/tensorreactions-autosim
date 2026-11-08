@@ -7,12 +7,11 @@ Newest changes first.
 - **M10S (`M10s autosim.lua`):** new auto-targeting:
   - When Firesnaking / Xtreme Firesnaking hits you, you target Red Hot; when Watersnaking / Xtreme Watersnaking hits you, you target Deep Blue. If you are already on that boss, nothing changes.
   - When a boss comes back into the arena (after the boss swap, Sickest Take-off, Xtreme Spectacular, Watery Grave and Arena Split), you target the boss that matches your fire or water debuff. Without a debuff you stay on your boss if it is still up, otherwise you target the one that came back.
-- **M10S (`M10s autosim.lua`):** Arena Split fixed.
-  - After the spread, the arrow now moves you round Deep Blue to the nearest angle clear of every second cone. Double-dip fires the same cones again and Reverse splits each cone in two, so the old spot could leave you in a cone.
+- **M10S (`M10s autosim.lua`):** Arena Split reworked to follow the strat step by step: your puddle spot, then your spread spot, then one safe spot from the second cones, then your pair stack, the spot before the knockback and your light-party stack.
+  - Safe spot after the spread: on Double-dip you step into the empty slice, on Reverse you stay unless a split cone is on you (far melees step aside). It is the nearest spot clear of every second cone, worked out from where the first cones actually went. The old spot could leave you in your own cone.
+  - The Steam Burst bubbles that burst around the light-party stacks are avoided: your stack spot moves out of one if it would reach it.
   - Arena Split is now recognised by where Deep Blue stands, not by counting Alley-oops.
   - The puddle spot is only shown until the puddles drop. The arrow no longer points back to your puddle spot later in the mechanic (this happened when the draw lost track of the Alley-oop, for example when watching a replay).
-  - The safe spot after your spread now also avoids the Steam Burst AoEs. Every lava puddle a water cone touches bursts, and every cone that crosses the middle line bursts there. The spot after hit 2 stays clear of the first wave, you then hold a spot clear of it until it goes off, and the pair-stack spot moves slightly if the second wave would reach it. Your light-party stack spot also moves out of the late bubble bursts (puddles, pair-stack spots, centre and surf line) when one would reach it.
-  - New spread spots for the far group (the group away from Deep Blue), different for Double-dip and Reverse. Each spot sits in a gap of the other cones, so the dodge after the spread stays short and clear of the Steam Bursts, and your own cones and bursts miss where the rest of the party usually stands. The near group spots are unchanged. On Reverse, the new far T and far M spots are close enough that they clip each other if two players in the party use these draws.
   - The knockback is 10 y, so the spot before it now carries you onto your light-party stack. The draw switches to the stack when the knockback actually lands and stays up until the bubbles burst.
 - **M10S (`M10s autosim.lua`):** the Insane Air 1 boss-landing arrow is removed.
 
