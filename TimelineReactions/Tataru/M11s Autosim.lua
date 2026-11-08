@@ -133,7 +133,7 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- M11S draws: weapon resolves (helper 46104 axe / 46105 scythe / 46106 sword at the weapon), Dance of Domination\n-- lines (46112, 6 casters) and Meteorain start (46132)\nlocal e = eventArgs\nif not e then return end\nlocal sp = e.spellID\nlocal TYPES = {[46104] = \"axe\", [46105] = \"scythe\", [46106] = \"sword\"}\nif not (TYPES[sp] or sp == 46112 or sp == 46132) then return end\ndata.m11 = data.m11 or {}\nlocal m = data.m11\nif sp == 46132 then m.mr0 = Now(); return end\nlocal ent = TensorCore.mGetEntity(e.entityID)\nlocal ps = ent and ent.pos\nif not ps then return end\nif sp == 46112 then\n  if not m.dod or Now() - m.dod.t > 3000 then m.dod = {t = Now(), lines = {}} end\n  local L = m.dod.lines\n  L[#L + 1] = {x = ps.x, z = ps.z, h = ps.h or 0}\n  return\nend\n-- weapon type is known now: tag the weapon at this spot\nlocal q = m.q\nif not q then return end\nfor _, w in ipairs(q) do\n  if not w.done and math.abs(w.x - ps.x) < 2.5 and math.abs(w.z - ps.z) < 2.5 then\n    w.type = TYPES[sp]; w.active = Now(); break\n  end\nend\n",
+							actionLua = "-- M11S draws: weapon resolves (helper 46104 axe / 46105 scythe / 46106 sword at the weapon), Dance of Domination\n-- lines (46112, 6 casters)\nlocal e = eventArgs\nif not e then return end\nlocal sp = e.spellID\nlocal TYPES = {[46104] = \"axe\", [46105] = \"scythe\", [46106] = \"sword\"}\nif not (TYPES[sp] or sp == 46112) then return end\ndata.m11 = data.m11 or {}\nlocal m = data.m11\nlocal ent = TensorCore.mGetEntity(e.entityID)\nlocal ps = ent and ent.pos\nif not ps then return end\nif sp == 46112 then\n  if not m.dod or Now() - m.dod.t > 3000 then m.dod = {t = Now(), lines = {}} end\n  local L = m.dod.lines\n  L[#L + 1] = {x = ps.x, z = ps.z, h = ps.h or 0}\n  return\nend\n-- weapon type is known now: tag the weapon at this spot\nlocal q = m.q\nif not q then return end\nfor _, w in ipairs(q) do\n  if not w.done and math.abs(w.x - ps.x) < 2.5 and math.abs(w.z - ps.z) < 2.5 then\n    w.type = TYPES[sp]; w.active = Now(); break\n  end\nend\n",
 							name = "[Draw] M11S - capture casts (channels)",
 							uuid = "916af86d-5fe2-9c60-97c4-279c790fecfd",
 							version = 2.1,
@@ -255,40 +255,6 @@ local tbl =
 				timerEndOffset = 680,
 				timerStartOffset = -8,
 				uuid = "41c8b385-a920-c6e7-ad80-cb9ba43a8c2a",
-				version = 2,
-			},
-		},
-		
-		{
-			data = 
-			{
-				actions = 
-				{
-					
-					{
-						data = 
-						{
-							aType = "Lua",
-							actionLua = "-- M11S draws: Meteorain clone tethers (356) - clone cardinal + which meteor (north or south-west)\nlocal e = eventArgs\nif not (e and e.newTetherID == 356) then return end\nlocal c = TensorCore.mGetEntity(e.sourceEntityID)\nlocal mt = TensorCore.mGetEntity(e.newTargetID)\nif not (c and c.pos and mt and mt.pos) then return end\ndata.m11 = data.m11 or {}\nlocal m = data.m11\nm.teth = m.teth or {}\nm.srcN = m.srcN or {}\n-- which meteor this clone's tether belongs to is decided when it targets the Comet (ContentID 14306);\n-- once a player holds it, keep that answer instead of the holder's position\nlocal north\nif e.newTargetContentID == 14306 then north = mt.pos.z < 100; m.srcN[e.sourceEntityID] = north\nelse north = m.srcN[e.sourceEntityID] end\nif north == nil then return end\nm.teth[#m.teth + 1] = {t = Now(), cx = c.pos.x, cz = c.pos.z, north = north}\n",
-							name = "[Draw] M11S - capture Meteorain tethers",
-							uuid = "f843a4ca-c54a-f0e4-9d23-831d99f6a531",
-							version = 2.1,
-						},
-					},
-				},
-				conditions = 
-				{
-				},
-				displayPath = "Role Draws",
-				eventType = 15,
-				loop = true,
-				mechanicTime = 10.203,
-				name = "[Draw] M11S - capture Meteorain tethers",
-				timeRange = true,
-				timelineIndex = 1,
-				timerEndOffset = 680,
-				timerStartOffset = -8,
-				uuid = "21f13c22-b10f-c910-8fb5-ebd62ab8e873",
 				version = 2,
 			},
 		},
@@ -539,40 +505,6 @@ local tbl =
 				uuid = "c8a76174-d10b-ad15-b174-b4c450043e1d",
 			},
 			objectType = "folder",
-		},
-		
-		{
-			data = 
-			{
-				actions = 
-				{
-					
-					{
-						data = 
-						{
-							aType = "Lua",
-							actionLua = "local Ro = AnyoneCore and AnyoneCore.Roster\nlocal slot = Ro and Ro.mySlot and Ro.mySlot()\nif not slot and GetCurrentRole then local r = GetCurrentRole(); slot = (r == \"MT\" and \"T1\") or (r == \"OT\" and \"T2\") or r end\nif not slot then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\nlocal function go(x, z)\n  local dest = {x = x, y = p.pos.y, z = z}\n  local g = TensorCore.getCachedDrawer(0x7733FF33, 0xAA33FF33, 0xFF33FF33, 0xFF000000, 2)\n  local flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY\n  local d = TensorCore.getDistance2d(p.pos, dest)\n  if d > 0.8 then\n    local tip = math.min(1.5, d * 0.35)\n    g:addArrow(p.pos.x, p.pos.y, p.pos.z, TensorCore.getHeadingToTarget(p.pos, dest), math.max(0.1, d - tip), 0.65, tip, 1.3, false, flags)\n  end\n  g:addCircle(dest.x, dest.y, dest.z, 0.65, false, flags)\nend\n-- Meteorain: your spot for each step (bait order M > H > R, meteors NE + SW, line stacks NW then behind the NE / NW / NE\n-- meteor, hide SW behind the 3 meteors). Tanks: stand 7y toward the clone that tethers your meteor (MT north meteor,\n-- OT south-west meteor). Never mirrors (32 clean logged pulls). Times are seconds after Meteorain starts casting.\nlocal m = data.m11\nlocal t0 = m and m.mr0\nif not t0 then return end\nlocal el = (Now() - t0) / 1000\nlocal ST = {\n  M1 = {{6.09, 101, 99.2}, {14.08, 104.8, 95.4}, {15.97, 105.9, 94.2}, {22.82, 106.8, 93.3}, {32.77, 93, 93.5}, {42.77, 107.3, 92.5}, {55.32, 94.7, 105.5}, {61.32, 83.3, 117.2}},\n  M2 = {{6.09, 99, 101.4}, {14.08, 95.5, 104.7}, {22.82, 106.8, 93.3}, {32.77, 93, 93.5}, {42.77, 107.3, 92.5}, {55.32, 94.7, 105.5}, {61.32, 83.3, 117.2}},\n  H1 = {{12.87, 93.1, 93.2}, {15.97, 98.5, 99.0}, {24.05, 95.6, 95.7}, {32.77, 93, 93.5}, {42.77, 107.3, 92.5}, {61.32, 83.3, 117.2}},\n  H2 = {{12.87, 93.1, 93.2}, {15.97, 98.5, 99.0}, {24.05, 90.4, 110.3}, {32.77, 93, 93.5}, {42.77, 107.3, 92.5}, {61.32, 83.3, 117.2}},\n  R1 = {{12.87, 93.1, 93.2}, {22.82, 106.8, 93.3}, {25.93, 99, 101.5}, {34.08, 105.3, 95.0}, {42.77, 107.3, 92.5}, {61.32, 83.3, 117.2}},\n  R2 = {{12.87, 93.1, 93.2}, {22.82, 106.8, 93.3}, {25.93, 99, 101.5}, {34.08, 85.1, 115.3}, {42.77, 107.3, 92.5}, {61.32, 83.3, 117.2}},\n  T1 = {{12.87, 95.2, 95.3}, {16.42}, {22.02, \"T\"}, {26.32}, {32.02, \"T\"}, {36.37}, {41.97, \"T\"}, {47.82}, {55.32, 94.7, 105.5}, {61.32, 83.3, 117.2}},\n  T2 = {{12.87, 95.2, 95.3}, {16.42}, {22.02, \"T\"}, {26.32}, {32.02, \"T\"}, {36.37}, {41.97, \"T\"}, {47.82}, {55.32, 94.7, 105.5}, {61.32, 83.3, 117.2}}\n}\nlocal steps = ST[slot]\nif not steps then return end\nlocal cur\nfor _, s in ipairs(steps) do if el < s[1] then cur = s; break end end\nif not cur or not cur[2] then return end\nif cur[2] == \"T\" then\n  local tt = m.teth\n  if not tt then return end\n  local north = (slot == \"T1\")\n  for i = #tt, 1, -1 do\n    local r = tt[i]\n    if Now() - r.t < 7000 and r.north == north then\n      local dx, dz = r.cx - 100, r.cz - 100\n      local L = math.sqrt(dx * dx + dz * dz)\n      if L < 1 then return end\n      if not north and dx > 10 and math.abs(dz) < 5 then go(106, 105) return end\n      go(100 + 7 * dx / L, 100 + 7 * dz / L)\n      return\n    end\n  end\n  return\nend\ngo(cur[2], cur[3])\n",
-							name = "[Draw] Meteorain - your spot",
-							uuid = "255b6d2e-b536-b248-860f-ec5717d76e88",
-							version = 2.1,
-						},
-					},
-				},
-				conditions = 
-				{
-				},
-				displayPath = "Role Draws",
-				eventType = 12,
-				loop = true,
-				mechanicTime = 291.105,
-				name = "[Draw] Meteorain - your spot",
-				timeRange = true,
-				timelineIndex = 79,
-				timerEndOffset = 56,
-				timerStartOffset = -5,
-				uuid = "a1f38c3a-6405-4c8f-ada3-9d0f652d446a",
-				version = 2,
-			},
 		},
 	},
 	inheritedProfiles = 

@@ -4,6 +4,7 @@ Newest changes first.
 
 ## 2026-11-08
 
+- **M11S (`M11s Autosim.lua`):** the Meteorain draws are removed, because they did not work.
 - **M10S (`M10s autosim.lua`):** new auto-targeting:
   - When Firesnaking / Xtreme Firesnaking hits you, you target Red Hot; when Watersnaking / Xtreme Watersnaking hits you, you target Deep Blue. If you are already on that boss, nothing changes.
   - When a boss comes back into the arena (after the boss swap, Sickest Take-off, Xtreme Spectacular, Watery Grave and Arena Split), you target the boss that matches your fire or water debuff. Without a debuff you stay on your boss if it is still up, otherwise you target the one that came back.
