@@ -2,6 +2,17 @@
 
 Newest changes first.
 
+## 2026-11-08
+
+- **M10S (`M10s autosim.lua`):** new auto-targeting:
+  - When Firesnaking / Xtreme Firesnaking hits you, you target Red Hot; when Watersnaking / Xtreme Watersnaking hits you, you target Deep Blue. If you are already on that boss, nothing changes.
+  - When a boss comes back into the arena (after the boss swap, Sickest Take-off, Xtreme Spectacular, Watery Grave and Arena Split), you target the boss that matches your fire or water debuff. Without a debuff you stay on your boss if it is still up, otherwise you target the one that came back.
+- **M10S (`M10s autosim.lua`):** Arena Split fixed.
+  - After the spread, the arrow now moves you round Deep Blue to the nearest angle clear of every second cone. Double-dip fires the same cones again and Reverse splits each cone in two, so the old spot could leave you in a cone.
+  - Arena Split is now recognised by where Deep Blue stands, not by counting Alley-oops.
+  - The knockback is 10 y, so the spot before it now carries you onto your light-party stack. The draw switches to the stack when the knockback actually lands and stays up until the bubbles burst.
+- **M10S (`M10s autosim.lua`):** the Insane Air 1 boss-landing arrow is removed.
+
 ## 2026-11-07
 
 - **Zelenia EX (`Tataru-Zelen.lua`):** Bloom 2 safe side reworked. The floor pattern is now read straight from the arena floor, and the side follows the same rule as cactbot and BossMod: floor with inner WNW red goes west when in is safe first and east when out is safe first, and the other floor is the mirror. The old guess from the Bloom 1 pulse is gone (it was right in only about 6 of 10 recorded pulls). If the floor can't be read, the arrow turns white and the route arrows take the east route (ESE, then ESE in the other ring, then ENE after the second Thunder IV), which was clean on both floors in every recorded pull.

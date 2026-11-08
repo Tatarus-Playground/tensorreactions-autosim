@@ -133,7 +133,7 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- M10S draws: remember Alley-oop variant, Sickest Take-off knockback line and pair stacks (channel starts)\nlocal e = eventArgs\nif not e then return end\nlocal sp = e.spellID\nif sp ~= 46557 and sp ~= 46560 and sp ~= 46542 then return end\ndata.m10 = data.m10 or {}\nlocal m = data.m10\nlocal ent = TensorCore.mGetEntity(e.entityID)\nif sp == 46557 or sp == 46560 then\n  if m.ao and Now() - m.ao.t < 5000 then return end\n  local n = (m.ao and m.ao.n or 0) + 1\n  local ps = ent and ent.pos\n  -- facing is frozen at channel start: Deep Blue turns ~20 deg just before hit 2\n  m.ao = {kind = (sp == 46557) and \"DD\" or \"REV\", t = Now(), boss = e.entityID, n = n,\n          x = ps and ps.x, z = ps and ps.z, h = ps and ps.h}\nelseif sp == 46542 then\n  if ent and ent.pos then m.kb = {t = Now(), z = ent.pos.z, east = (ent.pos.h or 0) > 0} end\nend\n",
+							actionLua = "-- M10S draws: remember Alley-oop variant, Sickest Take-off knockback line and pair stacks (channel starts)\nlocal e = eventArgs\nif not e then return end\nlocal sp = e.spellID\nif sp ~= 46557 and sp ~= 46560 and sp ~= 46542 then return end\ndata.m10 = data.m10 or {}\nlocal m = data.m10\nlocal ent = TensorCore.mGetEntity(e.entityID)\nif sp == 46557 or sp == 46560 then\n  if m.ao and Now() - m.ao.t < 5000 then return end\n  local n = (m.ao and m.ao.n or 0) + 1\n  local ps = ent and ent.pos\n  -- facing is frozen at channel start: Deep Blue turns ~20 deg just before hit 2\n  m.ao = {kind = (sp == 46557) and \"DD\" or \"REV\", t = Now(), boss = e.entityID, n = n,\n          x = ps and ps.x, z = ps and ps.z, h = ps and ps.h}\nelseif sp == 46542 then\n  if ent and ent.pos then\n    -- knockback direction = surf heading (+pi/2 east, -pi/2 west); unknown if the heading can't be read\n    local h = ent.pos.h\n    local east\n    if h and math.abs(h) > 0.5 then east = h > 0 end\n    m.kb = {t = Now(), z = ent.pos.z, east = east}\n  end\nend\n",
 							name = "[Draw] M10S - capture casts (channels)",
 							uuid = "b7627d78-158f-ce1b-8db7-75cb1932aade",
 							version = 2.1,
@@ -167,7 +167,7 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- M10S draws: Insane Air landings (pop the queue) and Xtreme Firesnaking/Watersnaking light-party split\nlocal e = eventArgs\nif not e then return end\nlocal sp = e.spellID\nlocal RED = {[46575] = true, [46579] = true, [46583] = true}\nlocal BLUE = {[46576] = true, [46580] = true, [46584] = true}\ndata.m10 = data.m10 or {}\nlocal m = data.m10\nif RED[sp] or BLUE[sp] then\n  local key = RED[sp] and \"red\" or \"blue\"\n  local ia = m.ia\n  if not ia then return end\n  -- mark the revealed spot where the boss actually landed (and any older ones) as done\n  local ent = TensorCore.mGetEntity(e.entityID)\n  local hit\n  for i, set in ipairs(ia.sets) do\n    local sp2 = set[key]\n    if sp2 and not sp2.landed and ent and ent.pos and math.abs(ent.pos.x - sp2.x) < 2.5 and math.abs(ent.pos.z - sp2.z) < 2.5 then hit = i end\n  end\n  for i, set in ipairs(ia.sets) do\n    local sp2 = set[key]\n    if sp2 and not sp2.landed and (not hit or i <= hit) then sp2.landed = true; if not hit then break end end\n  end\nelseif sp == 46510 or sp == 46511 then\n  m.snakeT = m.snakeT or Now()\n  local p = TensorCore.mGetPlayer()\n  if not (p and e.hitTargets) then return end\n  for _, id in ipairs(e.hitTargets) do\n    if id == p.id then m.fire = (sp == 46510); m.fireT = Now() end\n  end\nend\n",
+							actionLua = "-- M10S draws: Insane Air landings (pop the queue), Alley-oop hit-1 cones, Sick Swell knockback, Xtreme Firesnaking/Watersnaking light-party split\nlocal e = eventArgs\nif not e then return end\nlocal sp = e.spellID\nlocal RED = {[46575] = true, [46579] = true, [46583] = true}\nlocal BLUE = {[46576] = true, [46580] = true, [46584] = true}\ndata.m10 = data.m10 or {}\nlocal m = data.m10\nif RED[sp] or BLUE[sp] then\n  local key = RED[sp] and \"red\" or \"blue\"\n  local ia = m.ia\n  if not ia then return end\n  -- mark the revealed spot where the boss actually landed (and any older ones) as done\n  local ent = TensorCore.mGetEntity(e.entityID)\n  local hit\n  for i, set in ipairs(ia.sets) do\n    local sp2 = set[key]\n    if sp2 and not sp2.landed and ent and ent.pos and math.abs(ent.pos.x - sp2.x) < 2.5 and math.abs(ent.pos.z - sp2.z) < 2.5 then hit = i end\n  end\n  for i, set in ipairs(ia.sets) do\n    local sp2 = set[key]\n    if sp2 and not sp2.landed and (not hit or i <= hit) then sp2.landed = true; if not hit then break end end\n  end\nelseif sp == 46558 or sp == 46561 then\n  -- Alley-oop hit 1: one cone per player from Deep Blue; keep their headings for the hit-2 dodge\n  local ent = TensorCore.mGetEntity(e.entityID)\n  if not (ent and ent.pos) then return end\n  local c = m.aoc\n  if not c or Now() - c.t > 2000 then\n    local p = TensorCore.mGetPlayer()\n    c = {t = Now(), hs = {}, bx = ent.pos.x, bz = ent.pos.z, px = p and p.pos and p.pos.x, pz = p and p.pos and p.pos.z}\n    m.aoc = c\n  end\n  c.hs[#c.hs + 1] = ent.pos.h\nelseif sp == 46540 then\n  -- Sick Swell: the Sickest Take-off knockback landed\n  if m.kb and not m.kb.hit then m.kb.hit = Now() end\nelseif sp == 46510 or sp == 46511 then\n  m.snakeT = m.snakeT or Now()\n  local p = TensorCore.mGetPlayer()\n  if not (p and e.hitTargets) then return end\n  for _, id in ipairs(e.hitTargets) do\n    if id == p.id then m.fire = (sp == 46510); m.fireT = Now() end\n  end\nend\n",
 							name = "[Draw] M10S - capture casts (landings, snaking)",
 							uuid = "04dad8da-5d38-58c0-a540-2efe0508ba35",
 							version = 2.1,
@@ -221,6 +221,49 @@ local tbl =
 				timerEndOffset = 620,
 				timerStartOffset = -8,
 				uuid = "55dd0f58-fc7a-2d5d-8f03-3414eb1df064",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "Targeting",
+				uuid = "8475f7d0-bc49-60bd-ba34-116d4c3261ad",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- M10S: a boss became targetable again (boss swaps, Sickest Take-off, Xtreme Spectacular, Watery Grave, Arena Split).\n-- Fire debuff -> Red Hot, water debuff -> Deep Blue. No debuff: keep your boss if it is still up, else take the one that came back.\nlocal e = eventArgs\nif not (e and e.isTargetable) then return end\nlocal RED, BLUE = 14370, 14369\nlocal cid = e.entityContentID\nif cid ~= RED and cid ~= BLUE then return end\nlocal p = TensorCore.mGetPlayer()\nif not p then return end\nlocal m = data.m10\nlocal want\nif TensorCore.hasAnyBuff(p, 4974, 4827) then want = RED\nelseif TensorCore.hasAnyBuff(p, 4975, 4828) then want = BLUE\nelseif m and m.elem and Now() - m.elem.t < 75000 then want = m.elem.cid end\nlocal t = TensorCore.mGetTarget()\nlocal onBoss = t and t.targetable and (t.contentid == RED or t.contentid == BLUE)\nif want then\n  if onBoss and t.contentid == want then return end\n  local l = TensorCore.getEntityGroupList(\"ContentID\", {contentid = want})\n  if not l then return end\n  for _, en in pairs(l) do\n    if type(en) == \"number\" then en = TensorCore.mGetEntity(en) end\n    if type(en) == \"table\" and en.contentid == want and en.targetable then\n      Player:SetTarget(en.id)\n      return\n    end\n  end\n  return\nend\nif onBoss then return end\nPlayer:SetTarget(e.entityID)\n",
+							name = "[Target] M10S - boss returns: retarget",
+							uuid = "c98bee44-ecd9-1a74-8323-3d365d4eb153",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Targeting",
+				eventType = 26,
+				loop = true,
+				mechanicTime = 14.125,
+				name = "[Target] M10S - boss returns: retarget",
+				timeRange = true,
+				timelineIndex = 1,
+				timerEndOffset = 620,
+				uuid = "37c53b25-8116-6cbd-aae2-a2d009b4b1df",
 				version = 2,
 			},
 		},
@@ -284,6 +327,19 @@ local tbl =
 			},
 			objectType = "folder",
 		},
+	},
+	[57] = 
+	{
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "Targeting",
+				uuid = "1db4aac5-e89f-cdbf-bae2-8c99fd53adb9",
+			},
+			objectType = "folder",
+		},
 		
 		{
 			data = 
@@ -295,9 +351,9 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "local Ro = AnyoneCore and AnyoneCore.Roster\nlocal slot = Ro and Ro.mySlot and Ro.mySlot()\nif not slot and GetCurrentRole then local r = GetCurrentRole(); slot = (r == \"MT\" and \"T1\") or (r == \"OT\" and \"T2\") or r end\nif not slot then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\n-- Insane Air: arrow to where YOUR boss lands next; gone once it lands.\n-- Insane Air 1: G1 (T1 H1 M1 R1) = Deep Blue, G2 = Red Hot. Insane Air 2: fire party (Xtreme Firesnaking) = Red Hot,\n-- and each set one role pair swaps (Vertical = tanks, else healers, melee, ranged in turn). From 42 / 13 logged pulls.\nlocal m = data.m10\nlocal ia = m and m.ia\nif not ia then return end\nlocal g1 = (slot == \"T1\" or slot == \"H1\" or slot == \"M1\" or slot == \"R1\")\nlocal role = slot:sub(1, 1)\nfor _, set in ipairs(ia.sets) do\n  local mine\n  if ia.phase2 then\n    if m.fire == nil then return end\n    local sw = set.swapped and set.swapped[role]\n    mine = ((m.fire and not sw) or (not m.fire and sw)) and \"red\" or \"blue\"\n  else\n    mine = g1 and \"blue\" or \"red\"\n  end\n  local spot = set[mine]\n  if spot and not spot.landed then\n    local col = (mine == \"red\") and 0xFF3355FF or 0xFFFF9933\n    local dest = {x = spot.x, y = p.pos.y, z = spot.z}\n    local g = TensorCore.getCachedDrawer(0x55000000 + col % 0x1000000, 0x88000000 + col % 0x1000000, col, 0xFF000000, 2)\n    local flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY\n    local d = TensorCore.getDistance2d(p.pos, dest)\n    if d > 1.0 then\n      local tip = math.min(2.0, d * 0.3)\n      g:addArrow(p.pos.x, p.pos.y, p.pos.z, TensorCore.getHeadingToTarget(p.pos, dest), math.max(0.1, d - tip), 0.8, tip, 1.6, false, flags)\n    end\n    g:addCircle(dest.x, dest.y, dest.z, 1.2, false, flags)\n    return\n  end\nend\n",
-							name = "[Draw] Insane Air 1 - your boss landing",
-							uuid = "5af3a013-3622-c8de-a004-7a1a41c8566f",
+							actionLua = "-- M10S: hit by Firesnaking (Red Hot) or Watersnaking (Deep Blue) -> target that boss once.\n-- Already on that boss: nothing. On the other boss (or no boss): switch.\nlocal e = eventArgs\nif not (e and e.hitTargets) then return end\nlocal sp = e.spellID\nlocal want\nif sp == 45953 or sp == 46510 then want = 14370      -- fire -> Red Hot\nelseif sp == 45954 or sp == 46511 then want = 14369  -- water -> Deep Blue\nelse return end\nlocal p = TensorCore.mGetPlayer()\nif not p then return end\nlocal me = false\nfor _, id in ipairs(e.hitTargets) do if id == p.id then me = true break end end\nif not me then return end\ndata.m10 = data.m10 or {}\ndata.m10.elem = {cid = want, t = Now()}\nlocal t = TensorCore.mGetTarget()\nif t and t.contentid == want then return end\nlocal l = TensorCore.getEntityGroupList(\"ContentID\", {contentid = want})\nif not l then return end\nfor _, en in pairs(l) do\n  if type(en) == \"number\" then en = TensorCore.mGetEntity(en) end\n  if type(en) == \"table\" and en.contentid == want and en.targetable then\n    Player:SetTarget(en.id)\n    return\n  end\nend\n",
+							name = "[Target] M10S - fire/water hit: retarget once",
+							uuid = "9e05c69a-2d75-ceb2-9271-9a91ac1acfcf",
 							version = 2.1,
 						},
 					},
@@ -305,16 +361,16 @@ local tbl =
 				conditions = 
 				{
 				},
-				displayPath = "Role Draws",
-				eventType = 12,
+				displayPath = "Targeting",
+				eventType = 2,
 				loop = true,
-				mechanicTime = 194.671,
-				name = "[Draw] Insane Air 1 - your boss landing",
+				mechanicTime = 245.046,
+				name = "[Target] M10S - fire/water hit: retarget once",
 				timeRange = true,
-				timelineIndex = 43,
-				timerEndOffset = 28,
-				timerStartOffset = -8,
-				uuid = "900e4236-961d-c482-a1ea-9120dd06d029",
+				timelineIndex = 57,
+				timerEndOffset = 6,
+				timerStartOffset = -6,
+				uuid = "de0123c6-007f-d0b5-bef8-e3523901c9be",
 				version = 2,
 			},
 		},
@@ -389,7 +445,7 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "local Ro = AnyoneCore and AnyoneCore.Roster\nlocal slot = Ro and Ro.mySlot and Ro.mySlot()\nif not slot and GetCurrentRole then local r = GetCurrentRole(); slot = (r == \"MT\" and \"T1\") or (r == \"OT\" and \"T2\") or r end\nif not slot then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\nlocal function go(x, z)\n  local dest = {x = x, y = p.pos.y, z = z}\n  local g = TensorCore.getCachedDrawer(0x7733FF33, 0xAA33FF33, 0xFF33FF33, 0xFF000000, 2)\n  local flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY\n  local d = TensorCore.getDistance2d(p.pos, dest)\n  if d > 0.8 then\n    local tip = math.min(1.5, d * 0.35)\n    g:addArrow(p.pos.x, p.pos.y, p.pos.z, TensorCore.getHeadingToTarget(p.pos, dest), math.max(0.1, d - tip), 0.65, tip, 1.3, false, flags)\n  end\n  g:addCircle(dest.x, dest.y, dest.z, 0.65, false, flags)\nend\n-- Arena Split: puddles -> proteans (mirrored by Deep Blue's side) -> pair stacks -> knockback -> LP stacks.\n-- G1 (T1 H1 M1 R1) is always west, G2 east. From 18 full logged pulls.\nlocal m = data.m10\nlocal ao = m and m.ao and m.ao.n == 3 and m.ao or nil\nlocal g1 = (slot == \"T1\" or slot == \"H1\" or slot == \"M1\" or slot == \"R1\")\nlocal PUD = {R1 = {81, 81}, T1 = {81, 87.3}, M1 = {81, 112.3}, H1 = {81, 119},\n             R2 = {119, 81}, T2 = {118.3, 88.6}, M2 = {118.7, 112.2}, H2 = {119, 119}}\nif not ao then local o = PUD[slot]; if o then go(o[1], o[2]) end return end\nlocal el = (Now() - ao.t) / 1000\nlocal west = (ao.x or 100) < 100\nif el < 8.45 then\n  -- hit 1 (near group huddles by Deep Blue, far group on its own side); spots for Deep Blue WEST, mirrored for EAST\n  local NEAR = {T = {83.3, 97.5}, M = {84.6, 102.5}, H = {86.5, 107}, R = {87, 93.5}}\n  local FAR = {T = {105.5, 96.5}, M = {105.5, 104.5}, H = {105, 119.2}, R = {105, 81.1}}\n  local FAR_DD = {T = {106, 91.5}, M = {108.3, 107}, H = {109.6, 112.5}, R = {109.7, 86.4}}\n  local FAR_REV = {T = {106.4, 100}, M = {109.5, 101}}\n  local role = slot:sub(1, 1)\n  local near = (g1 == west)\n  local o\n  if near then o = NEAR[role]\n  elseif el > 5.7 and ao.kind == \"DD\" then o = FAR_DD[role]\n  elseif el > 5.7 and ao.kind == \"REV\" then o = FAR_REV[role] or FAR[role]\n  else o = FAR[role] end\n  if not o then return end\n  local x = west and o[1] or (200 - o[1])\n  go(x, o[2])\n  return\nend\nlocal PAIR = {T1 = {90, 85.5}, R1 = {90, 85.5}, H1 = {90, 112.6}, M1 = {90, 112.6},\n              T2 = {110, 87}, R2 = {110, 87}, H2 = {110, 111.5}, M2 = {110, 111.5}}\nlocal kb = m.kb\nif not kb or Now() - kb.t > 15000 then\n  local o = PAIR[slot]; if o then go(o[1], o[2]) end\n  return\nend\nlocal kel = (Now() - kb.t) / 1000\nlocal midLine = math.abs((kb.z or 85) - 100) < 5\nlocal z = midLine and 103 or 100\nif kel < 7.3 then\n  -- before the knockback: stand so the ~8.7y push lands you on your LP stack (89.5 / 110.5)\n  local x\n  if kb.east then x = g1 and 81 or 102 else x = g1 and 98 or 119 end\n  go(x, z)\nelse\n  go(g1 and 89.5 or 110.5, z)\nend\n",
+							actionLua = "local Ro = AnyoneCore and AnyoneCore.Roster\nlocal slot = Ro and Ro.mySlot and Ro.mySlot()\nif not slot and GetCurrentRole then local r = GetCurrentRole(); slot = (r == \"MT\" and \"T1\") or (r == \"OT\" and \"T2\") or r end\nif not slot then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\nlocal function clamp(v) return math.max(80.5, math.min(119.5, v)) end\nlocal function go(x, z)\n  local dest = {x = clamp(x), y = p.pos.y, z = clamp(z)}\n  local g = TensorCore.getCachedDrawer(0x7733FF33, 0xAA33FF33, 0xFF33FF33, 0xFF000000, 2)\n  local flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY\n  local d = TensorCore.getDistance2d(p.pos, dest)\n  if d > 0.8 then\n    local tip = math.min(1.5, d * 0.35)\n    g:addArrow(p.pos.x, p.pos.y, p.pos.z, TensorCore.getHeadingToTarget(p.pos, dest), math.max(0.1, d - tip), 0.65, tip, 1.3, false, flags)\n  end\n  g:addCircle(dest.x, dest.y, dest.z, 0.65, false, flags)\nend\n-- Arena Split: puddles -> proteans (mirrored by Deep Blue's side) -> pair stacks -> knockback -> LP stacks.\n-- G1 (T1 H1 M1 R1) is always west, G2 east. Checked against 21 logged pulls.\nlocal m = data.m10\nlocal ao = m and m.ao\n-- Arena Split's Alley-oop is the one where Deep Blue stands at x 88 or 112 on the centre line\nif ao then\n  local here = ao.x and ao.z and math.abs(math.abs(ao.x - 100) - 12) < 1.5 and math.abs(ao.z - 100) < 1.5\n  if not (here or (ao.x == nil and ao.n == 3)) then ao = nil end\nend\nlocal g1 = (slot == \"T1\" or slot == \"H1\" or slot == \"M1\" or slot == \"R1\")\nlocal PUD = {R1 = {81, 81}, T1 = {81, 87.3}, M1 = {81, 112.3}, H1 = {81, 119},\n             R2 = {119, 81}, T2 = {118.3, 88.6}, M2 = {118.7, 112.2}, H2 = {119, 119}}\nif not ao then local o = PUD[slot]; if o then go(o[1], o[2]) end return end\nlocal el = (Now() - ao.t) / 1000\nlocal west = (ao.x or 100) < 100\nif el < 8.45 then\n  -- hit 1: near group huddles by Deep Blue, far group on its own side (spots for Deep Blue WEST, mirrored for EAST)\n  local NEAR = {T = {83.3, 97.5}, M = {84.6, 102.5}, H = {86.5, 107}, R = {87, 93.5}}\n  local FAR = {T = {105.5, 96.5}, M = {105.5, 104.5}, H = {105, 119.2}, R = {105, 81.1}}\n  local o = ((g1 == west) and NEAR or FAR)[slot:sub(1, 1)]\n  if not o then return end\n  local x, z = west and o[1] or (200 - o[1]), o[2]\n  -- hit 2: Double-dip fires the same 8 cones again, Reverse splits each cone into two at +-22.5 deg.\n  -- Once hit 1 has gone off, move round Deep Blue to the nearest angle at least 20 deg clear of every hit-2 cone.\n  local c = m.aoc\n  if c and c.t >= ao.t and Now() - c.t > 300 and #c.hs > 0 and c.px then -- all 8 cones are in by then\n    if not c.spot then\n      local danger = {}\n      for _, h in ipairs(c.hs) do\n        if ao.kind == \"REV\" then\n          danger[#danger + 1] = h + math.rad(22.5); danger[#danger + 1] = h - math.rad(22.5)\n        else danger[#danger + 1] = h end\n      end\n      local function gap(a)\n        local mn = math.huge\n        for _, d in ipairs(danger) do\n          local v = (a - d) % (2 * math.pi)\n          if v > math.pi then v = 2 * math.pi - v end\n          if v < mn then mn = v end\n        end\n        return mn\n      end\n      local th0 = math.atan2(c.px - c.bx, c.pz - c.bz)\n      local r = math.max(4, math.min(19, math.sqrt((c.px - c.bx) ^ 2 + (c.pz - c.bz) ^ 2)))\n      local best, bestv\n      for i = 0, 40 do\n        for _, sg in ipairs({1, -1}) do\n          local th = th0 + sg * math.rad(i)\n          local v = gap(th)\n          if not bestv or v > bestv then best, bestv = th, v end\n          if v >= math.rad(20) then best, bestv = th, math.huge break end\n        end\n        if bestv == math.huge then break end\n      end\n      c.spot = {c.bx + r * math.sin(best), c.bz + r * math.cos(best)}\n    end\n    x, z = c.spot[1], c.spot[2]\n  end\n  go(x, z)\n  return\nend\nlocal PAIR = {T1 = {90, 85.5}, R1 = {90, 85.5}, H1 = {90, 112.6}, M1 = {90, 112.6},\n              T2 = {110, 87}, R2 = {110, 87}, H2 = {110, 111.5}, M2 = {110, 111.5}}\nlocal kb = m.kb\nif kb and kb.t < ao.t then kb = nil end\nif not kb then\n  local o = PAIR[slot]; if o then go(o[1], o[2]) end\n  return\nend\nif kb.hit and Now() - kb.hit > 4500 then return end -- LP stacks and Steam Burst bubbles done\nlocal z = (math.abs((kb.z or 85) - 100) < 5) and 103 or 100\nlocal lpx = g1 and 89 or 111\n-- after the knockback (Sick Swell lands ~7 s after the surf starts): LP stack, 11 y from the centre bubble\nif kb.hit or (Now() - kb.t) > 7100 or kb.east == nil then go(lpx, z) return end\n-- before it: stand 10 y up-wind of your LP stack, the push carries you onto it\ngo(kb.east and (lpx - 10) or (lpx + 10), z)\n",
 							name = "[Draw] Arena Split - your spot",
 							uuid = "19a2732d-52c1-e400-a6c0-e015beedb94d",
 							version = 2.1,
@@ -406,7 +462,7 @@ local tbl =
 				name = "[Draw] Arena Split - your spot",
 				timeRange = true,
 				timelineIndex = 118,
-				timerEndOffset = 19,
+				timerEndOffset = 22,
 				timerStartOffset = -14,
 				uuid = "e7286e64-f08c-385f-b901-13861cf2a284",
 				version = 2,
@@ -569,6 +625,53 @@ local tbl =
 				timelineIndex = 126,
 				timerEndOffset = 27,
 				uuid = "84f60369-c42a-a129-8140-5c3424bd880d",
+				version = 2,
+			},
+		},
+	},
+	[129] = 
+	{
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "Targeting",
+				uuid = "7aa3aec6-8009-5d53-94fa-70e38f8f9a0f",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- M10S: hit by Firesnaking (Red Hot) or Watersnaking (Deep Blue) -> target that boss once.\n-- Already on that boss: nothing. On the other boss (or no boss): switch.\nlocal e = eventArgs\nif not (e and e.hitTargets) then return end\nlocal sp = e.spellID\nlocal want\nif sp == 45953 or sp == 46510 then want = 14370      -- fire -> Red Hot\nelseif sp == 45954 or sp == 46511 then want = 14369  -- water -> Deep Blue\nelse return end\nlocal p = TensorCore.mGetPlayer()\nif not p then return end\nlocal me = false\nfor _, id in ipairs(e.hitTargets) do if id == p.id then me = true break end end\nif not me then return end\ndata.m10 = data.m10 or {}\ndata.m10.elem = {cid = want, t = Now()}\nlocal t = TensorCore.mGetTarget()\nif t and t.contentid == want then return end\nlocal l = TensorCore.getEntityGroupList(\"ContentID\", {contentid = want})\nif not l then return end\nfor _, en in pairs(l) do\n  if type(en) == \"number\" then en = TensorCore.mGetEntity(en) end\n  if type(en) == \"table\" and en.contentid == want and en.targetable then\n    Player:SetTarget(en.id)\n    return\n  end\nend\n",
+							name = "[Target] M10S - fire/water hit: retarget once",
+							uuid = "a5f22003-47c5-f941-be77-ddc900b3662e",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Targeting",
+				eventType = 2,
+				loop = true,
+				mechanicTime = 469.153,
+				name = "[Target] M10S - fire/water hit: retarget once",
+				timeRange = true,
+				timelineIndex = 129,
+				timerEndOffset = 6,
+				timerStartOffset = -6,
+				uuid = "ee071106-4124-634c-8452-2f5e1eaff5bc",
 				version = 2,
 			},
 		},
