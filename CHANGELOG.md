@@ -6,6 +6,7 @@ Newest changes first.
 
 - **M11S (`M11s Autosim.lua`):** Meteorain shows only your own spot:
   - The M1 / M2 and R1 / R2 image markers now show only your Party Roster slot's marker (M1, M2, R1 or R2), not both.
+  - All Meteorain draws now follow only the AnyoneCore Party Roster. Without a roster slot they show nothing, instead of guessing your role another way.
   - Third set: the "your spot" arrow had R1 and R2 the wrong way round. R1 now goes south-west (by 4) and R2 north-east, the same as the R1 / R2 markers.
 - **M11S (`M11s Autosim.lua`):** the weapon draws are turned off: the Assault Evolved 1 and 2 sword / scythe spots and the Ultimate Trophy Weapons sword / scythe spot. The tornado bait draw stays on.
 - **M11S (`M11s Autosim.lua`):** Meteorain draws added back, following the [Toxic Friends M11S plan](https://raidplan.io/plan/HJAbE7fuWodELUSB) (slides 11-13):
