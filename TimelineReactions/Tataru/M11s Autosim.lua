@@ -201,7 +201,7 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- M11S draws: weapons (ContentID 108) appear. Sets of 3 appear together (order: the one facing outward first,\n-- then clockwise); Ultimate Trophy Weapons appear one by one in resolve order.\nlocal e = eventArgs\nif not (e and e.isVisible and e.entityContentID == 108) then return end\nlocal ent = TensorCore.mGetEntity(e.entityID)\nlocal ps = ent and ent.pos\nif not ps then return end\ndata.m11 = data.m11 or {}\nlocal m = data.m11\nlocal now = Now()\nif not m.q or now - (m.lastVis or 0) > 20000 then m.q = {}; m.pend = nil; m.nvis = 0 end\nm.lastVis = now\nm.nvis = (m.nvis or 0) + 1\nm.pend = m.pend or {}\nlocal TY = {[19184] = \"axe\", [19185] = \"scythe\", [19186] = \"sword\"}\nm.pend[#m.pend + 1] = {id = e.entityID, x = ps.x, z = ps.z, h = ps.h or 0, t = now, n = m.nvis, type = TY[ent.modelid]}\n",
+							actionLua = "-- M11S draws: weapons (ContentID 108) appear. Sets of 3 appear together (order: the one facing outward first,\n-- then clockwise); Ultimate Trophy Weapons appear one by one in resolve order.\nlocal e = eventArgs\nif not (e and e.isVisible and e.entityContentID == 108) then return end\nlocal ent = TensorCore.mGetEntity(e.entityID)\nlocal ps = ent and ent.pos\nif not ps then return end\ndata.m11 = data.m11 or {}\nlocal m = data.m11\nlocal now = Now()\nif not m.q or now - (m.lastVis or 0) > 20000 then m.q = {}; m.pend = nil; m.nvis = 0 end\nm.lastVis = now\nm.nvis = (m.nvis or 0) + 1\nm.pend = m.pend or {}\n-- type from the show animation (capture weapon type), which fires in the same frame; if it comes after this, it tags the entry itself\nlocal wt = m.wtype and m.wtype[e.entityID]\nlocal typ = (wt and now - wt.t < 3000) and wt.type or nil\nm.pend[#m.pend + 1] = {id = e.entityID, x = ps.x, z = ps.z, h = ps.h or 0, t = now, n = m.nvis, type = typ}\n",
 							name = "[Draw] M11S - capture weapons appearing",
 							uuid = "4fbea91a-5c4c-883d-83b3-e5c379fc30c2",
 							version = 2.1,
@@ -293,7 +293,6 @@ local tbl =
 				{
 				},
 				displayPath = "Role Draws",
-				enabled = false,
 				eventType = 12,
 				loop = true,
 				mechanicTime = 47.765,
@@ -303,6 +302,40 @@ local tbl =
 				timerEndOffset = 12.5,
 				timerStartOffset = -9,
 				uuid = "3ddbfb6c-880c-dad0-9937-9d3c6e25fa90",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- M11S draws: weapon type from its show animation the moment it appears (sword 4561, axe 4562, scythe 4563).\n-- Lua can't read a weapon's model ID, so this is what tells the draws which weapon is which.\nlocal e = eventArgs\nif not (e and e.entityContentID == 108) then return end\nlocal TY = {[4561] = \"sword\", [4562] = \"axe\", [4563] = \"scythe\"}\nlocal typ = TY[e.newAnimID]\nif not typ then return end\ndata.m11 = data.m11 or {}\nlocal m = data.m11\nlocal now = Now()\nm.wtype = m.wtype or {}\nm.wtype[e.entityID] = {type = typ, t = now}\n-- the same weapon entities come back in later sets: only tag an entry that appeared in the last 3 s\nfor _, L in ipairs({m.pend or {}, m.q or {}}) do\n  for i = #L, 1, -1 do\n    local w = L[i]\n    if w.id == e.entityID and not w.done and now - (w.t or 0) < 3000 then w.type = typ; break end\n  end\nend\n",
+							name = "[Draw] M11S - capture weapon type (show animation)",
+							uuid = "457278fc-2c0a-4872-b2db-452ff0c1a20a",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 23,
+				loop = true,
+				mechanicTime = 47.765,
+				name = "[Draw] M11S - capture weapon type (show animation)",
+				timeRange = true,
+				timelineIndex = 7,
+				timerEndOffset = -5,
+				timerStartOffset = -12,
+				uuid = "04d04163-19f7-b96d-b4ca-ca4393e0ea5c",
 				version = 2,
 			},
 		},
@@ -341,7 +374,6 @@ local tbl =
 				{
 				},
 				displayPath = "Role Draws",
-				enabled = false,
 				eventType = 12,
 				loop = true,
 				mechanicTime = 92.436,
@@ -351,6 +383,40 @@ local tbl =
 				timerEndOffset = 12.5,
 				timerStartOffset = -20,
 				uuid = "83c99906-7d2e-9f75-8fee-8fd84fb0dd70",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- M11S draws: weapon type from its show animation the moment it appears (sword 4561, axe 4562, scythe 4563).\n-- Lua can't read a weapon's model ID, so this is what tells the draws which weapon is which.\nlocal e = eventArgs\nif not (e and e.entityContentID == 108) then return end\nlocal TY = {[4561] = \"sword\", [4562] = \"axe\", [4563] = \"scythe\"}\nlocal typ = TY[e.newAnimID]\nif not typ then return end\ndata.m11 = data.m11 or {}\nlocal m = data.m11\nlocal now = Now()\nm.wtype = m.wtype or {}\nm.wtype[e.entityID] = {type = typ, t = now}\n-- the same weapon entities come back in later sets: only tag an entry that appeared in the last 3 s\nfor _, L in ipairs({m.pend or {}, m.q or {}}) do\n  for i = #L, 1, -1 do\n    local w = L[i]\n    if w.id == e.entityID and not w.done and now - (w.t or 0) < 3000 then w.type = typ; break end\n  end\nend\n",
+							name = "[Draw] M11S - capture weapon type (show animation)",
+							uuid = "56628143-6f07-9816-b425-c4bc89c0a633",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 23,
+				loop = true,
+				mechanicTime = 92.436,
+				name = "[Draw] M11S - capture weapon type (show animation)",
+				timeRange = true,
+				timelineIndex = 20,
+				timerEndOffset = -15,
+				timerStartOffset = -22,
+				uuid = "5f2d2717-d714-3700-b9e1-2db3ff5935bf",
 				version = 2,
 			},
 		},
@@ -436,7 +502,6 @@ local tbl =
 				{
 				},
 				displayPath = "Role Draws",
-				enabled = false,
 				eventType = 12,
 				loop = true,
 				mechanicTime = 191.903,
@@ -446,6 +511,40 @@ local tbl =
 				timerEndOffset = 28,
 				timerStartOffset = -8,
 				uuid = "f5d191f9-539c-ddd1-a59a-168fa13eff2c",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- M11S draws: weapon type from its show animation the moment it appears (sword 4561, axe 4562, scythe 4563).\n-- Lua can't read a weapon's model ID, so this is what tells the draws which weapon is which.\nlocal e = eventArgs\nif not (e and e.entityContentID == 108) then return end\nlocal TY = {[4561] = \"sword\", [4562] = \"axe\", [4563] = \"scythe\"}\nlocal typ = TY[e.newAnimID]\nif not typ then return end\ndata.m11 = data.m11 or {}\nlocal m = data.m11\nlocal now = Now()\nm.wtype = m.wtype or {}\nm.wtype[e.entityID] = {type = typ, t = now}\n-- the same weapon entities come back in later sets: only tag an entry that appeared in the last 3 s\nfor _, L in ipairs({m.pend or {}, m.q or {}}) do\n  for i = #L, 1, -1 do\n    local w = L[i]\n    if w.id == e.entityID and not w.done and now - (w.t or 0) < 3000 then w.type = typ; break end\n  end\nend\n",
+							name = "[Draw] M11S - capture weapon type (show animation)",
+							uuid = "494ba078-184d-0005-88ec-4f03bbf84076",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 23,
+				loop = true,
+				mechanicTime = 191.903,
+				name = "[Draw] M11S - capture weapon type (show animation)",
+				timeRange = true,
+				timelineIndex = 48,
+				timerEndOffset = 18,
+				timerStartOffset = -9,
+				uuid = "fdf18d51-95c8-005e-af49-240aedd5a9ce",
 				version = 2,
 			},
 		},
