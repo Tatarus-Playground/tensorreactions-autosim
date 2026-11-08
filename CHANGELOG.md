@@ -4,7 +4,6 @@ Newest changes first.
 
 ## 2026-11-08
 
-- **Necron EX (`TataruNecron.lua`):** the Viper and Black Mage AutoSims now use the kill time of the latest clear: 471.8s instead of 480s. When Necron comes back after the intermission, the kill time is re-timed from that clear (back at 299.4s, dead at 471.8s).
 - **M9S (`M9S autosim.lua`):** new role draws for Hell in a Cell and Undead Deathmatch (AnyoneCore Party Roster only):
   - Hell in a Cell towers: G1 takes the first set, G2 the second, clockwise from north T > H > M > R. You get a line and ring to your own tower; it disappears while you stand in it and goes away when the tower goes off.
   - The group under the boss gets its Ultrasonic spot as soon as the boss starts casting. Ultrasonic Spread (role stacks): tank in the wide gap between the towers, healer in the next gap clockwise, both DPS in the next gap counter-clockwise. Ultrasonic Amp: the light party stacks in the wide gap.
