@@ -4,6 +4,10 @@ Newest changes first.
 
 ## 2026-11-08
 
+- **M11S (`M11s Autosim.lua`):** the weapon draws are back on: the Assault Evolved 1 and 2 sword / scythe spots and the Ultimate Trophy Weapons sword / scythe spot. They follow only the AnyoneCore Party Roster, as in the [Toxic Friends M11S plan](https://raidplan.io/plan/HJAbE7fuWodELUSB) (slides 3-5 and 8):
+  - Scythe: your protean spot around the weapon, clockwise from its front: MT (T1), R2, H2, M2, OT (T2), M1, H1, R1.
+  - Sword: your light-party stack behind the weapon, G1 (T1 H1 M1 R1) on its left, G2 on its right.
+  - Checked against 9 logged pulls: the spots match where players stood, and the weapon order was right every time.
 - **M11S (`M11s Autosim.lua`):** Meteorain shows only your own spot:
   - The M1 / M2 and R1 / R2 image markers now show only your Party Roster slot's marker (M1, M2, R1 or R2), not both.
   - All Meteorain draws now follow only the AnyoneCore Party Roster. Without a roster slot they show nothing, instead of guessing your role another way.
