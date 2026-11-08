@@ -20,12 +20,14 @@ Each timeline file is my live profile in TensorReactions' own save format, built
 | `TimelineReactions/Tataru/M4S autosim.lua` | M4S (Wicked Thunder) | Universal AutoSim for any job (3 reactions): kill time, phase-transition full downtime, melee and caster/movement windows re-timed on the real boss abilities. Role safespot draws for any job (78 reactions): an arrow and circle to your Party Roster slot's spot for every mechanic from Bewitching Flight to Sword Quiver |
 | `TimelineReactions/Tataru/M9S autosim.lua` | M9S (Vamp Fatale) | Universal AutoSim for any job (3 reactions): kill time, melee and caster/movement downtime, timing uncertainty, cast and boss-return syncs |
 | `TimelineReactions/Tataru/M10s autosim.lua` | M10S (Red Hot and Deep Blue) | Universal AutoSim for any job (3 reactions), Black Mage Auto LB with a Stun phase after Arena Split (3 reactions), role draws for any job (8 reactions): Alley-oop clock spots, Insane Air 2 boss-landing arrow, Arena Split spots, and auto-targeting for any job (3 reactions): the right boss after Firesnaking / Watersnaking and when a boss comes back |
-| `TimelineReactions/Tataru/M11s Autosim.lua` | M11S (The Tyrant) | Universal AutoSim for any job (3 reactions) incl. Stun phases for the knock-ups, and role draws for any job (9 reactions): Assault Evolved sword / scythe spots, Ultimate Trophy Weapons + tornado baits, Dance of Domination pair stacks |
+| `TimelineReactions/Tataru/M11s Autosim.lua` | M11S (The Tyrant) | Universal AutoSim for any job (3 reactions) incl. Stun phases for the knock-ups, and role draws for any job (14 reactions): Assault Evolved sword / scythe spots, Ultimate Trophy Weapons + tornado baits, Dance of Domination pair stacks, Meteorain (your spot for each step, image markers for the melee M1 / M2 spots and the ranged R1 / R2 third-set spots) |
 | `TimelineReactions/Tataru/M12s Phase 1 Autosim phasings .lua` | M12S phase 1 (Lindwurm) | Universal AutoSim for any job (3 reactions): phase-1 kill time, Act 3 full downtime, melee and caster/movement windows, Stun for the Cruel Coil and Raptor Knuckles knockbacks |
 | `TimelineReactions/Tataru/M12s Autosim Phase 2.lua` | M12S phase 2 (Lindwurm II) | Universal AutoSim for any job (3 reactions): phase-2 kill time, melee and caster/movement windows |
 | `GeneralReactions/Tataru/blm.lua` | Any fight | Black Mage countdown / pre-pull helpers (3 reactions) |
 
 `GeneralReactions/Tataru/blm.lua` is built from the live profile by `tools/export_autosim.py`.
+
+`TimelineReactions/Tataru/assets/` holds the images some draws use (M11S Meteorain: `M1.png`, `M2.png`, `R1.png`, `R2.png`, `spot-blue.png`, `spot-green.png`). The draws find them through `GetLuaModsPath()`, at `TensorReactions\TimelineReactions\Tataru\assets\...`, so they work in any Minion folder as long as the `assets` folder is installed there.
 
 ## Arkveld Tower names
 
@@ -39,6 +41,12 @@ The tower picker in the Arkveld EX helper names each tower by who takes it and t
 | Small tower NE | R2 / H2 | by 2 |
 | Small tower SE | M2 | by 3 |
 | Small tower SW | M1 / H1 | by 4 |
+
+## Strat sources
+
+- M11S Meteorain: [Toxic Friends - M11S](https://raidplan.io/plan/HJAbE7fuWodELUSB) on RaidPlan (slides 11-13), by Cute Animal @ Omega and Toxic Friends. Its Arena Split plan: [raidplan.io/plan/B82fx_zDqUMr5KFC](https://raidplan.io/plan/B82fx_zDqUMr5KFC).
+
+Screenshots of these plans are not included in this repository, because the plans carry no license that allows redistributing them. Open the links above to see them.
 
 ## Using the reactions
 
@@ -55,7 +63,7 @@ Updates replace the files in the `Tataru` folders. Don't edit those profiles dir
 
 ### Manual install
 
-Copy a file from `TimelineReactions/Tataru` into `TensorReactions/TimelineReactions` (or the general file into `TensorReactions/GeneralReactions`) and select it as the profile for that fight or job. To add the reactions to a profile you already have, merge the entries into that profile file instead. Close the game or reload TensorReactions first, and keep a backup of the profile. Manual copies don't update by themselves.
+Copy a file from `TimelineReactions/Tataru` into `TensorReactions/TimelineReactions` (or the general file into `TensorReactions/GeneralReactions`) and select it as the profile for that fight or job. For the M11S Meteorain image markers, also copy the `TimelineReactions/Tataru/assets` folder to `TensorReactions/TimelineReactions/Tataru/assets` (that exact path, even if the profile itself sits elsewhere). To add the reactions to a profile you already have, merge the entries into that profile file instead. Close the game or reload TensorReactions first, and keep a backup of the profile. Manual copies don't update by themselves.
 
 ## Changelog
 

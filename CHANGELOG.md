@@ -4,6 +4,11 @@ Newest changes first.
 
 ## 2026-11-08
 
+- **M11S (`M11s Autosim.lua`):** Meteorain draws added back, following the [Toxic Friends M11S plan](https://raidplan.io/plan/HJAbE7fuWodELUSB) (slides 11-13):
+  - Your spot for each Meteorain step (Party Roster slot), with the start of Meteorain and the tank tethers tracked.
+  - Melee DPS: image markers on the M1 and M2 spots, which turn green when you stand in yours.
+  - Ranged (BLM, BRD, DNC, MCH, SMN, PCT and RDM only): image markers on the R1 and R2 third-set spots.
+  - The images ship in `TimelineReactions/Tataru/assets/M11S/Meteorain/` and are found through the LuaMods path, so they work on any install. For a manual install, copy that `assets` folder as well (see the README).
 - **M11S (`M11s Autosim.lua`):** the Meteorain draws are removed, because they did not work.
 - **M10S (`M10s autosim.lua`):** new auto-targeting:
   - When Firesnaking / Xtreme Firesnaking hits you, you target Red Hot; when Watersnaking / Xtreme Watersnaking hits you, you target Deep Blue. If you are already on that boss, nothing changes.

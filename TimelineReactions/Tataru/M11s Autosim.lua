@@ -506,6 +506,208 @@ local tbl =
 			},
 			objectType = "folder",
 		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "data.m11 = data.m11 or {}\ndata.m11.mr0 = Now()\nself.used = true\n",
+							conditions = 
+							{
+								
+								{
+									"b8588eee-e228-ee4f-96c5-9d6215bd5b3b",
+									true,
+								},
+							},
+							name = "Record Meteorain start",
+							uuid = "a04469c0-f018-d6ad-bcc0-b168a7fcaf04",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Event",
+							dequeueIfLuaFalse = true,
+							eventArgType = 2,
+							eventSpellID = 46132,
+							name = "Meteorain 46132",
+							uuid = "b8588eee-e228-ee4f-96c5-9d6215bd5b3b",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "Role Draws",
+				eventType = 3,
+				mechanicTime = 291.105,
+				name = "[Draw] Meteorain - record start",
+				timeRange = true,
+				timelineIndex = 79,
+				timerEndOffset = 5,
+				timerStartOffset = -5,
+				uuid = "720098c6-9dc9-a21c-a911-467ce4ef4958",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- M11S draws: Meteorain clone tethers (356) - clone cardinal + which meteor (north or south-west)\nlocal e = eventArgs\nlocal c = TensorCore.mGetEntity(e.sourceEntityID)\nlocal mt = TensorCore.mGetEntity(e.newTargetID)\nif not (c and c.pos and mt and mt.pos) then return end\ndata.m11 = data.m11 or {}\nlocal m = data.m11\nm.teth = m.teth or {}\nm.srcN = m.srcN or {}\n-- which meteor this clone's tether belongs to is decided when it targets the Comet (ContentID 14306);\n-- once a player holds it, keep that answer instead of the holder's position\nlocal north\nif e.newTargetContentID == 14306 then north = mt.pos.z < 100; m.srcN[e.sourceEntityID] = north\nelse north = m.srcN[e.sourceEntityID] end\nif north == nil then return end\nm.teth[#m.teth + 1] = {t = Now(), cx = c.pos.x, cz = c.pos.z, north = north}\nself.used = true\n",
+							conditions = 
+							{
+								
+								{
+									"f7bc1077-deda-f287-a70d-3a07c4261b9a",
+									true,
+								},
+							},
+							name = "Capture Meteorain tether",
+							uuid = "4bac6d20-f273-a90d-b420-2feb3d5e6fdc",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Event",
+							comparator = 3,
+							dequeueIfLuaFalse = true,
+							eventArgType = 5,
+							eventIntValue = 356,
+							name = "Tether 356",
+							uuid = "f7bc1077-deda-f287-a70d-3a07c4261b9a",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "Role Draws",
+				eventType = 15,
+				loop = true,
+				mechanicTime = 291.105,
+				name = "[Draw] Meteorain - capture tethers",
+				timeRange = true,
+				timelineIndex = 79,
+				timerEndOffset = 56,
+				uuid = "12139b20-eaea-b546-b3a2-a776a841504a",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "local Ro = AnyoneCore and AnyoneCore.Roster\nlocal slot = Ro and Ro.mySlot and Ro.mySlot()\nif not slot and GetCurrentRole then local r = GetCurrentRole(); slot = (r == \"MT\" and \"T1\") or (r == \"OT\" and \"T2\") or r end\nif not slot then return end\nlocal p = TensorCore.mGetPlayer()\nif not (p and p.pos) then return end\nlocal function go(x, z)\n  local dest = {x = x, y = p.pos.y, z = z}\n  local g = TensorCore.getCachedDrawer(0x7733FF33, 0xAA33FF33, 0xFF33FF33, 0xFF000000, 2)\n  local flags = Argus2.RenderFlags.FLAG_RENDER_OVERLAY\n  local d = TensorCore.getDistance2d(p.pos, dest)\n  if d > 0.8 then\n    local tip = math.min(1.5, d * 0.35)\n    g:addArrow(p.pos.x, p.pos.y, p.pos.z, TensorCore.getHeadingToTarget(p.pos, dest), math.max(0.1, d - tip), 0.65, tip, 1.3, false, flags)\n  end\n  g:addCircle(dest.x, dest.y, dest.z, 0.65, false, flags)\nend\n-- Meteorain: your spot for each step (bait order M > H > R, meteors NE + SW, line stacks NW then behind the NE / NW / NE\n-- meteor, hide SW behind the 3 meteors). Tanks: stand 7y toward the clone that tethers your meteor (MT north meteor,\n-- OT south-west meteor). Never mirrors (32 clean logged pulls). Times are seconds after Meteorain starts casting.\nlocal m = data.m11\nlocal t0 = m and m.mr0\nif not t0 then return end\nlocal el = (Now() - t0) / 1000\nlocal ST = {\n  M1 = {{6.09, 101, 99.2}, {14.08, 104.8, 95.4}, {15.97, 105.9, 94.2}, {22.82, 106.8, 93.3}, {32.77, 93, 93.5}, {42.77, 107.3, 92.5}, {55.32, 94.7, 105.5}, {61.32, 83.3, 117.2}},\n  M2 = {{6.09, 99, 101.4}, {14.08, 95.5, 104.7}, {22.82, 106.8, 93.3}, {32.77, 93, 93.5}, {42.77, 107.3, 92.5}, {55.32, 94.7, 105.5}, {61.32, 83.3, 117.2}},\n  H1 = {{12.87, 93.1, 93.2}, {15.97, 98.5, 99.0}, {24.05, 95.6, 95.7}, {32.77, 93, 93.5}, {42.77, 107.3, 92.5}, {61.32, 83.3, 117.2}},\n  H2 = {{12.87, 93.1, 93.2}, {15.97, 98.5, 99.0}, {24.05, 90.4, 110.3}, {32.77, 93, 93.5}, {42.77, 107.3, 92.5}, {61.32, 83.3, 117.2}},\n  R1 = {{12.87, 93.1, 93.2}, {22.82, 106.8, 93.3}, {25.93, 99, 101.5}, {34.08, 105.3, 95.0}, {42.77, 107.3, 92.5}, {61.32, 83.3, 117.2}},\n  R2 = {{12.87, 93.1, 93.2}, {22.82, 106.8, 93.3}, {25.93, 99, 101.5}, {34.08, 85.1, 115.3}, {42.77, 107.3, 92.5}, {61.32, 83.3, 117.2}},\n  T1 = {{12.87, 95.2, 95.3}, {16.42}, {22.02, \"T\"}, {26.32}, {32.02, \"T\"}, {36.37}, {41.97, \"T\"}, {47.82}, {55.32, 94.7, 105.5}, {61.32, 83.3, 117.2}},\n  T2 = {{12.87, 95.2, 95.3}, {16.42}, {22.02, \"T\"}, {26.32}, {32.02, \"T\"}, {36.37}, {41.97, \"T\"}, {47.82}, {55.32, 94.7, 105.5}, {61.32, 83.3, 117.2}}\n}\nlocal steps = ST[slot]\nif not steps then return end\nlocal cur\nfor _, s in ipairs(steps) do if el < s[1] then cur = s; break end end\nif not cur or not cur[2] then return end\nif cur[2] == \"T\" then\n  local tt = m.teth\n  if not tt then return end\n  local north = (slot == \"T1\")\n  for i = #tt, 1, -1 do\n    local r = tt[i]\n    if Now() - r.t < 7000 and r.north == north then\n      local dx, dz = r.cx - 100, r.cz - 100\n      local L = math.sqrt(dx * dx + dz * dz)\n      if L < 1 then return end\n      if not north and dx > 10 and math.abs(dz) < 5 then go(106, 105) return end\n      go(100 + 7 * dx / L, 100 + 7 * dz / L)\n      return\n    end\n  end\n  return\nend\ngo(cur[2], cur[3])\n",
+							name = "Draw role destination",
+							uuid = "ef034ca1-4abf-24c2-b93f-08dedca9e0a4",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 12,
+				loop = true,
+				mechanicTime = 291.105,
+				name = "[Draw] Meteorain - your spot",
+				timeRange = true,
+				timelineIndex = 79,
+				timerEndOffset = 56,
+				timerStartOffset = -5,
+				uuid = "7c28a7ba-06e7-477b-aae2-e1df25af3924",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 12,
+				execute = "local player = TensorCore.mGetPlayer()\nif not player or not player.pos or not TensorCore.isMelee(player, true) then\n    self.used = true\n    return\nend\n\nlocal state = data.m11s_meteorain_melee_spots\nif not state then\n    -- images ship with the profile in TimelineReactions\\Tataru\\assets\\M11S\\Meteorain (any LuaMods folder)\n    local dir = GetLuaModsPath() .. [[TensorReactions\\TimelineReactions\\Tataru\\assets\\M11S\\Meteorain\\]]\n    state = {\n        drawer = TensorCore.getStaticDrawer(GUI:ColorConvertFloat4ToU32(1, 1, 1, 1)),\n        groundFlags = Argus2.RenderFlags.FLAG_WARP_TERRAIN | Argus2.RenderFlags.FLAG_RENDER_OVERLAY,\n        labelFlags = Argus2.RenderFlags.FLAG_RENDER_UI | Argus2.RenderFlags.FLAG_RENDER_OVERLAY,\n        blue = dir .. \"spot-blue.png\",\n        green = dir .. \"spot-green.png\",\n        m1 = dir .. \"M1.png\",\n        m2 = dir .. \"M2.png\",\n    }\n    data.m11s_meteorain_melee_spots = state\nend\n\nlocal px, pz = player.pos.x, player.pos.z\nlocal m1x, m1z = 104.753, 95.360\nlocal m2x, m2z = 95.384, 105.638\nlocal radius = 1.2\n\nlocal dx1, dz1 = px - m1x, pz - m1z\nlocal dx2, dz2 = px - m2x, pz - m2z\nlocal m1Inside = dx1 * dx1 + dz1 * dz1 <= radius * radius\nlocal m2Inside = dx2 * dx2 + dz2 * dz2 <= radius * radius\n\nstate.drawer:addTexture(m1x, 0.02, m1z, 0, m1Inside and state.green or state.blue, 0, 0, 2.85, 2.85, state.groundFlags)\nstate.drawer:addTexture(m2x, 0.02, m2z, 0, m2Inside and state.green or state.blue, 0, 0, 2.85, 2.85, state.groundFlags)\nstate.drawer:addScreenFacingTexture(m1x, 0.5, m1z, 0, state.m1, 0, 0, 2.0, 1.0, state.labelFlags)\nstate.drawer:addScreenFacingTexture(m2x, 0.5, m2z, 0, state.m2, 0, 0, 2.0, 1.0, state.labelFlags)\n\nself.used = true",
+				executeType = 2,
+				mechanicTime = 291.105,
+				name = "[Draw] Meteorain M1/M2 Spots",
+				timeRange = true,
+				timelineIndex = 79,
+				timerEndOffset = 19.095,
+				uuid = "dec24395-3f6a-5f17-8f01-024ed1a71c47",
+				version = 2,
+			},
+		},
+	},
+	[86] = 
+	{
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "Role Draws",
+				uuid = "e81b515d-87a7-0122-8db1-07f90ddec8b0",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 12,
+				execute = "local player = TensorCore.mGetPlayer()\nif not player or not player.pos then self.used = true; return end\nlocal job = TensorCore.getJobNameByID(player.job)\nif job ~= \"BLM\" and job ~= \"BRD\" and job ~= \"DNC\" and job ~= \"MCH\"\n    and job ~= \"SMN\" and job ~= \"PCT\" and job ~= \"RDM\" then\n    self.used = true; return\nend\nlocal spots = data.m11s_ranged_spots\nif not spots then\n    -- images ship with the profile in TimelineReactions\\Tataru\\assets\\M11S\\Meteorain (any LuaMods folder)\n    local dir = GetLuaModsPath() .. [[TensorReactions\\TimelineReactions\\Tataru\\assets\\M11S\\Meteorain\\]]\n    spots = {\n        drawer = TensorCore.getStaticDrawer(GUI:ColorConvertFloat4ToU32(1, 1, 1, 1)),\n        groundFlags = Argus2.RenderFlags.FLAG_WARP_TERRAIN | Argus2.RenderFlags.FLAG_RENDER_OVERLAY,\n        labelFlags = Argus2.RenderFlags.FLAG_RENDER_UI | Argus2.RenderFlags.FLAG_RENDER_OVERLAY,\n        blue = dir .. \"spot-blue.png\",\n        green = dir .. \"spot-green.png\",\n        r1 = dir .. \"R1.png\",\n        r2 = dir .. \"R2.png\",\n    }\n    data.m11s_ranged_spots = spots\nend\nlocal function drawSpot(x, z, label)\n    local dx, dz = player.pos.x - x, player.pos.z - z\n    local inside = dx * dx + dz * dz <= 1.2 * 1.2\n    spots.drawer:addTexture(x, 0.02, z, 0, inside and spots.green or spots.blue,\n        0, 0, 2.85, 2.85, spots.groundFlags)\n    spots.drawer:addScreenFacingTexture(x, 0.5, z, 0, label == \"R1\" and spots.r1 or spots.r2,\n        0, 0, 2.0, 1.0, spots.labelFlags)\nend\ndrawSpot(84.500, 116.500, \"R1\")\ndrawSpot(105.500, 95.000, \"R2\")\nself.used = true\n",
+				executeType = 2,
+				mechanicTime = 310.246,
+				name = "[Ranged Draw] Meteorain third set R1/R2",
+				timeRange = true,
+				timelineIndex = 86,
+				timerEndOffset = 12.45,
+				uuid = "8ef6e09f-8bd4-262b-b276-cad67b47ff0f",
+				version = 2,
+			},
+		},
 	},
 	inheritedProfiles = 
 	{
