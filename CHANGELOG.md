@@ -10,6 +10,7 @@ Newest changes first.
 - **M10S (`M10s autosim.lua`):** Arena Split fixed.
   - After the spread, the arrow now moves you round Deep Blue to the nearest angle clear of every second cone. Double-dip fires the same cones again and Reverse splits each cone in two, so the old spot could leave you in a cone.
   - Arena Split is now recognised by where Deep Blue stands, not by counting Alley-oops.
+  - The puddle spot is only shown until the puddles drop. The arrow no longer points back to your puddle spot later in the mechanic (this happened when the draw lost track of the Alley-oop, for example when watching a replay).
   - The knockback is 10 y, so the spot before it now carries you onto your light-party stack. The draw switches to the stack when the knockback actually lands and stays up until the bubbles burst.
 - **M10S (`M10s autosim.lua`):** the Insane Air 1 boss-landing arrow is removed.
 
