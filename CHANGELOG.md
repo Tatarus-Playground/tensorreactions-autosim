@@ -4,6 +4,11 @@ Newest changes first.
 
 ## 2026-11-08
 
+- **All AutoSims and draws:** 63 reactions that react to boss casts, tethers, map effects and similar events ran again on every game tick instead of once, until their time window ended. They now run once per event. What this fixes:
+  - **AutoSim cast syncs** (M9S, M10S, M11S, M12S phase 1 and 2, Zelenia EX Queen's Crusade, Necron EX): the same cast was counted again every 5 seconds, so windows meant for a later cast were placed too early. M12S phase 1 also added extra Stun phases after Raptor Knuckles.
+  - **M10S auto-targeting:** after a fire/water hit or a boss returning, it kept forcing your target every tick, so you couldn't switch away. It now sets the target once.
+  - **M10S draws:** the Arena Split knockback and spots, the Insane Air landings and the Alley-oop puddles kept re-recording the same event, which moved their timings and order.
+  - **M4S draws:** 49 capture reactions re-recorded events every tick (hit counts kept growing, sets were reset mid-mechanic, timers slid). This affected most of the M4S role draws.
 - **M11S (`M11s Autosim.lua`):** weapon draws fixed again and numbered:
   - The reactions that track the weapons ran again on every game tick instead of once per event, so the weapon order got mixed up and nothing was shown. They now run once per event.
   - Each weapon shows its number above it until it resolves: 1-3 in resolve order for Assault Evolved, 1-6 for Ultimate Trophy Weapons.
