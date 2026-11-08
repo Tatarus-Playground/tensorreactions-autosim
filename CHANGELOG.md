@@ -4,6 +4,10 @@ Newest changes first.
 
 ## 2026-11-08
 
+- **M11S (`M11s Autosim.lua`):** weapon draws fixed again and numbered:
+  - The reactions that track the weapons ran again on every game tick instead of once per event, so the weapon order got mixed up and nothing was shown. They now run once per event.
+  - Each weapon shows its number above it until it resolves: 1-3 in resolve order for Assault Evolved, 1-6 for Ultimate Trophy Weapons.
+  - Replayed against 5 logged pulls (all 8 slots): the right spot and the right numbers every time.
 - **M11S (`M11s Autosim.lua`):** the weapon draws work again and are back on: the Assault Evolved 1 and 2 and Ultimate Trophy Weapons sword / scythe spots.
   - They showed nothing before, because they read each weapon's type from a model ID that reactions can't see. The type now comes from the animation each weapon plays when it appears (sword, axe and scythe each have their own).
   - Scythe: your protean spot around the weapon, clockwise from its front: MT (T1), R2, H2, M2, OT (T2), M1, H1, R1. Sword: your light-party stack behind the weapon, G1 (T1 H1 M1 R1) on its left, G2 on its right. Both follow only the AnyoneCore Party Roster and the [Toxic Friends M11S plan](https://raidplan.io/plan/HJAbE7fuWodELUSB) (slides 3-5 and 8).
