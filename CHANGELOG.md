@@ -4,6 +4,11 @@ Newest changes first.
 
 ## 2026-11-08
 
+- **M9S (`M9S autosim.lua`):** new role draws for Hell in a Cell and Undead Deathmatch (AnyoneCore Party Roster only):
+  - Hell in a Cell towers: G1 takes the first set, G2 the second, clockwise from north T > H > M > R. You get a line and ring to your own tower; it disappears while you stand in it and goes away when the tower goes off.
+  - The group under the boss gets its Ultrasonic spot as soon as the boss starts casting. Ultrasonic Spread (role stacks): tank in the wide gap between the towers, healer in the next gap clockwise, both DPS in the next gap counter-clockwise. Ultrasonic Amp: the light party stacks in the wide gap.
+  - Undead Deathmatch: an arrow to your group's tower (G1 north / west, G2 south / east) until the towers go off.
+  - Checked against 13 logged pulls for all 8 slots.
 - **All AutoSims and draws:** 63 reactions that react to boss casts, tethers, map effects and similar events ran again on every game tick instead of once, until their time window ended. They now run once per event. What this fixes:
   - **AutoSim cast syncs** (M9S, M10S, M11S, M12S phase 1 and 2, Zelenia EX Queen's Crusade, Necron EX): the same cast was counted again every 5 seconds, so windows meant for a later cast were placed too early. M12S phase 1 also added extra Stun phases after Raptor Knuckles.
   - **M10S auto-targeting:** after a fire/water hit or a boss returning, it kept forcing your target every tick, so you couldn't switch away. It now sets the target once.
