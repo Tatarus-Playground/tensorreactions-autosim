@@ -14,8 +14,8 @@ Each timeline file is my live profile in TensorReactions' own save format, built
 
 | File | Fight / timeline | Contents |
 |---|---|---|
-| `TimelineReactions/Tataru/Tataru-Zelen.lua` | Zelenia EX | AutoSim for Viper and Black Mage (10 reactions) and role draws for any job (100 reactions), including a pre-pull settings window for the Bloom 4 Thorns DPS side |
-| `TimelineReactions/Tataru/TataruNecron.lua` | Necron EX | AutoSim for Viper and Black Mage (9 reactions) and role draws for any job (35 reactions) |
+| `TimelineReactions/Tataru/Tataru-Zelen.lua` | Zelenia EX | Universal AutoSim (10 reactions) and role draws for any job (100 reactions), including a pre-pull settings window for the Bloom 4 Thorns DPS side |
+| `TimelineReactions/Tataru/TataruNecron.lua` | Necron EX | Universal AutoSim (9 reactions) and role draws for any job (35 reactions) |
 | `TimelineReactions/Tataru/Arkveld.lua` | Guardian Arkveld EX | Arkveld helper for any job (92 reactions): limit cut arrows, tower picker and puddle countdown, role-based safety arrows |
 | `TimelineReactions/Tataru/M4S autosim.lua` | M4S (Wicked Thunder) | Universal AutoSim for any job (3 reactions): kill time, phase-transition full downtime, melee and caster/movement windows re-timed on the real boss abilities. Role safespot draws for any job (78 reactions): an arrow and circle to your Party Roster slot's spot for every mechanic from Bewitching Flight to Sword Quiver |
 | `TimelineReactions/Tataru/M9S autosim.lua` | M9S (Vamp Fatale) | Universal AutoSim for any job (3 reactions): kill time, melee and caster/movement downtime, timing uncertainty, cast and boss-return syncs. Role draws for any job (11 reactions): Hell in a Cell tower tether, Ultrasonic Spread / Amp spot, Undead Deathmatch group tower |
