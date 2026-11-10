@@ -21,7 +21,7 @@ local tbl =
 					data = 
 					{
 						aType = "Lua",
-						actionLua = "data.blm_autosim_prepull = data.blm_autosim_prepull or {}\nlocal state = data.blm_autosim_prepull\nstate.endsAt = Now() + eventArgs.time * 1000\nstate.resolved = false\nTensorCore.API.TensorACR.holdActionUntil(152, state.endsAt)\nTensorCore.API.TensorACR.holdActionUntil(7561, state.endsAt)\nself.used = true",
+						actionLua = "data.blm_autosim_prepull = data.blm_autosim_prepull or {}\nlocal state = data.blm_autosim_prepull\nstate.endsAt = Now() + eventArgs.time * 1000\nstate.resolved = false\nstate.fireAt, state.leyLinesAt = nil, nil -- set by the 6 s check\nTensorCore.API.TensorACR.holdActionUntil(152, state.endsAt)\nTensorCore.API.TensorACR.holdActionUntil(7561, state.endsAt)\nself.used = true",
 						conditions = 
 						{
 							
@@ -186,7 +186,7 @@ local tbl =
 					data = 
 					{
 						aType = "Lua",
-						actionLua = "local state = data.blm_autosim_prepull\nTensorCore.API.TensorACR.holdActionUntil(152, state.endsAt - 3286)\nstate.resolved = true\nself.used = true",
+						actionLua = "-- Ley Lines first, then Fire III. Fire III must not land before 0.2 s left on the countdown.\nlocal LAND_MS_BEFORE_ZERO = 200   -- earliest allowed hit: 0.2 s left\nlocal SAFETY_MS = 30              -- rounding/jitter margin; only ever makes it land later\nlocal LEY_LINES_LEAD_MS = 1500    -- Ley Lines this long before Fire III starts (lock + Circle of Power)\nlocal state = data.blm_autosim_prepull\n-- Fire III cast time now, before Ley Lines is down.\nlocal castMs = ActionList:Get(1, 152).casttime * 1000\n-- Circle of Power cuts cast time by 15%. Only count on it when Ley Lines is ready to use.\nlocal leyLinesReady = not ActionList:Get(1, 3573).isoncd\nif leyLinesReady then castMs = castMs * 0.85 end\nstate.fireAt = math.ceil(state.endsAt - LAND_MS_BEFORE_ZERO + SAFETY_MS - castMs)\nstate.leyLinesAt = leyLinesReady and (state.fireAt - LEY_LINES_LEAD_MS) or nil\nTensorCore.API.TensorACR.holdActionUntil(152, state.fireAt)\nstate.resolved = true\nself.used = true",
 						conditions = 
 						{
 							
@@ -205,7 +205,7 @@ local tbl =
 								true,
 							},
 						},
-						name = "Release Fire III to land at zero",
+						name = "Time Ley Lines + Fire III to land at 0.2s",
 						uuid = "1d34a273-d20e-c900-9057-309597ffe038",
 						version = 2.1,
 					},
@@ -268,6 +268,89 @@ local tbl =
 			name = "[AutoSim BLM] Prepull Swiftcast check at 6s",
 			timeout = 1,
 			uuid = "2a01cf37-bd14-151d-8f2b-257488eb8838",
+			version = 2,
+		},
+	},
+	
+	{
+		data = 
+		{
+			actions = 
+			{
+				
+				{
+					data = 
+					{
+						actionID = 3573,
+						conditions = 
+						{
+							
+							{
+								"dfc9105c-315f-8a39-8dab-6d770fbf64cb",
+								true,
+							},
+							
+							{
+								"bc610e22-f843-e1d3-a036-91339556fce3",
+								true,
+							},
+							
+							{
+								"b9bd242f-f08a-015d-bb19-7fc7829da132",
+								true,
+							},
+						},
+						ignoreWeaveRules = true,
+						name = "Ley Lines (prepull)",
+						uuid = "61bbac21-6dfc-ba67-b8f5-e8836ce14876",
+						version = 2.1,
+					},
+				},
+			},
+			conditions = 
+			{
+				
+				{
+					data = 
+					{
+						category = "Self",
+						conditionType = 13,
+						jobValue = "BLACKMAGE",
+						name = "BLM",
+						uuid = "dfc9105c-315f-8a39-8dab-6d770fbf64cb",
+						version = 3,
+					},
+				},
+				
+				{
+					data = 
+					{
+						category = "Lua",
+						conditionLua = "local state = data.blm_autosim_prepull\nif state == nil or state.leyLinesAt == nil then return false end\nlocal now = Now()\n-- Window closes 0.7 s before Fire III starts, so Ley Lines never delays it.\nreturn now >= state.leyLinesAt and now < state.fireAt - 700",
+						dequeueIfLuaFalse = true,
+						name = "Ley Lines window",
+						uuid = "bc610e22-f843-e1d3-a036-91339556fce3",
+						version = 3,
+					},
+				},
+				
+				{
+					data = 
+					{
+						actionID = 3573,
+						category = "Self",
+						comparator = 2,
+						conditionType = 4,
+						name = "Ley Lines ready",
+						uuid = "b9bd242f-f08a-015d-bb19-7fc7829da132",
+						version = 3,
+					},
+				},
+			},
+			displayPath = "AutoSim",
+			name = "[AutoSim BLM] Prepull Ley Lines before Fire III",
+			timeout = 1,
+			uuid = "63985cbf-d3c5-27cb-8180-942855167ce0",
 			version = 2,
 		},
 	},

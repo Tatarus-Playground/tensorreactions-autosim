@@ -2,6 +2,13 @@
 
 Newest changes first.
 
+## 2026-11-10
+
+- **Black Mage pre-pull (`blm.lua`):** Ley Lines is now part of the countdown, and Fire III no longer lands early:
+  - About 1.5 s before Fire III starts, Ley Lines goes down at your feet (about 4.5 s left on the countdown).
+  - Fire III is timed to finish at 0.2 s left or later (about 0.17 s), never before. It used to be timed to finish right at zero without Ley Lines.
+  - The Fire III cast time is read from the game on every countdown, so the timing follows your spell speed. If Ley Lines is on cooldown, Fire III is timed for its full cast instead.
+
 ## 2026-11-08
 
 - **M9S (`M9S autosim.lua`):** new role draws for Hell in a Cell and Undead Deathmatch (AnyoneCore Party Roster only):
