@@ -23,7 +23,7 @@ Each timeline file is my live profile in TensorReactions' own save format, built
 | `TimelineReactions/Tataru/M11s Autosim.lua` | M11S (The Tyrant) | Universal AutoSim for any job (3 reactions) incl. Stun phases for the knock-ups, and role draws for any job (14 reactions): Assault Evolved sword / scythe spots, Ultimate Trophy Weapons + tornado baits, Dance of Domination pair stacks, Meteorain (your spot for each step, image markers for the melee M1 / M2 spots and the ranged R1 / R2 third-set spots) |
 | `TimelineReactions/Tataru/M12s Phase 1 Autosim phasings .lua` | M12S phase 1 (Lindwurm) | Universal AutoSim for any job (3 reactions): phase-1 kill time, Act 3 full downtime, melee and caster/movement windows, Stun for the Cruel Coil and Raptor Knuckles knockbacks |
 | `TimelineReactions/Tataru/M12s Autosim Phase 2.lua` | M12S phase 2 (Lindwurm II) | Universal AutoSim for any job (3 reactions): phase-2 kill time, melee and caster/movement windows |
-| `GeneralReactions/Tataru/blm.lua` | Any fight | Pre-pull stuff |
+| `GeneralReactions/Tataru/blm.lua` | Any fight | Pre-pull stuff, set up at 2.34 GCD speed (it reads your own cast time, so other speeds work too) |
 
 `GeneralReactions/Tataru/blm.lua` is built from the live profile by `tools/export_autosim.py`.
 
