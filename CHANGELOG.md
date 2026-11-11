@@ -11,7 +11,7 @@ Newest changes first.
 
 ## 2026-11-11
 
-- **Zelenia EX (`Tataru-Zelen.lua`):** all circle draws (stack circles, tower and spot circles) now draw under players instead of over them. Arrows, lines and cones still draw on top.
+- **Zelenia EX (`Tataru-Zelen.lua`):** all circle draws (stack circles, tower and spot circles) now draw under players instead of over them, fitted to the floor so they don't flicker. Arrows, lines and cones still draw on top.
 - **Zelenia EX (`Tataru-Zelen.lua`):** Specter of the Lost tankbusters are now drawn as soon as the two tethers appear: a 45 degree cone from the arena centre to each tether holder, following the tether as it is passed, until the hit. The cone size is measured from the logged hits. Moogle Telegraphs' own draw for this cleave is blacklisted only while the cast is happening; the entry is removed again after the hit and on a wipe.
 - **Necron EX (`TataruNecron.lua`):** same add setup as Zelenia for every job except Viper. While only the hands can be hit (the hands phase and Darkness of Eternity), AutoSim counts damage as 0.8, and Icy Hands and Beckoning Hands go on your job's DoT blacklist. Both windows follow Necron's real leave and return times. Works with or without a countdown.
 - **Zelenia EX (`Tataru-Zelen.lua`):** for every job except Viper, AutoSim now counts damage during the add phase as 0.8, and the Roseblood Drop adds go on your job's DoT blacklist. The add window ends when Zelenia comes back. Works with or without a countdown. Cooldowns now stay on during the adds for these jobs too, as they already did for Viper.
