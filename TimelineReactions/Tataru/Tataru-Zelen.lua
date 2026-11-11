@@ -1460,6 +1460,70 @@ local tbl =
 				version = 2,
 			},
 		},
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "AutoSim",
+				uuid = "19f8b6a1-74ce-63e3-a0f8-651178c26585",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- [Opti] Disable CDs (store, no job check) turns CDs off during the adds.\n-- AutoSim now counts the add phase as 0.8 and handles burst timing, so keep the CD toggle on.\n-- Polled OnUpdate: no self.used, so it keeps the toggle on for the whole add window.\nlocal J = TensorZelAddsCD\nif not J then\n  J = {\n  [20] = {\"ACR_RikuMNK3_CD\"},\n  [21] = {\"ACR_RikuWAR3_CD\"},\n  [23] = {\"ACR_TensorRequiem3_CD\", \"ACR_TensorRequiem4_CD\"},\n  [24] = {\"ACR_RikuWHM3_CD\"},\n  [25] = {\"ACR_TensorNuke4_CD\"},\n  [27] = {\"ACR_TensorRuin3_CD\"},\n  [28] = {\"ACR_RikuSCH3_CD\"},\n  [30] = {\"ACR_RikuNIN3_CD\"},\n  [32] = {\"ACR_RikuDRK3_CD\"},\n  [33] = {\"ACR_RikuAST3_CD\"},\n  [34] = {\"ACR_TensorWeeb3_CD\", \"ACR_TensorWeeb4_CD\"},\n  [35] = {\"ACR_RikuRDM3_CD\"},\n  [37] = {\"ACR_TensorMagnum3_CD\"},\n  [38] = {\"ACR_RikuDNC3_CD\"},\n  [39] = {\"ACR_TensorReaper4_CD\"},\n  [40] = {\"ACR_RikuSGE3_CD\"},\n  [42] = {\"ACR_RikuPCT3_CD\"},\n  }\n  TensorZelAddsCD = J\nend\nlocal vars = Player and J[Player.job]\nif not vars then return end\nfor i = 1, #vars do\n  if _G[vars[i]] == false then _G[vars[i]] = true end\nend\n",
+							conditions = 
+							{
+								
+								{
+									"25e87eb2-fdc8-e858-aa63-1e2f3d8a9127",
+									false,
+								},
+							},
+							name = "[AutoSim] Keep CD on (adds, not Viper)",
+							uuid = "98a81e88-27dd-0264-a8d0-2fad65e8cf62",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Self",
+							conditionType = 13,
+							dequeueIfLuaFalse = true,
+							jobValue = "VIPER",
+							name = "Viper",
+							uuid = "25e87eb2-fdc8-e858-aa63-1e2f3d8a9127",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "AutoSim",
+				loop = true,
+				mechanicTime = 105.7,
+				name = "[AutoSim] Keep CD on (adds, not Viper)",
+				timeRange = true,
+				timelineIndex = 17,
+				timerEndOffset = 60,
+				timerStartOffset = -2,
+				uuid = "2c6bf95d-b12f-f6b8-9fb5-eb0849bc122a",
+				version = 2,
+			},
+		},
 	},
 	[23] = 
 	{

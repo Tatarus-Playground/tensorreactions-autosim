@@ -11,7 +11,7 @@ Newest changes first.
 
 ## 2026-11-11
 
-- **Zelenia EX (`Tataru-Zelen.lua`):** for every job except Viper, AutoSim now counts damage during the add phase as 0.8, and the Roseblood Drop adds go on your job's DoT blacklist. The add window ends when Zelenia comes back. Works with or without a countdown.
+- **Zelenia EX (`Tataru-Zelen.lua`):** for every job except Viper, AutoSim now counts damage during the add phase as 0.8, and the Roseblood Drop adds go on your job's DoT blacklist. The add window ends when Zelenia comes back. Works with or without a countdown. Cooldowns now stay on during the adds for these jobs too, as they already did for Viper.
 
 ## 2026-11-08
 
