@@ -2393,6 +2393,416 @@ local tbl =
 			},
 			objectType = "folder",
 		},
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "Local trial",
+				uuid = "178b806e-92c7-dacc-b4cc-87a94584d14d",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				displayPath = "Local trial",
+				name = "Bloom 2",
+				uuid = "aef74ce5-1da5-1260-89a1-b6ab3ea85089",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Local BRDlol trial. Independent of the inherited Bloom 2 solver.\nlocal e = eventArgs\nlocal now = Now()\nlocal b = data.zeleniaB2Trial\nif e.spellID == 43540 or not b or now > b.expiry then\n  if b and b.timer then AnyoneCore.removeTimedWorldText(b.timer) end\n  if b and b.label then AnyoneCore.removeTimedWorldText(b.label) end\n  b = {started=now, expiry=now+25000, cones={}, rings={}, hit={}, stage=0}\n  if e.spellID==43540 then b.bossID=e.entityID end\n  data.zeleniaB2Trial = b\n  function b.trace(text)\n    d(text)\n    TensorCore.timelineLogToFile(text .. \"\\n\")\n  end\n  b.trace(\"[Zelenia B2 local] initialized from spell=\"..e.spellID)\n  function b.log(key, text)\n    if b.logKey ~= key then\n      b.logKey = key\n      b.trace('[Zelenia B2 local] ' .. text)\n    end\n  end\n  function b.clearText()\n    if b.timer then AnyoneCore.removeTimedWorldText(b.timer); b.timer=nil end\n    if b.label then AnyoneCore.removeTimedWorldText(b.label); b.label=nil end\n  end\n  function b.point(k, ring)\n    local angle = 22.5 + 45*k\n    local radius = 6\n    if ring == 'OUT' then\n      radius = 10\n      angle = ({[1]=77,[2]=103,[5]=257,[6]=283})[k]\n    end\n    local a = math.rad(angle)\n    return {x=100+radius*math.sin(a), z=100-radius*math.cos(a), angle=angle}\n  end\n  function b.coneAt(angle)\n    local best, diff\n    for i,c in ipairs(b.cones) do\n      local v = math.abs((angle-c.angle+180)%360-180)\n      if not diff or v < diff then best,diff=i,v end\n    end\n    if diff and diff < 29 then return best end\n  end\n  function b.resolved(c)\n    if not c then return false end\n    if b.hit[c.id] then return true end\n    -- Cast finishes precede the effect packet by ~0.3s in sampled pulls.\n    -- Only a late fallback may advance a missing event, never an early guess.\n    if Now() >= c.finish+500 then\n      if not c.fallbackLogged then\n        c.fallbackLogged=true\n        b.trace('[Zelenia B2 local] late hit fallback helper='..c.id..' spell='..c.spell)\n      end\n      return true\n    end\n    return false\n  end\n  local redByLayout = {\n    [1] = {[0]=true,[3]=true,[4]=true,[6]=true,[7]=true,[8]=true,[9]=true,[11]=true,[12]=true,[15]=true},\n    [2] = {[0]=true,[1]=true,[3]=true,[4]=true,[7]=true,[8]=true,[11]=true,[12]=true,[14]=true,[15]=true},\n  }\n  function b.floor()\n    if b.route then return b.routeTiles,b.route.floor end\n    local layout\n    if b.tileCount==16 then\n      for id,mask in ipairs(redByLayout) do\n        local matches=true\n        for tile=0,15 do\n          if b.tiles[tile]~=(mask[tile]==true) then matches=false; break end\n        end\n        if matches then layout=id; break end\n      end\n    else\n      -- Tile 1 is clear in layout 1 and red in layout 2. Both pairs of\n      -- render states were observed against the matching Splatoon floor.\n      local resource=Argus.getMapEffectResource(5)\n      local sub=resource and Argus.getEffectSubresource(resource,0)\n      if sub then\n        local _,path=Argus.getEffectResourceInfo(sub)\n        local _,state=Argus.getEffectResourceRenderInfo(sub)\n        if type(path)=='string' and path:find('mag01',1,true) then\n          if state==2 or state==10 then layout=1 end\n          if state==5 or state==11 then layout=2 end\n        end\n      end\n    end\n    if not layout then return nil,'waiting for Bloom 2 floor pattern' end\n    local red={}\n    for tile=0,15 do red[tile]=redByLayout[layout][tile]==true end\n    return red,'layout '..layout\n  end\n  function b.safe(x,z,red)\n    local dx,dz=x-100,z-100\n    local radius=math.sqrt(dx*dx+dz*dz)\n    if radius<2.7 or radius>15.1 then return false end\n    local angle=math.deg(math.atan2(dx,-dz))%360\n    local k=math.floor(angle/45)%8\n    local base=radius<=8 and 0 or 8\n    if red[base+k]~=false then return false end\n    local rel=angle-45*k\n    if red[base+(k+7)%8]~=false and radius*math.sin(math.rad(rel))<0.45 then return false end\n    if red[base+(k+1)%8]~=false and radius*math.sin(math.rad(45-rel))<0.45 then return false end\n    local other=base==0 and k+8 or k\n    if red[other]~=false and math.abs(radius-8)<0.45 then return false end\n    return true\n  end\n  function b.pathClear(px,pz,q,red)\n    local dx,dz=q.x-px,q.z-pz\n    local count=math.max(1,math.ceil(math.sqrt(dx*dx+dz*dz)/0.3))\n    local entered=false\n    for i=0,count do\n      local good=b.safe(px+dx*i/count,pz+dz*i/count,red)\n      -- Permit leaving an unsafe starting position, but never entering a rose\n      -- after reaching clear ground. The destination must itself be clear.\n      if good then entered=true elseif entered then return false end\n    end\n    return entered and b.safe(q.x,q.z,red)\n  end\nend\nif e.spellID==43216 or e.spellID==43450 or e.spellID==43451 then\n  local list=e.spellID==43216 and b.cones or b.rings\n  local duplicate=false\n  for _,v in ipairs(list) do if v.id==e.entityID then duplicate=true end end\n  if not duplicate then\n    local ent=TensorCore.mGetEntity(e.entityID)\n    if e.spellID~=43216 or (ent and ent.pos and ent.pos.h) then\n      list[#list+1]={id=e.entityID,spell=e.spellID,finish=now+e.channelTimeMax*1000,\n        angle=ent and ent.pos and (180-math.deg(ent.pos.h))%360 or nil}\n      table.sort(list,function(a,c) return a.finish<c.finish end)\n      b.trace('[Zelenia B2 local] captured spell='..e.spellID..' helper='..e.entityID..\n        ' castMs='..(e.channelTimeMax*1000)..' cones='..#b.cones..' rings='..#b.rings)\n    end\n  end\nend\nself.used=true\n",
+							conditions = 
+							{
+								
+								{
+									"cf1a90a3-03de-67d1-b680-ac0e11638a45",
+									true,
+								},
+							},
+							name = "[B2 Local] Capture casts",
+							uuid = "81791f0f-ba2c-0e67-830f-406a2a2c31c4",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Lua",
+							conditionLua = "return eventArgs and eventArgs.entityContentID == 13861 and (eventArgs.spellID == 43540 or eventArgs.spellID == 43216 or eventArgs.spellID == 43450 or eventArgs.spellID == 43451)",
+							dequeueIfLuaFalse = true,
+							name = "Relevant mechanic",
+							uuid = "cf1a90a3-03de-67d1-b680-ac0e11638a45",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "Local trial/Bloom 2",
+				eventType = 3,
+				loop = true,
+				mechanicTime = 217,
+				name = "[B2 Local] Capture casts",
+				timeRange = true,
+				timelineIndex = 32,
+				timerEndOffset = 30,
+				timerStartOffset = -30,
+				uuid = "28d00b0a-9095-2f47-b4d2-1f71715f7fac",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "local b=data.zeleniaB2Trial\nif b and not b.done and Now()<=b.expiry then\n  b.hit[eventArgs.entityID]=true\n  b.poll=nil\n  b.trace('[Zelenia B2 local] hit confirmed helper='..eventArgs.entityID..' spell='..eventArgs.spellID)\nend\nself.used=true\n",
+							conditions = 
+							{
+								
+								{
+									"cfce48c3-591a-f7b8-9bb4-0caf2b8242cb",
+									true,
+								},
+							},
+							name = "[B2 Local] Confirm hits",
+							uuid = "1f2d4086-dada-bf16-a105-2b918ac33246",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Lua",
+							conditionLua = "return eventArgs and eventArgs.entityContentID == 13861 and (eventArgs.spellID == 43216 or eventArgs.spellID == 43450 or eventArgs.spellID == 43451)",
+							dequeueIfLuaFalse = true,
+							name = "Relevant mechanic",
+							uuid = "cfce48c3-591a-f7b8-9bb4-0caf2b8242cb",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "Local trial/Bloom 2",
+				eventType = 2,
+				loop = true,
+				mechanicTime = 217,
+				name = "[B2 Local] Confirm hits",
+				timeRange = true,
+				timelineIndex = 32,
+				timerEndOffset = 30,
+				timerStartOffset = -30,
+				uuid = "283b0463-f772-75f0-8288-f02d3dd49e9a",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "local b=data.zeleniaB2Trial\nif not b or b.done then self.used=true return end\nlocal now=Now()\nif now>b.expiry then b.clearText(); b.done=true; self.used=true return end\nif b.poll and now-b.poll<250 then self.used=true return end\nb.poll=now\nlocal p=TensorCore.mGetPlayer()\nif not p or not p.pos or p.localmapid~=1271 then b.clearText(); b.draw=nil; self.used=true return end\nlocal function wait(reason)\n  b.draw=nil\n  b.log('wait:'..reason,'guidance withheld: '..reason)\n  if b.warning~=reason then\n    b.clearText()\n    b.warning=reason\n    b.label=AnyoneCore.addTimedWorldTextOnEnt(math.max(1,b.expiry-now),'CHECK ROSE TILES',p.id,0xFF00FFFF,true,1.5,2.8)\n  end\nend\nlocal first=b.rings[1]\nif not first then self.used=true return end\nlocal red,signature=b.floor()\nif not red then wait(signature); self.used=true return end\nif b.floorCandidate~=signature then\n  b.floorCandidate=signature\n  b.floorSince=now\n  self.used=true return\nend\nif now-b.floorSince<250 then self.used=true return end\nlocal firstRing=first.spell==43450 and 'OUT' or 'IN'\nlocal secondRing=firstRing=='OUT' and 'IN' or 'OUT'\n-- The roses become hazardous at the first Thunder Slash. Allow a shortcut\n-- only when the player can reach the clear destination before that hit.\nlocal function canCrossBeforeFirstHit(destination)\n  local firstCone=b.cones[1]\n  if b.resolved(first) or (firstCone and b.resolved(firstCone)) then return false end\n  local deadline=firstCone and math.min(first.finish,firstCone.finish) or first.finish\n  local dx,dz=destination.x-p.pos.x,destination.z-p.pos.z\n  local travelMs=math.sqrt(dx*dx+dz*dz)*200\n  return now+travelMs+450<deadline\nend\nif (#b.cones~=6 or #b.rings~=2) and not b.resolved(first) then\n  local base=firstRing=='OUT' and 8 or 0\n  for _,side in ipairs({{1,2},{5,6}}) do\n    for i,k in ipairs(side) do\n      if red[base+k]==false and red[base+side[3-i]]==true then\n        local q=b.point(k,firstRing)\n        if b.safe(q.x,q.z,red) then\n          b.draw={x=q.x,z=q.z,expires=math.min(now+600,first.finish+500),\n            noArrow=not canCrossBeforeFirstHit(q) and not b.pathClear(p.pos.x,p.pos.z,q,red)}\n          b.log('first:'..signature,'first '..firstRing..' waypoint from '..signature)\n        end\n      end\n    end\n  end\n  self.used=true return\nend\nif #b.cones~=6 or #b.rings~=2 then self.used=true return end\nif not b.route then\n  local routes={}\n  local o1=firstRing=='OUT' and 8 or 0\n  local o2=8-o1\n  for _,side in ipairs({'E','W'}) do\n    local ks=side=='E' and {1,2} or {5,6}\n    local n1,n2,k1=0,0,nil\n    for _,k in ipairs(ks) do\n      if red[o1+k]==false then n1=n1+1; k1=k end\n      if red[o2+k]==false then n2=n2+1 end\n    end\n    if n1==1 and n2==2 then\n      local qa,qc=b.point(ks[1],secondRing),b.point(ks[2],secondRing)\n      local ia,ic=b.coneAt(qa.angle),b.coneAt(qc.angle)\n      local q1=b.point(k1,firstRing)\n      if ia and ic and ia~=ic and b.safe(q1.x,q1.z,red) and b.safe(qa.x,qa.z,red) and b.safe(qc.x,qc.z,red) then\n        routes[#routes+1]={side=side,first=firstRing,second=secondRing,k1=k1,\n          early=ia<ic and ks[1] or ks[2],late=ia<ic and ks[2] or ks[1],\n          ie=math.min(ia,ic),il=math.max(ia,ic),floor=signature}\n      end\n    end\n  end\n  if #routes~=1 then wait('no unique rose-safe route'); self.used=true return end\n  -- Starting late after the first hit must not resurrect an unobserved first step.\n  b.route=routes[1]\n  b.routeTiles=red\n  local r=b.route\n  b.trace('[Zelenia B2 local] route locked side='..r.side..' first='..r.first..\n    ' firstSector='..r.k1..' early='..r.ie..' late='..r.il..' floor='..signature)\nend\nlocal r=b.route\nif signature~=r.floor then wait('floor changed after route lock'); self.used=true return end\nif b.resolved(b.cones[r.il]) then\n  b.clearText(); b.draw=nil; b.done=true\n  b.log('done','personal route complete; guidance released')\n  self.used=true return\nend\nlocal stage=not b.resolved(first) and 1 or (not b.resolved(b.cones[r.ie]) and 2 or 3)\nstage=math.max(stage,b.stage)\nlocal k=stage==1 and r.k1 or (stage==2 and r.late or r.early)\nlocal ring=stage==1 and r.first or r.second\nlocal goal=b.point(k,ring)\nlocal q={x=goal.x,z=goal.z}\nlocal dx,dz=p.pos.x-100,p.pos.z-100\nlocal radius=math.sqrt(dx*dx+dz*dz)\nif stage==2 and r.k1~=r.late then\n  local inSecond=(r.second=='IN' and radius<=7) or (r.second=='OUT' and radius>=9)\n  if not inSecond then\n    -- Cross the ring boundary in the original clear sector before sliding.\n    local angle=math.deg(math.atan2(dx,-dz))%360\n    angle=math.max(45*r.k1+8,math.min(45*r.k1+37,angle))\n    local a=math.rad(angle)\n    local rr=r.second=='IN' and 6 or 10\n    q={x=100+rr*math.sin(a),z=100-rr*math.cos(a)}\n  end\nend\nif not b.safe(goal.x,goal.z,red) or not b.safe(q.x,q.z,red) then\n  wait('rose blocks destination or path; stage '..stage)\n  self.used=true return\nend\n-- Check the selected waypoint against cones about to resolve. Future cones\n-- are not permanent hazards: that would incorrectly reject all six sectors.\nlocal angle=math.deg(math.atan2(q.x-100,100-q.z))%360\nfor _,cone in ipairs(b.cones) do\n  local untilHit=cone.finish+350-now\n  if not b.hit[cone.id] and untilHit>=-150 and untilHit<=350 and math.abs((angle-cone.angle+180)%360-180)<31 then\n    wait('cone about to hit waypoint; stage '..stage)\n    self.used=true return\n  end\nend\nb.warning=nil\nif stage~=b.stage or not b.timer then\n  b.clearText()\n  local deadline=(stage==1 and first or (stage==2 and b.cones[r.ie] or b.cones[r.il])).finish+350\n  local remaining=math.max(1,deadline-now)\n  b.timer=AnyoneCore.addWorldTextCountdown(remaining,{x=goal.x,y=p.pos.y+1.5,z=goal.z},0xFF33FF33,true,1.5)\n  local label=stage==1 and ('START '..ring) or (stage==2 and ('GO '..ring) or 'DODGE CONE')\n  b.label=AnyoneCore.addTimedWorldTextOnEnt(remaining,label,p.id,0xFF33FF33,true,1.5,2.8)\nend\nb.stage=stage\nlocal px,pz=p.pos.x,p.pos.z\nlocal earlyCross=stage==1 and canCrossBeforeFirstHit(q)\nlocal direct=earlyCross or b.pathClear(px,pz,q,red)\nlocal bend,best\nif not direct then\n  -- Try a single bend through clear tile interiors. Both legs must pass\n  -- the same rose checks as the direct route.\n  local goalRadius=math.sqrt((q.x-100)^2+(q.z-100)^2)\n  for sector=0,7 do\n    for _,offset in ipairs({9,22.5,36}) do\n      local degrees=45*sector+offset\n      local a=math.rad(degrees)\n      for _,rr in ipairs({6,10,goalRadius}) do\n        local x,z=100+rr*math.sin(a),100-rr*math.cos(a)\n        local firstLeg=(x-px)^2+(z-pz)^2\n        local length=math.sqrt(firstLeg)+math.sqrt((q.x-x)^2+(q.z-z)^2)\n        if firstLeg>1 and (not best or length<best) and b.safe(x,z,red) then\n          local clear=true\n          for _,cone in ipairs(b.cones) do\n            local untilHit=cone.finish+350-now\n            if not b.hit[cone.id] and untilHit>=-150 and untilHit<=350\n                and math.abs((degrees-cone.angle+180)%360-180)<31 then clear=false; break end\n          end\n          local candidate={x=x,z=z}\n          if clear and b.pathClear(px,pz,candidate,red) and b.pathClear(x,z,q,red) then\n            bend,best=candidate,length\n          end\n        end\n      end\n    end\n  end\nend\nb.draw={x=q.x,z=q.z,expires=now+600,noArrow=not direct and not bend,\n  arrowX=bend and bend.x,arrowZ=bend and bend.z}\nlocal arrowMode=earlyCross and 'early rose crossing' or direct and 'direct' or (bend and 'via clear tile' or 'no clear route')\nb.log('arrow:'..stage..':'..arrowMode,'stage '..stage..' arrow: '..arrowMode)\nb.log('step:'..stage..':'..string.format('%.1f,%.1f',q.x,q.z),\n  string.format('step=%d ring=%s side=%s destination=(%.2f,%.2f) current=(%.2f,%.2f)',stage,ring,r.side,q.x,q.z,p.pos.x,p.pos.z))\nself.used=true\n",
+							conditions = 
+							{
+								
+								{
+									"91a356a9-ad35-929d-a057-23290190fb05",
+									true,
+								},
+							},
+							name = "[B2 Local] Resolve safe route",
+							uuid = "f8d320cb-9657-28aa-9a29-1c5916eb9558",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Lua",
+							conditionLua = "return data.zeleniaB2Trial ~= nil and not data.zeleniaB2Trial.done",
+							name = "Relevant mechanic",
+							uuid = "91a356a9-ad35-929d-a057-23290190fb05",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "Local trial/Bloom 2",
+				loop = true,
+				mechanicTime = 217,
+				name = "[B2 Local] Resolve safe route",
+				timeRange = true,
+				timelineIndex = 32,
+				timerEndOffset = 30,
+				timerStartOffset = -30,
+				uuid = "a487b8e2-1070-7f7e-8652-27a66120e1f4",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "local b=data.zeleniaB2Trial\nlocal now=Now()\nif not b or b.done or now>b.expiry then return end\nlocal q=b.draw\nlocal hasWaypoint=q and now<=q.expires\nlocal p=TensorCore.mGetPlayer()\nif not p or not p.pos or p.localmapid~=1271 then return end\nif not hasWaypoint then\n  for _,ring in ipairs(b.rings) do\n    if not b.hit[ring.id] and now<=ring.finish+500 then\n      local drawer=TensorCore.getCachedDrawer(0x222222FF,0x442222FF,0xFF3333FF,0xFF000000,2)\n      local flags=Argus2.RenderFlags.FLAG_RENDER_OVERLAY\n      if ring.spell==43450 then\n        drawer:addCircle(100,p.pos.y,100,8,false,flags)\n      else\n        drawer:addDonut(100,p.pos.y,100,8,16,false,flags)\n      end\n      break\n    end\n  end\n  return\nend\nlocal ax,az=q.arrowX or q.x,q.arrowZ or q.z\nlocal dx,dz=ax-p.pos.x,az-p.pos.z\nlocal distance=math.sqrt(dx*dx+dz*dz)\nlocal drawer=TensorCore.getCachedDrawer(0x3333FF33,0x5533FF33,0xFF33FF33,0xFF000000,2)\nlocal flags=Argus2.RenderFlags.FLAG_RENDER_OVERLAY\ndrawer:addCircle(q.x,p.pos.y,q.z,0.65,false,flags)\nif distance>0.8 and not q.noArrow then\n  local tip=math.min(1.5,distance*0.35)\n  drawer:addArrow(p.pos.x,p.pos.y,p.pos.z,\n    TensorCore.getHeadingToTarget2(p.pos.x,p.pos.y,p.pos.z,ax,p.pos.y,az),\n    math.max(0.1,distance-tip),0.65,tip,1.3,false,flags)\nend\n",
+							name = "[B2 Local] Draw current step",
+							uuid = "7bb6b2e8-66f4-d1f2-947f-1ff60e609cc3",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Local trial/Bloom 2",
+				eventType = 12,
+				loop = true,
+				mechanicTime = 217,
+				name = "[B2 Local] Draw current step",
+				timeRange = true,
+				timelineIndex = 32,
+				timerEndOffset = 30,
+				timerStartOffset = -30,
+				uuid = "af120f1f-67f1-1649-ab36-f0fd33895f8d",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "local old=eventArgs and eventArgs.oldData\nlocal b=old and old.zeleniaB2Trial\nif b then b.clearText(); b.draw=nil; b.done=true end\nself.used=true\n",
+							name = "[B2 Local] Cleanup on wipe",
+							uuid = "03f2ca93-56c4-e38a-8323-913d8c2257d4",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Local trial/Bloom 2",
+				eventType = 9,
+				loop = true,
+				mechanicTime = 217,
+				name = "[B2 Local] Cleanup on wipe",
+				timeRange = true,
+				timelineIndex = 32,
+				timerEndOffset = 1000,
+				timerStartOffset = -247,
+				uuid = "3b405a4c-73bc-724e-967d-17363b10a615",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "local b=data.zeleniaB2Trial\nif b then b.clearText(); b.draw=nil; b.done=true end\nself.used=true",
+							conditions = 
+							{
+								
+								{
+									"c14ec2d8-c262-1a72-839c-cf448fcdc2ab",
+									true,
+								},
+							},
+							name = "[B2 Local] Cleanup on boss departure",
+							uuid = "6f676f70-ffd0-b835-95ba-f08be5673156",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Lua",
+							conditionLua = "local b=data.zeleniaB2Trial\nreturn b ~= nil and not b.done and eventArgs ~= nil and eventArgs.entityID == b.bossID and eventArgs.isTargetable == false",
+							dequeueIfLuaFalse = true,
+							name = "Relevant mechanic",
+							uuid = "c14ec2d8-c262-1a72-839c-cf448fcdc2ab",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "Local trial/Bloom 2",
+				eventType = 26,
+				loop = true,
+				mechanicTime = 217,
+				name = "[B2 Local] Cleanup on boss departure",
+				timeRange = true,
+				timelineIndex = 32,
+				timerEndOffset = 30,
+				timerStartOffset = -30,
+				uuid = "859d3496-6a3d-921b-8ffc-7d18f52c2260",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "local b=data.zeleniaB2Trial\nif b then b.clearText(); b.draw=nil; b.done=true end\nself.used=true",
+							conditions = 
+							{
+								
+								{
+									"7eae26da-58a7-f8da-ba20-bfa04594b78b",
+									true,
+								},
+							},
+							name = "[B2 Local] Cleanup on map change",
+							uuid = "ac788875-bc51-97f2-a249-47c967385fe3",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Lua",
+							conditionLua = "return eventArgs and eventArgs.oldMapID == 1271",
+							dequeueIfLuaFalse = true,
+							name = "Relevant mechanic",
+							uuid = "7eae26da-58a7-f8da-ba20-bfa04594b78b",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "Local trial/Bloom 2",
+				eventType = 11,
+				loop = true,
+				mechanicTime = 217,
+				name = "[B2 Local] Cleanup on map change",
+				timeRange = true,
+				timelineIndex = 32,
+				timerEndOffset = 1000,
+				timerStartOffset = -247,
+				uuid = "6dad23cd-f111-1527-a537-1d4865d594d7",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "local b=data.zeleniaB2Trial\nlocal e=eventArgs\nb.tiles=b.tiles or {}\nlocal i=e.a1-4\nif b.tiles[i]==nil then b.tileCount=(b.tileCount or 0)+1 end\nb.tiles[i]=e.a2==64\nif b.tileCount==1 or b.tileCount==16 then b.log('tile capture '..b.tileCount,'map effect tiles captured: '..b.tileCount..'/16') end\nself.used=true",
+							conditions = 
+							{
+								
+								{
+									"a80d3095-60ed-d74d-9c3a-daac92ab8c67",
+									true,
+								},
+							},
+							name = "[B2 Local] Capture rose tile layout",
+							uuid = "97fd7206-5e0f-ecaf-a127-afc4df4e89cb",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Lua",
+							conditionLua = "local b=data.zeleniaB2Trial\nlocal e=eventArgs\nreturn b ~= nil and b.bossID ~= nil and not b.done and Now()<b.expiry and (b.tileCount or 0)<16 and e ~= nil and type(e.a1)=='number' and e.a1>=4 and e.a1<=19 and ((e.a2==1 and e.a3==2) or (e.a2==64 and e.a3==256))",
+							dequeueIfLuaFalse = true,
+							name = "Relevant mechanic",
+							uuid = "a80d3095-60ed-d74d-9c3a-daac92ab8c67",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "Local trial/Bloom 2",
+				eventType = 14,
+				loop = true,
+				mechanicTime = 217,
+				name = "[B2 Local] Capture rose tile layout",
+				timeRange = true,
+				timelineIndex = 32,
+				timerEndOffset = 30,
+				timerStartOffset = -30,
+				uuid = "abcc2688-c67e-5bf6-8071-2e0de70ee5bf",
+				version = 2,
+			},
+		},
 	},
 	[35] = 
 	{

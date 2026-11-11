@@ -11,6 +11,11 @@ Newest changes first.
 
 ## 2026-11-11
 
+- **Zelenia EX (`Tataru-Zelen.lua`):** new Bloom 2 safe-route guide (folder "Local trial / Bloom 2"):
+  - It reads the rose tile floor and the Thunder Slash cone and in / out ring casts, then picks the one route on the east or west side that stays off the roses.
+  - A green circle marks your next spot, with a countdown and a START / GO / DODGE CONE label. A green arrow leads you there, bending through a clear tile when the straight path crosses a rose.
+  - Until the route is known, the next in / out hit is drawn in red. If the floor can't be read or no single safe route exists, "CHECK ROSE TILES" shows above you instead.
+  - The guide clears itself after the last cone, on a wipe, when Zelenia leaves, or when you leave the arena.
 - **Zelenia EX (`Tataru-Zelen.lua`):** orange N / E / S / W compass letters with a black edge and an orange glow now float just outside the arena's orange edge for the whole fight. The letter images are in `TimelineReactions/Tataru/assets/Zelenia/Compass`.
 - **Zelenia EX (`Tataru-Zelen.lua`):** all circle draws (stack circles, tower and spot circles) now draw under players instead of over them, as normal ground draws that follow the floor and don't flicker. Arrows, lines and cones still draw on top.
 - **Zelenia EX (`Tataru-Zelen.lua`):** Specter of the Lost tankbusters are now drawn as soon as the two tethers appear: a 45 degree cone from the arena centre to each tether holder, following the tether as it is passed, until the hit. The cone size is measured from the logged hits. Moogle Telegraphs' own draw for this cleave is blacklisted only while the cast is happening; the entry is removed again after the hit and on a wipe.
