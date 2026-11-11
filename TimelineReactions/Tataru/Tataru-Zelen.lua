@@ -428,6 +428,123 @@ local tbl =
 				version = 2,
 			},
 		},
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "AutoSim",
+				uuid = "8318b83f-8662-e672-b972-5bac55d0e4e9",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Zelenia EX adds (Roseblood Drop), every job except Viper:\n-- AutoSim counts add-phase damage as 0.8, and the adds go on the DoT blacklist.\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal api = TensorCore.API.TensorACR\n-- Add phase: Zelenia leaves at ~95.2s and comes back at ~135.4s (fast adds) or ~147.5s (slow adds).\n-- Damage in that window counts 0.8 for AutoSim; the return sync moves the end to the real return.\nlocal old = TensorZelAdds and TensorZelAdds.bm\nlocal s = {stamp = Now()}\nTensorZelAdds = s\nlocal ok, id = false, nil\nif old then ok, id = pcall(api.setAutoSimPhase, old, 95.2, 135.4, 0.8) end\nif not ok then ok, id = pcall(api.addAutoSimPhase, \"BossModifier\", 95.2, 135.4, 0.8) end\nif ok then s.bm = id end\n-- DoT blacklist (only ACRs that have one): no DoTs on the Roseblood Drop adds\nlocal okE, has = pcall(api.getBlacklistEntry, 13860)\nif okE and not has then\n  local okA = pcall(api.addBlacklistEntry, 13860, \"Roseblood Drop\")\n  if okA then pcall(api.saveDotBlacklist) end\nend\n",
+							conditions = 
+							{
+								
+								{
+									"70f46d27-5902-fad3-b533-8e295c2a112e",
+									false,
+								},
+							},
+							name = "[AutoSim] Adds 0.8 + DoT blacklist (not Viper)",
+							uuid = "28db574e-9f48-b115-a307-f4516fb30bac",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Self",
+							conditionType = 13,
+							dequeueIfLuaFalse = true,
+							jobValue = "VIPER",
+							name = "Viper",
+							uuid = "70f46d27-5902-fad3-b533-8e295c2a112e",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "AutoSim",
+				eventType = 16,
+				mechanicTime = 11.4,
+				name = "[AutoSim] Adds 0.8 + DoT blacklist (not Viper)",
+				timeRange = true,
+				timelineIndex = 1,
+				timerEndOffset = -5,
+				timerStartOffset = -60,
+				uuid = "e4abba57-dd76-a28c-9ea5-d2ac2ffc22e9",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- No countdown this pull? Same add setup at pull start (skipped when the countdown setup just ran).\nself.used = true -- run once per pull\nif TensorZelAdds and TensorZelAdds.stamp and Now() - TensorZelAdds.stamp < 75000 then return end\nlocal api = TensorCore.API.TensorACR\n-- Add phase: Zelenia leaves at ~95.2s and comes back at ~135.4s (fast adds) or ~147.5s (slow adds).\n-- Damage in that window counts 0.8 for AutoSim; the return sync moves the end to the real return.\nlocal old = TensorZelAdds and TensorZelAdds.bm\nlocal s = {stamp = Now()}\nTensorZelAdds = s\nlocal ok, id = false, nil\nif old then ok, id = pcall(api.setAutoSimPhase, old, 95.2, 135.4, 0.8) end\nif not ok then ok, id = pcall(api.addAutoSimPhase, \"BossModifier\", 95.2, 135.4, 0.8) end\nif ok then s.bm = id end\n-- DoT blacklist (only ACRs that have one): no DoTs on the Roseblood Drop adds\nlocal okE, has = pcall(api.getBlacklistEntry, 13860)\nif okE and not has then\n  local okA = pcall(api.addBlacklistEntry, 13860, \"Roseblood Drop\")\n  if okA then pcall(api.saveDotBlacklist) end\nend\n",
+							conditions = 
+							{
+								
+								{
+									"a8af6777-745f-be93-bbd9-d6610fd094e9",
+									false,
+								},
+							},
+							name = "[AutoSim] Adds 0.8 - no countdown (not Viper)",
+							uuid = "e384cd58-66c9-f0bc-b903-ce70384605d9",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Self",
+							conditionType = 13,
+							dequeueIfLuaFalse = true,
+							jobValue = "VIPER",
+							name = "Viper",
+							uuid = "a8af6777-745f-be93-bbd9-d6610fd094e9",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "AutoSim",
+				mechanicTime = 11.4,
+				name = "[AutoSim] Adds 0.8 - no countdown (not Viper)",
+				timeRange = true,
+				timelineIndex = 1,
+				timerEndOffset = -5,
+				timerStartOffset = -10,
+				uuid = "bbe21140-9a7a-0df0-a4cb-bed72f4ddf3c",
+				version = 2,
+			},
+		},
 	}, 
 	[3] = 
 	{
@@ -1523,6 +1640,70 @@ local tbl =
 				timerEndOffset = 15,
 				timerStartOffset = -45,
 				uuid = "c1b6af66-e89f-6115-b320-0f66d12bca76",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "AutoSim",
+				uuid = "0945b041-601b-cc47-8014-1b0b8b7d9618",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Zelenia back from the add phase (Perfumed Quietus cast start): end the 0.8 add weighting here\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal e = eventArgs\nif not (e and e.spellID == 43191) then return end\nlocal s = TensorZelAdds\nif not (s and s.bm) or s.ret then return end\nlocal api = TensorCore.API.TensorACR\nlocal okT, t = pcall(api.getAutoSimTime)\nif not (okT and t and t > 110) then return end\ns.ret = t\nlocal ok, id = pcall(api.setAutoSimPhase, s.bm, 95.2, t, 0.8)\nif ok then s.bm = id end\n",
+							conditions = 
+							{
+								
+								{
+									"bac89d7b-75a3-9b34-a78e-8f1134814660",
+									false,
+								},
+							},
+							name = "[AutoSim] Adds 0.8 - Zelenia return (not Viper)",
+							uuid = "afa4d102-1f56-a1fd-bdb9-43c44f20dad9",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Self",
+							conditionType = 13,
+							dequeueIfLuaFalse = true,
+							jobValue = "VIPER",
+							name = "Viper",
+							uuid = "bac89d7b-75a3-9b34-a78e-8f1134814660",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "AutoSim",
+				eventType = 3,
+				mechanicTime = 155.9,
+				name = "[AutoSim] Adds 0.8 - Zelenia return (not Viper)",
+				timeRange = true,
+				timelineIndex = 23,
+				timerEndOffset = 15,
+				timerStartOffset = -45,
+				uuid = "faa951c2-8b0f-c3ca-97b6-430f8bc479e7",
 				version = 2,
 			},
 		},
