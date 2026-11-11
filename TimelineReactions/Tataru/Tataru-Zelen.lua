@@ -788,6 +788,40 @@ local tbl =
 				version = 2,
 			},
 		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Specter of the Lost: 45-degree tankbuster cones from the arena centre to both tether holders.\n-- Drawn from the tethers (Z.spec, set by the Specter tether tracker) until the hit; after the tethers\n-- drop at cast end the last directions stay for 1.5 s. Moogle Telegraphs' own draw of 43168 is blacklisted.\ndata.zel = data.zel or {}\nlocal Z = data.zel\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and not bl[43168] then\n  bl[43168] = {label = \"Specter of the Lost (Zelenia EX)\", source = \"TensorReactions Tataru-Zelen\"}\nend\nlocal C = Z.specCone\nif not C then C = {dirs = {}, t = 0}; Z.specCone = C end\nlocal now = Now()\nlocal any = false\nif Z.spec then\n  for id in pairs(Z.spec) do\n    local ent = TensorCore.mGetEntity(id)\n    if ent and ent.pos then\n      if not any then C.dirs = {}; any = true end\n      C.dirs[id] = TensorCore.getHeadingToTarget2(100, 0, 100, ent.pos.x, 0, ent.pos.z)\n    end\n  end\nend\nif any then C.t = now elseif now - C.t > 1500 then return end\nlocal flags = Z.flags or Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal dr = TensorCore.getCachedDrawer(nil, nil, 0x440080FF, 0xFF0080FF, 2)\nfor _, h in pairs(C.dirs) do\n  dr:addCone(100, 0, 100, 16, math.rad(45), h, false, flags)\nend\n",
+							name = "[Draw] Specter - 45 deg buster cones",
+							uuid = "6237b020-a5fd-cff8-b784-92345848f33f",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 12,
+				loop = true,
+				mechanicTime = 44.7,
+				name = "[Draw] Specter - 45 deg buster cones",
+				timeRange = true,
+				timelineIndex = 6,
+				timerEndOffset = 0.6,
+				timerStartOffset = -9,
+				uuid = "fc4a8bc3-e928-7d4e-a986-c8d288a973c3",
+				version = 2,
+			},
+		},
 	},
 	[8] = 
 	{
@@ -2561,6 +2595,40 @@ local tbl =
 				timerEndOffset = 0.2,
 				timerStartOffset = -8.5,
 				uuid = "4a9a740a-0f2b-31b3-a41e-851f03dbb684",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Specter of the Lost: 45-degree tankbuster cones from the arena centre to both tether holders.\n-- Drawn from the tethers (Z.spec, set by the Specter tether tracker) until the hit; after the tethers\n-- drop at cast end the last directions stay for 1.5 s. Moogle Telegraphs' own draw of 43168 is blacklisted.\ndata.zel = data.zel or {}\nlocal Z = data.zel\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and not bl[43168] then\n  bl[43168] = {label = \"Specter of the Lost (Zelenia EX)\", source = \"TensorReactions Tataru-Zelen\"}\nend\nlocal C = Z.specCone\nif not C then C = {dirs = {}, t = 0}; Z.specCone = C end\nlocal now = Now()\nlocal any = false\nif Z.spec then\n  for id in pairs(Z.spec) do\n    local ent = TensorCore.mGetEntity(id)\n    if ent and ent.pos then\n      if not any then C.dirs = {}; any = true end\n      C.dirs[id] = TensorCore.getHeadingToTarget2(100, 0, 100, ent.pos.x, 0, ent.pos.z)\n    end\n  end\nend\nif any then C.t = now elseif now - C.t > 1500 then return end\nlocal flags = Z.flags or Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal dr = TensorCore.getCachedDrawer(nil, nil, 0x440080FF, 0xFF0080FF, 2)\nfor _, h in pairs(C.dirs) do\n  dr:addCone(100, 0, 100, 16, math.rad(45), h, false, flags)\nend\n",
+							name = "[Draw] Specter - 45 deg buster cones",
+							uuid = "a94efba6-5d4f-1308-887e-85ee48d3c58d",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 12,
+				loop = true,
+				mechanicTime = 242.3,
+				name = "[Draw] Specter - 45 deg buster cones",
+				timeRange = true,
+				timelineIndex = 42,
+				timerEndOffset = 0.6,
+				timerStartOffset = -9,
+				uuid = "5166c2cc-cedc-fb00-abd0-610e9dd465dd",
 				version = 2,
 			},
 		},
@@ -5114,6 +5182,40 @@ local tbl =
 				version = 2,
 			},
 		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Specter of the Lost: 45-degree tankbuster cones from the arena centre to both tether holders.\n-- Drawn from the tethers (Z.spec, set by the Specter tether tracker) until the hit; after the tethers\n-- drop at cast end the last directions stay for 1.5 s. Moogle Telegraphs' own draw of 43168 is blacklisted.\ndata.zel = data.zel or {}\nlocal Z = data.zel\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and not bl[43168] then\n  bl[43168] = {label = \"Specter of the Lost (Zelenia EX)\", source = \"TensorReactions Tataru-Zelen\"}\nend\nlocal C = Z.specCone\nif not C then C = {dirs = {}, t = 0}; Z.specCone = C end\nlocal now = Now()\nlocal any = false\nif Z.spec then\n  for id in pairs(Z.spec) do\n    local ent = TensorCore.mGetEntity(id)\n    if ent and ent.pos then\n      if not any then C.dirs = {}; any = true end\n      C.dirs[id] = TensorCore.getHeadingToTarget2(100, 0, 100, ent.pos.x, 0, ent.pos.z)\n    end\n  end\nend\nif any then C.t = now elseif now - C.t > 1500 then return end\nlocal flags = Z.flags or Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal dr = TensorCore.getCachedDrawer(nil, nil, 0x440080FF, 0xFF0080FF, 2)\nfor _, h in pairs(C.dirs) do\n  dr:addCone(100, 0, 100, 16, math.rad(45), h, false, flags)\nend\n",
+							name = "[Draw] Specter - 45 deg buster cones",
+							uuid = "a1c65d49-c78b-c129-a632-0d035aef0ba9",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 12,
+				loop = true,
+				mechanicTime = 484.4,
+				name = "[Draw] Specter - 45 deg buster cones",
+				timeRange = true,
+				timelineIndex = 97,
+				timerEndOffset = 0.6,
+				timerStartOffset = -9,
+				uuid = "38e58f2d-a5f6-c43d-9bf2-bf44b240367b",
+				version = 2,
+			},
+		},
 	},
 	[99] = 
 	{
@@ -6002,6 +6104,40 @@ local tbl =
 				timerEndOffset = 0.2,
 				timerStartOffset = -8.5,
 				uuid = "0197dcd1-251f-b072-97fb-372f4f8550c0",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Specter of the Lost: 45-degree tankbuster cones from the arena centre to both tether holders.\n-- Drawn from the tethers (Z.spec, set by the Specter tether tracker) until the hit; after the tethers\n-- drop at cast end the last directions stay for 1.5 s. Moogle Telegraphs' own draw of 43168 is blacklisted.\ndata.zel = data.zel or {}\nlocal Z = data.zel\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and not bl[43168] then\n  bl[43168] = {label = \"Specter of the Lost (Zelenia EX)\", source = \"TensorReactions Tataru-Zelen\"}\nend\nlocal C = Z.specCone\nif not C then C = {dirs = {}, t = 0}; Z.specCone = C end\nlocal now = Now()\nlocal any = false\nif Z.spec then\n  for id in pairs(Z.spec) do\n    local ent = TensorCore.mGetEntity(id)\n    if ent and ent.pos then\n      if not any then C.dirs = {}; any = true end\n      C.dirs[id] = TensorCore.getHeadingToTarget2(100, 0, 100, ent.pos.x, 0, ent.pos.z)\n    end\n  end\nend\nif any then C.t = now elseif now - C.t > 1500 then return end\nlocal flags = Z.flags or Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal dr = TensorCore.getCachedDrawer(nil, nil, 0x440080FF, 0xFF0080FF, 2)\nfor _, h in pairs(C.dirs) do\n  dr:addCone(100, 0, 100, 16, math.rad(45), h, false, flags)\nend\n",
+							name = "[Draw] Specter - 45 deg buster cones",
+							uuid = "3f81d0ae-afea-d4a1-a687-e38c5fb8265f",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 12,
+				loop = true,
+				mechanicTime = 580.8,
+				name = "[Draw] Specter - 45 deg buster cones",
+				timeRange = true,
+				timelineIndex = 116,
+				timerEndOffset = 0.6,
+				timerStartOffset = -9,
+				uuid = "a8e369d6-71a3-8d35-9b0f-f7b0c53e7f26",
 				version = 2,
 			},
 		},
