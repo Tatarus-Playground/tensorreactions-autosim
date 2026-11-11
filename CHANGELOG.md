@@ -11,6 +11,7 @@ Newest changes first.
 
 ## 2026-11-11
 
+- **Necron EX (`TataruNecron.lua`):** same add setup as Zelenia for every job except Viper. While only the hands can be hit (the hands phase and Darkness of Eternity), AutoSim counts damage as 0.8, and Icy Hands and Beckoning Hands go on your job's DoT blacklist. Both windows follow Necron's real leave and return times. Works with or without a countdown.
 - **Zelenia EX (`Tataru-Zelen.lua`):** for every job except Viper, AutoSim now counts damage during the add phase as 0.8, and the Roseblood Drop adds go on your job's DoT blacklist. The add window ends when Zelenia comes back. Works with or without a countdown. Cooldowns now stay on during the adds for these jobs too, as they already did for Viper.
 
 ## 2026-11-08

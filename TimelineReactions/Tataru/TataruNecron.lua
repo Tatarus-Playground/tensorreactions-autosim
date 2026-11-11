@@ -234,6 +234,123 @@ local tbl =
 				version = 2,
 			},
 		},
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "AutoSim",
+				uuid = "92cec4a2-9549-126f-a4de-af19159386f7",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Necron EX adds (Icy / Beckoning Hands), every job except Viper:\n-- AutoSim counts damage while only the hands can be hit as 0.8, and the hands go on the DoT blacklist.\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal api = TensorCore.API.TensorACR\n-- Only the hands can be hit: Necron away 201.3-231.4s (hands) and 247.8-302.3s (Darkness of Eternity).\n-- Damage in those windows counts 0.8 for AutoSim; the syncs move them to the real leave/return times.\nlocal old = TensorNecAdds\nlocal s = {stamp = Now()}\nTensorNecAdds = s\nlocal function put(key, a, b)\n  local ok, id = false, nil\n  if old and old[key] then ok, id = pcall(api.setAutoSimPhase, old[key], a, b, 0.8) end\n  if not ok then ok, id = pcall(api.addAutoSimPhase, \"BossModifier\", a, b, 0.8) end\n  if ok then s[key] = id end\nend\nput(\"w1\", 201.3, 231.4)\nput(\"w2\", 247.8, 302.3)\n-- DoT blacklist (only ACRs that have one): no DoTs on the hands\nfor _, a in ipairs({{14094, \"Icy Hands\"}, {14096, \"Beckoning Hands\"}}) do\n  local okE, has = pcall(api.getBlacklistEntry, a[1])\n  if okE and not has then\n    local okA = pcall(api.addBlacklistEntry, a[1], a[2])\n    if okA then pcall(api.saveDotBlacklist) end\n  end\nend\n",
+							conditions = 
+							{
+								
+								{
+									"3501319e-7f56-71b1-a39a-9ee5c9069930",
+									false,
+								},
+							},
+							name = "[AutoSim] Adds 0.8 + DoT blacklist (not Viper)",
+							uuid = "59eb8f5c-b43f-cd04-8e31-242908bc0d82",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Self",
+							conditionType = 13,
+							dequeueIfLuaFalse = true,
+							jobValue = "VIPER",
+							name = "Viper",
+							uuid = "3501319e-7f56-71b1-a39a-9ee5c9069930",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "AutoSim",
+				eventType = 16,
+				mechanicTime = 8,
+				name = "[AutoSim] Adds 0.8 + DoT blacklist (not Viper)",
+				timeRange = true,
+				timelineIndex = 1,
+				timerEndOffset = -5,
+				timerStartOffset = -60,
+				uuid = "a2559c4d-99ca-49c5-a1a8-35c0fb1fc854",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- No countdown this pull? Same add setup at pull start (skipped when the countdown setup just ran).\nself.used = true -- run once per pull\nif TensorNecAdds and TensorNecAdds.stamp and Now() - TensorNecAdds.stamp < 75000 then return end\nlocal api = TensorCore.API.TensorACR\n-- Only the hands can be hit: Necron away 201.3-231.4s (hands) and 247.8-302.3s (Darkness of Eternity).\n-- Damage in those windows counts 0.8 for AutoSim; the syncs move them to the real leave/return times.\nlocal old = TensorNecAdds\nlocal s = {stamp = Now()}\nTensorNecAdds = s\nlocal function put(key, a, b)\n  local ok, id = false, nil\n  if old and old[key] then ok, id = pcall(api.setAutoSimPhase, old[key], a, b, 0.8) end\n  if not ok then ok, id = pcall(api.addAutoSimPhase, \"BossModifier\", a, b, 0.8) end\n  if ok then s[key] = id end\nend\nput(\"w1\", 201.3, 231.4)\nput(\"w2\", 247.8, 302.3)\n-- DoT blacklist (only ACRs that have one): no DoTs on the hands\nfor _, a in ipairs({{14094, \"Icy Hands\"}, {14096, \"Beckoning Hands\"}}) do\n  local okE, has = pcall(api.getBlacklistEntry, a[1])\n  if okE and not has then\n    local okA = pcall(api.addBlacklistEntry, a[1], a[2])\n    if okA then pcall(api.saveDotBlacklist) end\n  end\nend\n",
+							conditions = 
+							{
+								
+								{
+									"b7933aca-ddea-72ed-a91c-75017ab7a9ec",
+									false,
+								},
+							},
+							name = "[AutoSim] Adds 0.8 - no countdown (not Viper)",
+							uuid = "06e53deb-38e4-cd5f-80de-acb40e8da5c0",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Self",
+							conditionType = 13,
+							dequeueIfLuaFalse = true,
+							jobValue = "VIPER",
+							name = "Viper",
+							uuid = "b7933aca-ddea-72ed-a91c-75017ab7a9ec",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "AutoSim",
+				mechanicTime = 8,
+				name = "[AutoSim] Adds 0.8 - no countdown (not Viper)",
+				timeRange = true,
+				timelineIndex = 1,
+				timerEndOffset = -2,
+				timerStartOffset = -7,
+				uuid = "b49a09e4-6c99-f3eb-943d-4d52f19cecf0",
+				version = 2,
+			},
+		},
 	}, 
 	[4] = 
 	{
@@ -1086,6 +1203,73 @@ local tbl =
 			},
 		},
 	},
+	[44] = 
+	{
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "AutoSim",
+				uuid = "213da2d0-d6d5-a7ab-ae9b-0ceec3727c68",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Necron back after the hands: end the first 0.8 window, move the Darkness of Eternity one to match\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal e = eventArgs\nif not e then return end\nlocal ent = TensorCore.mGetEntity(e.entityID)\nif not (ent and ent.name == \"Necron\") then return end\nlocal s = TensorNecAdds\nif not s then return end\nlocal api = TensorCore.API.TensorACR\nlocal okT, t = pcall(api.getAutoSimTime)\nif not (okT and t) then return end\nlocal function set(key, a, b)\n  if not s[key] then return end\n  local ok, id = pcall(api.setAutoSimPhase, s[key], a, b, 0.8)\n  if ok then s[key] = id end\nend\nif e.isTargetable and t > 205 and t < 245 and not s.r1 then\n  s.r1 = t\n  set(\"w1\", 201.3, t)\n  set(\"w2\", t + 16.4, t + 70.9) -- Necron leaves ~16.4s after coming back, then is away ~54.5s\nend\n",
+							conditions = 
+							{
+								
+								{
+									"02bb36a8-556e-2290-a882-4cb884827a40",
+									false,
+								},
+							},
+							name = "[AutoSim] Adds 0.8 - Necron back from hands (not Viper)",
+							uuid = "c91735fd-baa5-fade-bc4c-0b8b8fd17101",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Self",
+							conditionType = 13,
+							dequeueIfLuaFalse = true,
+							jobValue = "VIPER",
+							name = "Viper",
+							uuid = "02bb36a8-556e-2290-a882-4cb884827a40",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "AutoSim",
+				eventType = 26,
+				mechanicTime = 199.5,
+				name = "[AutoSim] Adds 0.8 - Necron back from hands (not Viper)",
+				timeRange = true,
+				timelineIndex = 44,
+				timerEndOffset = 45,
+				timerStartOffset = 5,
+				uuid = "ad92bbc4-bd94-5d65-806d-6b6623802dbc",
+				version = 2,
+			},
+		},
+	},
 	[50] = 
 	{
 		
@@ -1423,6 +1607,70 @@ local tbl =
 				timerEndOffset = 75,
 				timerStartOffset = 20,
 				uuid = "1368c279-6e38-525d-a5f7-bc8406520995",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "AutoSim",
+				uuid = "ac9d3e33-a33e-1cdd-8b5c-7043efd979b4",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Darkness of Eternity: Necron leaves (start the 0.8 window) and comes back (end it)\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal e = eventArgs\nif not e then return end\nlocal ent = TensorCore.mGetEntity(e.entityID)\nif not (ent and ent.name == \"Necron\") then return end\nlocal s = TensorNecAdds\nif not s then return end\nlocal api = TensorCore.API.TensorACR\nlocal okT, t = pcall(api.getAutoSimTime)\nif not (okT and t) then return end\nlocal function set(key, a, b)\n  if not s[key] then return end\n  local ok, id = pcall(api.setAutoSimPhase, s[key], a, b, 0.8)\n  if ok then s[key] = id end\nend\nif not e.isTargetable and t > 238 and t < 265 and not s.l2 then\n  s.l2 = t\n  set(\"w2\", t, t + 54.5)\nelseif e.isTargetable and t > 260 and not s.r2 then\n  s.r2 = t\n  set(\"w2\", s.l2 or 247.8, t)\nend\n",
+							conditions = 
+							{
+								
+								{
+									"aa1d1196-dae5-2705-bc79-ebd9c44be689",
+									false,
+								},
+							},
+							name = "[AutoSim] Adds 0.8 - Darkness of Eternity (not Viper)",
+							uuid = "31b5085b-03e5-5dd0-b9c5-a5bfba5e4deb",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							category = "Self",
+							conditionType = 13,
+							dequeueIfLuaFalse = true,
+							jobValue = "VIPER",
+							name = "Viper",
+							uuid = "aa1d1196-dae5-2705-bc79-ebd9c44be689",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "AutoSim",
+				eventType = 26,
+				mechanicTime = 250.8,
+				name = "[AutoSim] Adds 0.8 - Darkness of Eternity (not Viper)",
+				timeRange = true,
+				timelineIndex = 50,
+				timerEndOffset = 75,
+				timerStartOffset = -10,
+				uuid = "aac67ab5-b9ca-de1f-bde6-5b60bba50355",
 				version = 2,
 			},
 		},
