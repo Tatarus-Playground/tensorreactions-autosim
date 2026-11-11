@@ -315,6 +315,36 @@ local tbl =
 		{
 			data = 
 			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Wipe: take Specter of the Lost (43168) off the Moogle Telegraphs blacklist in case a pull ended mid-cast\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and bl[43168] then bl[43168] = nil end\n",
+							name = "[Draw] Specter - Moogle blacklist off (wipe)",
+							uuid = "847be47e-37d5-8dde-b5e3-0ed70c9ea0a7",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 9,
+				mechanicTime = 11.4,
+				name = "[Draw] Specter - Moogle blacklist off (wipe)",
+				timelineIndex = 1,
+				uuid = "506e17f6-e647-c3d9-b99c-de7cd0979aee",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
 				displayPath = "",
 				name = "BLM Optimization",
 				uuid = "a92f57b5-26ed-132e-b32a-2d36417f461c",
@@ -799,7 +829,7 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- Specter of the Lost: 45-degree tankbuster cones from the arena centre to both tether holders.\n-- Drawn from the tethers (Z.spec, set by the Specter tether tracker) until the hit; after the tethers\n-- drop at cast end the last directions stay for 1.5 s. Moogle Telegraphs' own draw of 43168 is blacklisted.\ndata.zel = data.zel or {}\nlocal Z = data.zel\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and not bl[43168] then\n  bl[43168] = {label = \"Specter of the Lost (Zelenia EX)\", source = \"TensorReactions Tataru-Zelen\"}\nend\nlocal C = Z.specCone\nif not C then C = {dirs = {}, t = 0}; Z.specCone = C end\nlocal now = Now()\nlocal any = false\nif Z.spec then\n  for id in pairs(Z.spec) do\n    local ent = TensorCore.mGetEntity(id)\n    if ent and ent.pos then\n      if not any then C.dirs = {}; any = true end\n      C.dirs[id] = TensorCore.getHeadingToTarget2(100, 0, 100, ent.pos.x, 0, ent.pos.z)\n    end\n  end\nend\nif any then C.t = now elseif now - C.t > 1500 then return end\nlocal flags = Z.flags or Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal dr = TensorCore.getCachedDrawer(nil, nil, 0x440080FF, 0xFF0080FF, 2)\nfor _, h in pairs(C.dirs) do\n  dr:addCone(100, 0, 100, 16, math.rad(45), h, false, flags)\nend\n",
+							actionLua = "-- Specter of the Lost: 45-degree tankbuster cones from the arena centre to both tether holders.\n-- Drawn from the tethers (Z.spec, set by the Specter tether tracker) until the hit; after the tethers\n-- drop at cast end the last directions stay for 1.5 s. Moogle Telegraphs' own draw of 43168 is blacklisted\n-- only during this cast; \"Specter - Moogle blacklist off\" removes it again after the hit and on a wipe.\ndata.zel = data.zel or {}\nlocal Z = data.zel\nlocal C = Z.specCone\nif not C then C = {dirs = {}, t = 0}; Z.specCone = C end\nlocal now = Now()\nif C.done and now - C.done < 5000 then return end -- this cleave already landed\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and not bl[43168] then\n  bl[43168] = {label = \"Specter of the Lost (Zelenia EX)\", source = \"TensorReactions Tataru-Zelen\"}\nend\nlocal any = false\nif Z.spec then\n  for id in pairs(Z.spec) do\n    local ent = TensorCore.mGetEntity(id)\n    if ent and ent.pos then\n      if not any then C.dirs = {}; any = true end\n      C.dirs[id] = TensorCore.getHeadingToTarget2(100, 0, 100, ent.pos.x, 0, ent.pos.z)\n    end\n  end\nend\nif any then C.t = now elseif now - C.t > 1500 then return end\nlocal flags = Z.flags or Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal dr = TensorCore.getCachedDrawer(nil, nil, 0x440080FF, 0xFF0080FF, 2)\nfor _, h in pairs(C.dirs) do\n  dr:addCone(100, 0, 100, 16, math.rad(45), h, false, flags)\nend\n",
 							name = "[Draw] Specter - 45 deg buster cones",
 							uuid = "6237b020-a5fd-cff8-b784-92345848f33f",
 							version = 2.1,
@@ -819,6 +849,40 @@ local tbl =
 				timerEndOffset = 0.6,
 				timerStartOffset = -9,
 				uuid = "fc4a8bc3-e928-7d4e-a986-c8d288a973c3",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Specter of the Lost landed: take 43168 off the Moogle Telegraphs blacklist again (only blacklisted during the cast)\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal e = eventArgs\nif not (e and e.spellID == 43168) then return end\ndata.zel = data.zel or {}\nlocal Z = data.zel\nZ.specCone = Z.specCone or {dirs = {}, t = 0}\nZ.specCone.done = Now()\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and bl[43168] then bl[43168] = nil end\n",
+							name = "[Draw] Specter - Moogle blacklist off (hit)",
+							uuid = "050a6bf1-5e48-31b8-b168-29dec770a883",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 2,
+				loop = true,
+				mechanicTime = 44.7,
+				name = "[Draw] Specter - Moogle blacklist off (hit)",
+				timeRange = true,
+				timelineIndex = 6,
+				timerEndOffset = 3,
+				timerStartOffset = -9,
+				uuid = "bd48b251-62e9-5af2-a8fe-4d7bab43e350",
 				version = 2,
 			},
 		},
@@ -2609,7 +2673,7 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- Specter of the Lost: 45-degree tankbuster cones from the arena centre to both tether holders.\n-- Drawn from the tethers (Z.spec, set by the Specter tether tracker) until the hit; after the tethers\n-- drop at cast end the last directions stay for 1.5 s. Moogle Telegraphs' own draw of 43168 is blacklisted.\ndata.zel = data.zel or {}\nlocal Z = data.zel\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and not bl[43168] then\n  bl[43168] = {label = \"Specter of the Lost (Zelenia EX)\", source = \"TensorReactions Tataru-Zelen\"}\nend\nlocal C = Z.specCone\nif not C then C = {dirs = {}, t = 0}; Z.specCone = C end\nlocal now = Now()\nlocal any = false\nif Z.spec then\n  for id in pairs(Z.spec) do\n    local ent = TensorCore.mGetEntity(id)\n    if ent and ent.pos then\n      if not any then C.dirs = {}; any = true end\n      C.dirs[id] = TensorCore.getHeadingToTarget2(100, 0, 100, ent.pos.x, 0, ent.pos.z)\n    end\n  end\nend\nif any then C.t = now elseif now - C.t > 1500 then return end\nlocal flags = Z.flags or Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal dr = TensorCore.getCachedDrawer(nil, nil, 0x440080FF, 0xFF0080FF, 2)\nfor _, h in pairs(C.dirs) do\n  dr:addCone(100, 0, 100, 16, math.rad(45), h, false, flags)\nend\n",
+							actionLua = "-- Specter of the Lost: 45-degree tankbuster cones from the arena centre to both tether holders.\n-- Drawn from the tethers (Z.spec, set by the Specter tether tracker) until the hit; after the tethers\n-- drop at cast end the last directions stay for 1.5 s. Moogle Telegraphs' own draw of 43168 is blacklisted\n-- only during this cast; \"Specter - Moogle blacklist off\" removes it again after the hit and on a wipe.\ndata.zel = data.zel or {}\nlocal Z = data.zel\nlocal C = Z.specCone\nif not C then C = {dirs = {}, t = 0}; Z.specCone = C end\nlocal now = Now()\nif C.done and now - C.done < 5000 then return end -- this cleave already landed\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and not bl[43168] then\n  bl[43168] = {label = \"Specter of the Lost (Zelenia EX)\", source = \"TensorReactions Tataru-Zelen\"}\nend\nlocal any = false\nif Z.spec then\n  for id in pairs(Z.spec) do\n    local ent = TensorCore.mGetEntity(id)\n    if ent and ent.pos then\n      if not any then C.dirs = {}; any = true end\n      C.dirs[id] = TensorCore.getHeadingToTarget2(100, 0, 100, ent.pos.x, 0, ent.pos.z)\n    end\n  end\nend\nif any then C.t = now elseif now - C.t > 1500 then return end\nlocal flags = Z.flags or Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal dr = TensorCore.getCachedDrawer(nil, nil, 0x440080FF, 0xFF0080FF, 2)\nfor _, h in pairs(C.dirs) do\n  dr:addCone(100, 0, 100, 16, math.rad(45), h, false, flags)\nend\n",
 							name = "[Draw] Specter - 45 deg buster cones",
 							uuid = "a94efba6-5d4f-1308-887e-85ee48d3c58d",
 							version = 2.1,
@@ -2629,6 +2693,40 @@ local tbl =
 				timerEndOffset = 0.6,
 				timerStartOffset = -9,
 				uuid = "5166c2cc-cedc-fb00-abd0-610e9dd465dd",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Specter of the Lost landed: take 43168 off the Moogle Telegraphs blacklist again (only blacklisted during the cast)\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal e = eventArgs\nif not (e and e.spellID == 43168) then return end\ndata.zel = data.zel or {}\nlocal Z = data.zel\nZ.specCone = Z.specCone or {dirs = {}, t = 0}\nZ.specCone.done = Now()\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and bl[43168] then bl[43168] = nil end\n",
+							name = "[Draw] Specter - Moogle blacklist off (hit)",
+							uuid = "99866327-3d28-d12f-9b3f-7060ed6b0529",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 2,
+				loop = true,
+				mechanicTime = 242.3,
+				name = "[Draw] Specter - Moogle blacklist off (hit)",
+				timeRange = true,
+				timelineIndex = 42,
+				timerEndOffset = 3,
+				timerStartOffset = -9,
+				uuid = "7c4283dc-b762-68e4-a954-4314f6f697fb",
 				version = 2,
 			},
 		},
@@ -5193,7 +5291,7 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- Specter of the Lost: 45-degree tankbuster cones from the arena centre to both tether holders.\n-- Drawn from the tethers (Z.spec, set by the Specter tether tracker) until the hit; after the tethers\n-- drop at cast end the last directions stay for 1.5 s. Moogle Telegraphs' own draw of 43168 is blacklisted.\ndata.zel = data.zel or {}\nlocal Z = data.zel\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and not bl[43168] then\n  bl[43168] = {label = \"Specter of the Lost (Zelenia EX)\", source = \"TensorReactions Tataru-Zelen\"}\nend\nlocal C = Z.specCone\nif not C then C = {dirs = {}, t = 0}; Z.specCone = C end\nlocal now = Now()\nlocal any = false\nif Z.spec then\n  for id in pairs(Z.spec) do\n    local ent = TensorCore.mGetEntity(id)\n    if ent and ent.pos then\n      if not any then C.dirs = {}; any = true end\n      C.dirs[id] = TensorCore.getHeadingToTarget2(100, 0, 100, ent.pos.x, 0, ent.pos.z)\n    end\n  end\nend\nif any then C.t = now elseif now - C.t > 1500 then return end\nlocal flags = Z.flags or Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal dr = TensorCore.getCachedDrawer(nil, nil, 0x440080FF, 0xFF0080FF, 2)\nfor _, h in pairs(C.dirs) do\n  dr:addCone(100, 0, 100, 16, math.rad(45), h, false, flags)\nend\n",
+							actionLua = "-- Specter of the Lost: 45-degree tankbuster cones from the arena centre to both tether holders.\n-- Drawn from the tethers (Z.spec, set by the Specter tether tracker) until the hit; after the tethers\n-- drop at cast end the last directions stay for 1.5 s. Moogle Telegraphs' own draw of 43168 is blacklisted\n-- only during this cast; \"Specter - Moogle blacklist off\" removes it again after the hit and on a wipe.\ndata.zel = data.zel or {}\nlocal Z = data.zel\nlocal C = Z.specCone\nif not C then C = {dirs = {}, t = 0}; Z.specCone = C end\nlocal now = Now()\nif C.done and now - C.done < 5000 then return end -- this cleave already landed\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and not bl[43168] then\n  bl[43168] = {label = \"Specter of the Lost (Zelenia EX)\", source = \"TensorReactions Tataru-Zelen\"}\nend\nlocal any = false\nif Z.spec then\n  for id in pairs(Z.spec) do\n    local ent = TensorCore.mGetEntity(id)\n    if ent and ent.pos then\n      if not any then C.dirs = {}; any = true end\n      C.dirs[id] = TensorCore.getHeadingToTarget2(100, 0, 100, ent.pos.x, 0, ent.pos.z)\n    end\n  end\nend\nif any then C.t = now elseif now - C.t > 1500 then return end\nlocal flags = Z.flags or Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal dr = TensorCore.getCachedDrawer(nil, nil, 0x440080FF, 0xFF0080FF, 2)\nfor _, h in pairs(C.dirs) do\n  dr:addCone(100, 0, 100, 16, math.rad(45), h, false, flags)\nend\n",
 							name = "[Draw] Specter - 45 deg buster cones",
 							uuid = "a1c65d49-c78b-c129-a632-0d035aef0ba9",
 							version = 2.1,
@@ -5213,6 +5311,40 @@ local tbl =
 				timerEndOffset = 0.6,
 				timerStartOffset = -9,
 				uuid = "38e58f2d-a5f6-c43d-9bf2-bf44b240367b",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Specter of the Lost landed: take 43168 off the Moogle Telegraphs blacklist again (only blacklisted during the cast)\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal e = eventArgs\nif not (e and e.spellID == 43168) then return end\ndata.zel = data.zel or {}\nlocal Z = data.zel\nZ.specCone = Z.specCone or {dirs = {}, t = 0}\nZ.specCone.done = Now()\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and bl[43168] then bl[43168] = nil end\n",
+							name = "[Draw] Specter - Moogle blacklist off (hit)",
+							uuid = "dbc4aa6f-95dd-1043-b3d6-9ecb132fbb05",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 2,
+				loop = true,
+				mechanicTime = 484.4,
+				name = "[Draw] Specter - Moogle blacklist off (hit)",
+				timeRange = true,
+				timelineIndex = 97,
+				timerEndOffset = 3,
+				timerStartOffset = -9,
+				uuid = "acc5be42-91b1-6e92-abb3-70e883ed4423",
 				version = 2,
 			},
 		},
@@ -6118,7 +6250,7 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- Specter of the Lost: 45-degree tankbuster cones from the arena centre to both tether holders.\n-- Drawn from the tethers (Z.spec, set by the Specter tether tracker) until the hit; after the tethers\n-- drop at cast end the last directions stay for 1.5 s. Moogle Telegraphs' own draw of 43168 is blacklisted.\ndata.zel = data.zel or {}\nlocal Z = data.zel\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and not bl[43168] then\n  bl[43168] = {label = \"Specter of the Lost (Zelenia EX)\", source = \"TensorReactions Tataru-Zelen\"}\nend\nlocal C = Z.specCone\nif not C then C = {dirs = {}, t = 0}; Z.specCone = C end\nlocal now = Now()\nlocal any = false\nif Z.spec then\n  for id in pairs(Z.spec) do\n    local ent = TensorCore.mGetEntity(id)\n    if ent and ent.pos then\n      if not any then C.dirs = {}; any = true end\n      C.dirs[id] = TensorCore.getHeadingToTarget2(100, 0, 100, ent.pos.x, 0, ent.pos.z)\n    end\n  end\nend\nif any then C.t = now elseif now - C.t > 1500 then return end\nlocal flags = Z.flags or Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal dr = TensorCore.getCachedDrawer(nil, nil, 0x440080FF, 0xFF0080FF, 2)\nfor _, h in pairs(C.dirs) do\n  dr:addCone(100, 0, 100, 16, math.rad(45), h, false, flags)\nend\n",
+							actionLua = "-- Specter of the Lost: 45-degree tankbuster cones from the arena centre to both tether holders.\n-- Drawn from the tethers (Z.spec, set by the Specter tether tracker) until the hit; after the tethers\n-- drop at cast end the last directions stay for 1.5 s. Moogle Telegraphs' own draw of 43168 is blacklisted\n-- only during this cast; \"Specter - Moogle blacklist off\" removes it again after the hit and on a wipe.\ndata.zel = data.zel or {}\nlocal Z = data.zel\nlocal C = Z.specCone\nif not C then C = {dirs = {}, t = 0}; Z.specCone = C end\nlocal now = Now()\nif C.done and now - C.done < 5000 then return end -- this cleave already landed\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and not bl[43168] then\n  bl[43168] = {label = \"Specter of the Lost (Zelenia EX)\", source = \"TensorReactions Tataru-Zelen\"}\nend\nlocal any = false\nif Z.spec then\n  for id in pairs(Z.spec) do\n    local ent = TensorCore.mGetEntity(id)\n    if ent and ent.pos then\n      if not any then C.dirs = {}; any = true end\n      C.dirs[id] = TensorCore.getHeadingToTarget2(100, 0, 100, ent.pos.x, 0, ent.pos.z)\n    end\n  end\nend\nif any then C.t = now elseif now - C.t > 1500 then return end\nlocal flags = Z.flags or Argus2.RenderFlags.FLAG_RENDER_OVERLAY\nlocal dr = TensorCore.getCachedDrawer(nil, nil, 0x440080FF, 0xFF0080FF, 2)\nfor _, h in pairs(C.dirs) do\n  dr:addCone(100, 0, 100, 16, math.rad(45), h, false, flags)\nend\n",
 							name = "[Draw] Specter - 45 deg buster cones",
 							uuid = "3f81d0ae-afea-d4a1-a687-e38c5fb8265f",
 							version = 2.1,
@@ -6138,6 +6270,40 @@ local tbl =
 				timerEndOffset = 0.6,
 				timerStartOffset = -9,
 				uuid = "a8e369d6-71a3-8d35-9b0f-f7b0c53e7f26",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Specter of the Lost landed: take 43168 off the Moogle Telegraphs blacklist again (only blacklisted during the cast)\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal e = eventArgs\nif not (e and e.spellID == 43168) then return end\ndata.zel = data.zel or {}\nlocal Z = data.zel\nZ.specCone = Z.specCone or {dirs = {}, t = 0}\nZ.specCone.done = Now()\nlocal M = MoogleTelegraphs and MoogleTelegraphs.Settings\nlocal bl = M and M.aoeIDUserBlacklist\nif bl and bl[43168] then bl[43168] = nil end\n",
+							name = "[Draw] Specter - Moogle blacklist off (hit)",
+							uuid = "2a1d319c-7fc1-b322-981f-5c267aee19fc",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 2,
+				loop = true,
+				mechanicTime = 580.8,
+				name = "[Draw] Specter - Moogle blacklist off (hit)",
+				timeRange = true,
+				timelineIndex = 116,
+				timerEndOffset = 3,
+				timerStartOffset = -9,
+				uuid = "0b5298d4-4297-5881-8c64-9da215245ce0",
 				version = 2,
 			},
 		},
