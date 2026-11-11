@@ -63,4 +63,4 @@ See [CHANGELOG.md](CHANGELOG.md) for what changed in each update.
 
 ## Thanks
 
-Thank you for the help, Matthew and Anon.
+Thank you for the help with feedback and more, Matthew, Anon, Rompot and Dave.
