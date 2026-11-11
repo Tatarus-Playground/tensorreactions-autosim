@@ -345,6 +345,36 @@ local tbl =
 		{
 			data = 
 			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Compass letters just outside the arena edge (arena = circle r16 around 100,100; letters at r17.5).\n-- Images ship with the profile in TimelineReactions\\Tataru\\assets\\Zelenia\\Compass (any LuaMods folder).\n-- Polled OnFrame: no self.used.\nlocal C = data.zelCompass\nif not C then\n  local dir = GetLuaModsPath() .. [[TensorReactions\\TimelineReactions\\Tataru\\assets\\Zelenia\\Compass\\]]\n  C = {\n    drawer = TensorCore.getStaticDrawer(GUI:ColorConvertFloat4ToU32(1, 1, 1, 1)),\n    flags = Argus2.RenderFlags.FLAG_RENDER_UI + Argus2.RenderFlags.FLAG_RENDER_OVERLAY,\n    pts = {\n      {100, 82.5, dir .. \"N.png\"},\n      {117.5, 100, dir .. \"E.png\"},\n      {100, 117.5, dir .. \"S.png\"},\n      {82.5, 100, dir .. \"W.png\"},\n    },\n  }\n  data.zelCompass = C\nend\nfor i = 1, 4 do\n  local q = C.pts[i]\n  C.drawer:addScreenFacingTexture(q[1], 1.2, q[2], 0, q[3], 0, 0, 1.6, 1.6, C.flags)\nend\n",
+							name = "[Draw] Compass N / E / S / W outside the arena",
+							uuid = "6d112515-588a-cf6a-a68a-704ae0ddf767",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+				},
+				displayPath = "Role Draws",
+				eventType = 12,
+				mechanicTime = 11.4,
+				name = "[Draw] Compass N / E / S / W outside the arena",
+				timelineIndex = 1,
+				uuid = "9a4369d2-6803-8347-a4c6-fe52e428d92c",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
 				displayPath = "",
 				name = "BLM Optimization",
 				uuid = "a92f57b5-26ed-132e-b32a-2d36417f461c",
