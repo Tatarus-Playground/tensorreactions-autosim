@@ -6,7 +6,7 @@ Newest changes first.
 
 - **Valigarmanda EX (`ex1 autosim.lua`):** new profile for the `valigarmanda-ex` timeline, with a universal AutoSim and role draws for any job.
   - **AutoSim (28 reactions):**
-    - Kill time is 295 s, the median of the 20 most recent FFLogs clears. It is re-timed when Valigarmanda comes back after the Beacons, and every extra Calamitous Cry pushes it back.
+    - Kill time is 333.3 s. It is re-timed when Valigarmanda comes back after the Beacons, and every extra Calamitous Cry pushes it back.
     - Full downtime when the boss leaves for the Beacons and at the return.
     - Melee downtime for Slithering Strike.
     - Caster / movement windows for Scourge of Fire, Ruin Foretold, Hail of Feathers, Blighted Bolt, the ice-phase corner casts, Freezing Dust and your own Freezing Up. Each window moves to the real boss cast.
