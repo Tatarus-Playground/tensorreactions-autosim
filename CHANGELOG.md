@@ -2,6 +2,25 @@
 
 Newest changes first.
 
+## 2026-11-12
+
+- **Valigarmanda EX (`ex1 autosim.lua`):** new profile for the `valigarmanda-ex` timeline, with a universal AutoSim and role draws for any job.
+  - **AutoSim (28 reactions):**
+    - Kill time is 295 s, the median of the 20 most recent FFLogs clears. It is re-timed when Valigarmanda comes back after the Beacons, and every extra Calamitous Cry pushes it back.
+    - Full downtime when the boss leaves for the Beacons and at the return.
+    - Melee downtime for Slithering Strike.
+    - Caster / movement windows for Scourge of Fire, Ruin Foretold, Hail of Feathers, Blighted Bolt, the ice-phase corner casts, Freezing Dust and your own Freezing Up. Each window moves to the real boss cast.
+    - While only the Beacons can be hit, damage counts as 0.8, and the Beacons, Feathers of Ruin and Ice Boulders go on your job's DoT blacklist.
+    - Works with or without a countdown.
+  - **Role draws (111 reactions, AnyoneCore Party Roster):** a circle on your spot and an arrow leading there, for:
+    - Spikesicle, opener and ice phase. The spot is worked out live from the line order, the boulders and the avalanche side, so no line hits you, and it moves as each line goes off.
+    - Volcanic Drop and the fire-stance partners.
+    - Mountain Fire: MT soaks towers 1, 3 and 5, OT soaks 2, 4 and 6, and everyone else stands behind the tower.
+    - Scourge of Fire.
+    - Calamitous Cry: G1 left, G2 right, in the gaps between the Echo cones.
+    - Storm phase: fire stacks, Hail of Feathers (first three drops), Blighted Bolt clear of the feathers, thunder / ice spreads, Crackling Cataclysm, Thunderous Breath and Ruinfall.
+    - Ice phase: Scourge of Ice / Fire, Avalanche with the stance, the thunder spread and Ice Talon.
+
 ## 2026-11-10
 
 - **Black Mage pre-pull (`blm.lua`):** Ley Lines is now part of the countdown, and Fire III no longer lands early:
