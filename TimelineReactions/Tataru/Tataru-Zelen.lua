@@ -392,7 +392,7 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "local api = TensorCore.API.TensorACR\n-- BLM caster downtime (no hardcasts): local damage-caster movement + top BLM FFLogs kills; re-timed by the sync reactions\npcall(api.clearAutoSimPhases, \"CasterDowntime\")\npcall(api.clearAutoSimUncertainty)\n-- Kill time: average of our last 3 kills (394.5 / 392.6 / 402.8 s, 2026-11-04); re-timed when Zelenia returns\npcall(api.setAutoSimKillTime, 397)\n-- Add phase length depends on add kill speed\npcall(api.addAutoSimUncertainty, 94, 12)\nlocal function add(a, b)\n  local ok, id = pcall(api.addAutoSimPhase, \"CasterDowntime\", a, b)\n  if ok then return id end\nend\nTensorZelBLM = {\n  kill = 397,\n  sp = add(40.4, 43.4),     -- Specter of the Lost 1: +2.5..+5.5\n  th3 = add(186.0, 188.0),  -- Alexandrian Thunder III 1 (Bloom 2): +1.5..+3.5\n  qc2 = add(217.9, 220.4),  -- Queen's Crusade 2 (Bloom 2 Thunder Slash cleave): +13.5..+16\n  et = add(357.0, 359.8),   -- Encircling Thorns: move to the stack spot, +0.75..+3.5\n  b3 = add(365.2, 368.0),   -- Banish III: chain break run, +0.75..+3.5\n}\nself.used = true\n",
+							actionLua = "local api = TensorCore.API.TensorACR\n-- BLM caster downtime (no hardcasts): local damage-caster movement + top BLM FFLogs kills; re-timed by the sync reactions\npcall(api.clearAutoSimPhases, \"CasterDowntime\")\npcall(api.clearAutoSimUncertainty)\n-- Kill time: our last kill (384.8 s, 2026-11-12); re-timed when Zelenia returns\npcall(api.setAutoSimKillTime, 384.8)\n-- Add phase length depends on add kill speed\npcall(api.addAutoSimUncertainty, 94, 12)\nlocal function add(a, b)\n  local ok, id = pcall(api.addAutoSimPhase, \"CasterDowntime\", a, b)\n  if ok then return id end\nend\nTensorZelBLM = {\n  kill = 384.8,\n  sp = add(40.4, 43.4),     -- Specter of the Lost 1: +2.5..+5.5\n  th3 = add(186.0, 188.0),  -- Alexandrian Thunder III 1 (Bloom 2): +1.5..+3.5\n  qc2 = add(217.9, 220.4),  -- Queen's Crusade 2 (Bloom 2 Thunder Slash cleave): +13.5..+16\n  et = add(357.0, 359.8),   -- Encircling Thorns: move to the stack spot, +0.75..+3.5\n  b3 = add(365.2, 368.0),   -- Banish III: chain break run, +0.75..+3.5\n}\nself.used = true\n",
 							conditions = 
 							{
 								
@@ -1793,7 +1793,7 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- Zelenia back from the add phase (Perfumed Quietus cast start): re-time the BLM kill time\nlocal e = eventArgs\nif not (e and e.spellID == 43191) then return end\nlocal s = TensorZelBLM\nlocal api = TensorCore.API.TensorACR\nlocal t = api.getAutoSimTime()\nif s and t and t > 110 and not s.ret then\n  s.ret = t\n  -- our last 3 kills: Zelenia back at ~147.5 s, dead 249.1 s later on average\n  s.kill = t + 249.1\n  pcall(api.setAutoSimKillTime, s.kill)\n  pcall(api.addAutoSimUncertainty, t, 3)\n  self.used = true\nend\n",
+							actionLua = "-- Zelenia back from the add phase (Perfumed Quietus cast start): re-time the BLM kill time\nlocal e = eventArgs\nif not (e and e.spellID == 43191) then return end\nlocal s = TensorZelBLM\nlocal api = TensorCore.API.TensorACR\nlocal t = api.getAutoSimTime()\nif s and t and t > 110 and not s.ret then\n  s.ret = t\n  -- our last kill (2026-11-12): Perfumed Quietus at 134.9 s, dead 249.9 s later\n  s.kill = t + 249.9\n  pcall(api.setAutoSimKillTime, s.kill)\n  pcall(api.addAutoSimUncertainty, t, 3)\n  self.used = true\nend\n",
 							conditions = 
 							{
 								
