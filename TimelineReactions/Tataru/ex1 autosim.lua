@@ -572,17 +572,17 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- [Draw] Valigarmanda - Volcanic Drop puddle countdown: a countdown on each puddle (36836, r2) until it bursts.\n-- OnAOECreate gives the puddle spot; it bursts about 2.5 s later (2.47-2.55 s in the 2026-11-13 clear), same style as the Arkveld puddle timers.\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal e = eventArgs\nif not (e and e.x and e.z) then return end\nif not (AnyoneCore and AnyoneCore.addWorldTextCountdown) then return end\nlocal ms = math.floor(((e.duration or 2.2) + 0.3) * 1000)\npcall(AnyoneCore.addWorldTextCountdown, ms, {x = e.x, y = (e.y or 0) + 1.2, z = e.z}, 0xFF2288FF, true, 1.3)\n",
+							actionLua = "-- [Draw] Valigarmanda - Volcanic Drop puddle countdown: a countdown on each puddle (36836, r2) until it bursts.\n-- OnAOECreate gives the puddle spot; it bursts about 2.5 s later (2.47-2.55 s in the 2026-11-13 clear), same style as the Arkveld puddle timers.\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal e = eventArgs\nif not (e and e.x and e.z) then return end\nif not (AnyoneCore and AnyoneCore.addWorldTextCountdown) then return end\nlocal ms = math.floor(((e.duration or 2.2) + 0.3) * 1000)\npcall(AnyoneCore.addWorldTextCountdown, ms, {x = e.x, y = (e.y or 0) + 0.1, z = e.z}, 0xFF2288FF, true, 1.3)\n",
 							conditions = 
 							{
 								
 								{
-									"2399b87e-1c89-6a95-af14-98caee75bf89",
+									"e07e3897-d064-65d4-8d73-59302595338d",
 									true,
 								},
 							},
 							name = "Countdown",
-							uuid = "92ad287f-ea07-fe0f-abf3-84d49fc94a88",
+							uuid = "da5f3031-d6e8-70de-bd4a-0bcbceff7984",
 							version = 2.1,
 						},
 					},
@@ -597,7 +597,7 @@ local tbl =
 							conditionLua = "-- Volcanic Drop puddle (36836) only. Dequeue Action if False = on.\nreturn eventArgs.aoeID == 36836\n",
 							dequeueIfLuaFalse = true,
 							name = "puddle 36836",
-							uuid = "2399b87e-1c89-6a95-af14-98caee75bf89",
+							uuid = "e07e3897-d064-65d4-8d73-59302595338d",
 							version = 3,
 						},
 					},
@@ -611,7 +611,7 @@ local tbl =
 				timelineIndex = 7,
 				timerEndOffset = 7,
 				timerStartOffset = -2,
-				uuid = "78178206-f0b5-5490-a457-5f3d4c8a1b38",
+				uuid = "1736323d-ebbb-f8dd-95d0-a4677f3b407a",
 				version = 2,
 			},
 		},
@@ -2378,17 +2378,17 @@ local tbl =
 						data = 
 						{
 							aType = "Lua",
-							actionLua = "-- [Draw] Valigarmanda - Volcanic Drop puddle countdown: a countdown on each puddle (36836, r2) until it bursts.\n-- OnAOECreate gives the puddle spot; it bursts about 2.5 s later (2.47-2.55 s in the 2026-11-13 clear), same style as the Arkveld puddle timers.\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal e = eventArgs\nif not (e and e.x and e.z) then return end\nif not (AnyoneCore and AnyoneCore.addWorldTextCountdown) then return end\nlocal ms = math.floor(((e.duration or 2.2) + 0.3) * 1000)\npcall(AnyoneCore.addWorldTextCountdown, ms, {x = e.x, y = (e.y or 0) + 1.2, z = e.z}, 0xFF2288FF, true, 1.3)\n",
+							actionLua = "-- [Draw] Valigarmanda - Volcanic Drop puddle countdown: a countdown on each puddle (36836, r2) until it bursts.\n-- OnAOECreate gives the puddle spot; it bursts about 2.5 s later (2.47-2.55 s in the 2026-11-13 clear), same style as the Arkveld puddle timers.\nself.used = true -- one run per queued event (without this TensorReactions re-runs it every tick)\nlocal e = eventArgs\nif not (e and e.x and e.z) then return end\nif not (AnyoneCore and AnyoneCore.addWorldTextCountdown) then return end\nlocal ms = math.floor(((e.duration or 2.2) + 0.3) * 1000)\npcall(AnyoneCore.addWorldTextCountdown, ms, {x = e.x, y = (e.y or 0) + 0.1, z = e.z}, 0xFF2288FF, true, 1.3)\n",
 							conditions = 
 							{
 								
 								{
-									"00b29532-448b-61a4-a3d2-395789a8af97",
+									"c68eb6de-f88d-8244-831e-8cbfe91e4fb5",
 									true,
 								},
 							},
 							name = "Countdown",
-							uuid = "828c5d32-d62a-0e70-8aeb-f1173294f586",
+							uuid = "24c1b1aa-b332-03e6-80fd-b36b58eaabdf",
 							version = 2.1,
 						},
 					},
@@ -2403,7 +2403,7 @@ local tbl =
 							conditionLua = "-- Volcanic Drop puddle (36836) only. Dequeue Action if False = on.\nreturn eventArgs.aoeID == 36836\n",
 							dequeueIfLuaFalse = true,
 							name = "puddle 36836",
-							uuid = "00b29532-448b-61a4-a3d2-395789a8af97",
+							uuid = "c68eb6de-f88d-8244-831e-8cbfe91e4fb5",
 							version = 3,
 						},
 					},
@@ -2417,7 +2417,7 @@ local tbl =
 				timelineIndex = 20,
 				timerEndOffset = 7,
 				timerStartOffset = -2,
-				uuid = "c98d2956-9d81-22b2-a3ba-b7ccdc1c562f",
+				uuid = "f01f1a47-90e5-3945-ad00-aee1f2d020fa",
 				version = 2,
 			},
 		},
