@@ -4,6 +4,12 @@ Newest changes first.
 
 ## 2026-11-13
 
+- **M4S (`M4S autosim.lua`):** role draws moved to the Hector P1 strat (the Hector cheatsheet and the "Shabatrope Edge 2" and "Supp Left DN" raidplans):
+  - Electrope Edge 2 spread: the cheatsheet spots. When the east half is safe, MT stays north and the healers and ranged take the raidplan's east-side spots, instead of the whole layout turning upside down.
+  - Electrope Edge 2 pair stacks: supports with 3 hits north, supports with 2 hits south, DPS with 2 hits under the boss, DPS with 3 hits at the safe side.
+  - New: your Witchgleam clock spot for Electrope Edge 2. Tanks north / south, healers west / east, R1 north-west, R2 north-east, melee south-west / south-east.
+  - Intermission: the near and far spots are now 12.5 and 20 y out, matching the cheatsheet.
+  - Unchanged, because they already matched: Witch Hunt, Electrope Edge 1, the Electrope Edge 2 cage cells and Ion Cluster.
 - **Arkveld EX (`Arkveld.lua`):** new universal AutoSim for any job (folder "AutoSim", 36 reactions):
   - Kill time is 427 s.
   - Melee downtime for the three Rushes, the second tower set and the Wyvern's Vengeance exaflares.
