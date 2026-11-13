@@ -4,6 +4,7 @@ Newest changes first.
 
 ## 2026-11-13
 
+- **Valigarmanda EX (`ex1 autosim.lua`):** adds phase: the arrow to your group's side now stays only until your group's beacon is dead (G1 the Flame-kissed Beacon on the left, G2 the Glacial Beacon on the right), then it goes away.
 - **Valigarmanda EX (`ex1 autosim.lua`):** Hail of Feathers spot fixed. It used to stay in one corner, where the 4th drop lands. It now follows the drops:
   - Start in the corner opposite the first drop (first drop east: north-west corner).
   - After the 2nd drop, run along that edge to the other corner (north-east).
