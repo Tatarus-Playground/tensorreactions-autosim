@@ -4,6 +4,13 @@ Newest changes first.
 
 ## 2026-11-13
 
+- **Arkveld EX (`Arkveld.lua`):** new universal AutoSim for any job (folder "AutoSim", 36 reactions):
+  - Kill time is 427 s.
+  - Melee downtime for the three Rushes, the second tower set and the Wyvern's Vengeance exaflares.
+  - Caster / movement windows for the mechanics where Black Mages almost never hardcast: the Chainblade Blows, the tower casts, Wyvern's Weal lasers and the late exaflares and dashes.
+  - The boss's rear is marked as blocked while it stands on the arena edge facing the centre, so positionals plan for it.
+  - Black Mage Ley Lines repositioning windows (ground field movement).
+  - Every window moves to the real boss cast as it happens. Works with or without a countdown and resets on a wipe.
 - **Arkveld EX (`Arkveld.lua`):** reworked with a new set of draws, cues and trackers (folder "Matthew", 161 reactions). Thank you Matthew for the help!
   - **Settings:**
     - Moogle Telegraphs' own Arkveld EX draws are blacklisted, so they don't double up with these.
