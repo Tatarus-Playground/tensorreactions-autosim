@@ -4,6 +4,7 @@ Newest changes first.
 
 ## 2026-11-13
 
+- **Valigarmanda EX (`ex1 autosim.lua`):** Mountain Fire spot fixed. The arrow always pointed straight behind the tower (the middle wedge). It now follows the safe wedge each tower actually leaves (left, middle or right, as the boss turns), matching the LEFT / MIDDLE / RIGHT calls.
 - **Valigarmanda EX (`ex1 autosim.lua`):** each Volcanic Drop puddle now shows a countdown until it bursts into lava, in the same style as the Arkveld puddle timers.
 - **Valigarmanda EX (`ex1 autosim.lua`):** new Calamity's Chill motion helper, the same idea as Lj's DMU Accel Bomb motion reactions:
   - From 3 s left on Calamity's Chill until Freezing Up ends, casting is forced to slidecast (TensorDrift only).
