@@ -4,6 +4,7 @@ Newest changes first.
 
 ## 2026-11-13
 
+- **Valigarmanda EX (`ex1 autosim.lua`):** each Volcanic Drop puddle now shows a countdown until it bursts into lava, in the same style as the Arkveld puddle timers.
 - **M4S (`M4S autosim.lua`):** role draws moved to the Hector P1 strat (the Hector cheatsheet and the "Shabatrope Edge 2" and "Supp Left DN" raidplans):
   - Electrope Edge 2 spread: the cheatsheet spots. When the east half is safe, MT stays north and the healers and ranged take the raidplan's east-side spots, instead of the whole layout turning upside down.
   - Electrope Edge 2 pair stacks: supports with 3 hits north, supports with 2 hits south, DPS with 2 hits under the boss, DPS with 3 hits at the safe side.
