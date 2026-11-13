@@ -2,6 +2,55 @@
 
 Newest changes first.
 
+## 2026-11-13
+
+- **Arkveld EX (`Arkveld.lua`):** reworked with a new set of draws, cues and trackers (folder "Matthew", 161 reactions). Thank you Matthew for the help!
+  - **Settings:**
+    - Moogle Telegraphs' own Arkveld EX draws are blacklisted, so they don't double up with these.
+    - A new "Arkveld EX draw options" window has a Rush countdowns toggle, which is saved between sessions.
+  - **Mechanic cues:**
+    - Cast warnings for light-party stacks, spreads and the enrage. Raidwide warnings are included but off.
+    - Chainblade Blow: a swap call on the first impact.
+    - Wyvern's Weal: the tethered baiter is marked, and a move cue shows when the beam locks.
+    - Wild Energy: your spread radius with a timer.
+  - **Beam draws:**
+    - Chainblade Blow: frontal beams, side cleave with a countdown.
+    - Siegeflight: preview of the first middle lane.
+    - Wyvern's Rattle: the first two rows are previewed and the next row highlighted, advancing on each hit.
+    - Wyvern's Weal: confirmed sweep ticks.
+    - Wrathful Rattle: forecast exaline lanes, a full wave preview with countdowns, early next-wave lanes, and future lines re-timed on each impact.
+  - **Mechanic draws:**
+    - Chainblade Blow: safe-side call, plus a checked route during Wrathful Rattle.
+    - Siegeflight: cross and stack guidance.
+    - Light-party stacks: live circles that show overlap.
+    - Rush: confirmed charge lanes, the next quakes, and a move-in cue after the third landing.
+    - Ouroblade: the unsafe half is drawn.
+    - Chainblade Charge: the stack target is marked, and the circle clears on impact.
+    - Towers: pregroup in the centre, then your puddle route and a timer for your assigned soak (it uses the tower picker).
+    - Exaflares: crystal exaflares get a timed route and crossing cue. Wyvern's Vengeance and the late exaflares preview the next circle per lane, crystal blasts included, with a crystal-safe route.
+    - Limit Cut: get ready, bait and return cues, with the cleave locked at the jump landing.
+    - Wyvern's Weal: laser routes and bait cues, crystal ranges, and the tether line with the crystals it threatens.
+    - Wrathful Rattle: a checked exaline route.
+  - **Trackers:** the mechanic trackers moved into the new folder. The Rush landing tracker now also calls "Stand near last charge".
+  - **Removed (replaced by the above):**
+    - Chainblade Blow: the old start and hit trackers, and one set of safety arrows.
+    - Siegeflight / Rattle: progress tracker and safety arrows.
+    - Rush: trackers and safety arrows.
+    - Ouroblade: resolve, and one spread spot arrow.
+    - Steeltail / Chainblade Charge: cast tracker.
+    - Towers: the old your-tower, puddle bait and countdown draw.
+    - Exa: trackers, safety arrows and progress.
+    - Limit cut: jump counter and arrows.
+    - Lasers: hit tracker and safe-spot arrows.
+  - **Unchanged:**
+    - The tower-pick settings window.
+    - Chainblade Blow safety arrows.
+    - Steeltail / Chainblade Charge safety arrows and stack marker.
+    - Ouroblade cleave side and spread spot arrows.
+    - Limit cut start tracker and your-number markers.
+    - Laser bait markers.
+    - The Siegeflight / Rattle, Steeltail / Chainblade Charge and laser trackers.
+
 ## 2026-11-12
 
 - **Valigarmanda EX (`ex1 autosim.lua`):** new profile for the `valigarmanda-ex` timeline, with a universal AutoSim and role draws for any job.
