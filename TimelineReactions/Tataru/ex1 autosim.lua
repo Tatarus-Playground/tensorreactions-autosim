@@ -461,6 +461,178 @@ local tbl =
 				version = 2,
 			},
 		},
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "Motion",
+				uuid = "efcd4e56-9c0a-b89f-a2af-9ce2267e5d07",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: keep casting while you move (TensorDrift only).\nif TensorDrift_SlidecastForceHold ~= nil then\n  TensorDrift_SlidecastForceHold = true\n  data.valxSlide = true\nend",
+							conditions = 
+							{
+								
+								{
+									"6e111fe3-68a7-b074-ac04-447fe74c395e",
+									true,
+								},
+							},
+							name = "Force slidecast (Chill)",
+							uuid = "334d169a-3e09-4791-9c13-14ed45cfdd46",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: keep casting while you move (TensorDrift only).\nif TensorDrift_SlidecastForceHold ~= nil then\n  TensorDrift_SlidecastForceHold = true\n  data.valxSlide = true\nend",
+							conditions = 
+							{
+								
+								{
+									"f1facf3f-88fa-27d1-a75d-2e8b560b69ec",
+									true,
+								},
+							},
+							name = "Force slidecast (Freezing Up)",
+							uuid = "7c32810d-050b-e9c0-b94c-3f195bd46a18",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: jumping keeps you in motion for Freezing Up (2 s check after Calamity's Chill runs out).\nlocal now = Now()\nif data.valxJumpT and now - data.valxJumpT < 600 then return end\nlocal p = TensorCore.mGetPlayer()\nif p then\n  data.valxJumpT = now\n  p:Jump()\nend",
+							conditions = 
+							{
+								
+								{
+									"1562f4f5-a338-1d07-b344-3f2c6a90e283",
+									true,
+								},
+							},
+							name = "Jump (Chill <= 1.5 s)",
+							uuid = "d7616916-35b5-7f14-a5de-5f99c5b899a6",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: jumping keeps you in motion for Freezing Up (2 s check after Calamity's Chill runs out).\nlocal now = Now()\nif data.valxJumpT and now - data.valxJumpT < 600 then return end\nlocal p = TensorCore.mGetPlayer()\nif p then\n  data.valxJumpT = now\n  p:Jump()\nend",
+							conditions = 
+							{
+								
+								{
+									"f1facf3f-88fa-27d1-a75d-2e8b560b69ec",
+									true,
+								},
+							},
+							name = "Jump (Freezing Up)",
+							uuid = "ef851295-1e66-0eab-a63b-bcbd0da4d3bd",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Chill and Freezing Up are gone: release the forced slidecast this reaction set.\nif data.valxSlide then\n  TensorDrift_SlidecastForceHold = false\n  data.valxSlide = nil\nend",
+							conditions = 
+							{
+								
+								{
+									"6e111fe3-68a7-b074-ac04-447fe74c395e",
+									false,
+								},
+								
+								{
+									"f1facf3f-88fa-27d1-a75d-2e8b560b69ec",
+									false,
+								},
+							},
+							name = "End slidecast",
+							uuid = "814d113a-c623-d18a-abe1-ee3c474eb52b",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							buffCheckType = 3,
+							buffDuration = 3,
+							buffID = 3822,
+							category = "Self",
+							comparator = 2,
+							name = "Chill <= 3 s",
+							uuid = "6e111fe3-68a7-b074-ac04-447fe74c395e",
+							version = 3,
+						},
+					},
+					
+					{
+						data = 
+						{
+							buffCheckType = 3,
+							buffDuration = 1.5,
+							buffID = 3822,
+							category = "Self",
+							comparator = 2,
+							name = "Chill <= 1.5 s",
+							uuid = "1562f4f5-a338-1d07-b344-3f2c6a90e283",
+							version = 3,
+						},
+					},
+					
+					{
+						data = 
+						{
+							buffID = 3523,
+							category = "Self",
+							name = "Freezing Up",
+							uuid = "f1facf3f-88fa-27d1-a75d-2e8b560b69ec",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "Motion",
+				loop = true,
+				mechanicTime = 54.8,
+				name = "[Motion] Valigarmanda - Calamity's Chill / Freezing Up: jump + slidecast",
+				throttleTime = 100,
+				timeRange = true,
+				timelineIndex = 6,
+				timerEndOffset = 100,
+				timerStartOffset = 15,
+				uuid = "439c3949-fc0e-cc10-8d49-4e1d81538150",
+				version = 2,
+			},
+		},
 	},
 	[7] = 
 	{
@@ -577,12 +749,12 @@ local tbl =
 							{
 								
 								{
-									"e07e3897-d064-65d4-8d73-59302595338d",
+									"c6006875-dda0-5f32-b3a7-942031fe23be",
 									true,
 								},
 							},
 							name = "Countdown",
-							uuid = "da5f3031-d6e8-70de-bd4a-0bcbceff7984",
+							uuid = "e113c228-6916-1961-a998-fdc35c85180d",
 							version = 2.1,
 						},
 					},
@@ -597,7 +769,7 @@ local tbl =
 							conditionLua = "-- Volcanic Drop puddle (36836) only. Dequeue Action if False = on.\nreturn eventArgs.aoeID == 36836\n",
 							dequeueIfLuaFalse = true,
 							name = "puddle 36836",
-							uuid = "e07e3897-d064-65d4-8d73-59302595338d",
+							uuid = "c6006875-dda0-5f32-b3a7-942031fe23be",
 							version = 3,
 						},
 					},
@@ -611,7 +783,7 @@ local tbl =
 				timelineIndex = 7,
 				timerEndOffset = 7,
 				timerStartOffset = -2,
-				uuid = "1736323d-ebbb-f8dd-95d0-a4677f3b407a",
+				uuid = "f9e0cd8e-92d4-543c-aa06-6801d589d735",
 				version = 2,
 			},
 		},
@@ -2383,12 +2555,12 @@ local tbl =
 							{
 								
 								{
-									"c68eb6de-f88d-8244-831e-8cbfe91e4fb5",
+									"13296793-cf10-4aa4-9a64-b18dd316048d",
 									true,
 								},
 							},
 							name = "Countdown",
-							uuid = "24c1b1aa-b332-03e6-80fd-b36b58eaabdf",
+							uuid = "4eded8db-edaf-bd3b-9604-cfad1399063b",
 							version = 2.1,
 						},
 					},
@@ -2403,7 +2575,7 @@ local tbl =
 							conditionLua = "-- Volcanic Drop puddle (36836) only. Dequeue Action if False = on.\nreturn eventArgs.aoeID == 36836\n",
 							dequeueIfLuaFalse = true,
 							name = "puddle 36836",
-							uuid = "c68eb6de-f88d-8244-831e-8cbfe91e4fb5",
+							uuid = "13296793-cf10-4aa4-9a64-b18dd316048d",
 							version = 3,
 						},
 					},
@@ -2417,7 +2589,7 @@ local tbl =
 				timelineIndex = 20,
 				timerEndOffset = 7,
 				timerStartOffset = -2,
-				uuid = "f01f1a47-90e5-3945-ad00-aee1f2d020fa",
+				uuid = "b1fa5d50-716e-aab9-a59e-5173a5969ec2",
 				version = 2,
 			},
 		},
@@ -3313,6 +3485,178 @@ local tbl =
 				timerEndOffset = 14,
 				timerStartOffset = 0.5,
 				uuid = "c71d13f1-2e49-f7b1-85b8-cfeb0f95f58c",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "Motion",
+				uuid = "64970c64-cceb-c2e1-8c9b-d13bca3797c3",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: keep casting while you move (TensorDrift only).\nif TensorDrift_SlidecastForceHold ~= nil then\n  TensorDrift_SlidecastForceHold = true\n  data.valxSlide = true\nend",
+							conditions = 
+							{
+								
+								{
+									"a7dc0866-d4a4-621e-9cad-ad269aa7f264",
+									true,
+								},
+							},
+							name = "Force slidecast (Chill)",
+							uuid = "9439cd60-e3db-249d-b9b3-02cb91d2f974",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: keep casting while you move (TensorDrift only).\nif TensorDrift_SlidecastForceHold ~= nil then\n  TensorDrift_SlidecastForceHold = true\n  data.valxSlide = true\nend",
+							conditions = 
+							{
+								
+								{
+									"cf28144d-12a5-4a3a-a458-77001c8999b0",
+									true,
+								},
+							},
+							name = "Force slidecast (Freezing Up)",
+							uuid = "8dbd720e-015d-6c56-9c5f-00a8c649e626",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: jumping keeps you in motion for Freezing Up (2 s check after Calamity's Chill runs out).\nlocal now = Now()\nif data.valxJumpT and now - data.valxJumpT < 600 then return end\nlocal p = TensorCore.mGetPlayer()\nif p then\n  data.valxJumpT = now\n  p:Jump()\nend",
+							conditions = 
+							{
+								
+								{
+									"4e3f0710-821d-c4bb-85de-f3f2dd6c3c5d",
+									true,
+								},
+							},
+							name = "Jump (Chill <= 1.5 s)",
+							uuid = "9b6b1d22-ca7f-df64-a778-3a1a4dda5565",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: jumping keeps you in motion for Freezing Up (2 s check after Calamity's Chill runs out).\nlocal now = Now()\nif data.valxJumpT and now - data.valxJumpT < 600 then return end\nlocal p = TensorCore.mGetPlayer()\nif p then\n  data.valxJumpT = now\n  p:Jump()\nend",
+							conditions = 
+							{
+								
+								{
+									"cf28144d-12a5-4a3a-a458-77001c8999b0",
+									true,
+								},
+							},
+							name = "Jump (Freezing Up)",
+							uuid = "e17d50f8-bf4f-c957-9d4b-33b0f994410d",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Chill and Freezing Up are gone: release the forced slidecast this reaction set.\nif data.valxSlide then\n  TensorDrift_SlidecastForceHold = false\n  data.valxSlide = nil\nend",
+							conditions = 
+							{
+								
+								{
+									"a7dc0866-d4a4-621e-9cad-ad269aa7f264",
+									false,
+								},
+								
+								{
+									"cf28144d-12a5-4a3a-a458-77001c8999b0",
+									false,
+								},
+							},
+							name = "End slidecast",
+							uuid = "315cb13c-73df-ae1e-9baa-6fbd4021349a",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							buffCheckType = 3,
+							buffDuration = 3,
+							buffID = 3822,
+							category = "Self",
+							comparator = 2,
+							name = "Chill <= 3 s",
+							uuid = "a7dc0866-d4a4-621e-9cad-ad269aa7f264",
+							version = 3,
+						},
+					},
+					
+					{
+						data = 
+						{
+							buffCheckType = 3,
+							buffDuration = 1.5,
+							buffID = 3822,
+							category = "Self",
+							comparator = 2,
+							name = "Chill <= 1.5 s",
+							uuid = "4e3f0710-821d-c4bb-85de-f3f2dd6c3c5d",
+							version = 3,
+						},
+					},
+					
+					{
+						data = 
+						{
+							buffID = 3523,
+							category = "Self",
+							name = "Freezing Up",
+							uuid = "cf28144d-12a5-4a3a-a458-77001c8999b0",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "Motion",
+				loop = true,
+				mechanicTime = 2019.8,
+				name = "[Motion] Valigarmanda - Calamity's Chill / Freezing Up: jump + slidecast",
+				throttleTime = 100,
+				timeRange = true,
+				timelineIndex = 45,
+				timerEndOffset = 100,
+				timerStartOffset = 15,
+				uuid = "65d54358-d13e-8758-a3a6-761f4a0f1773",
 				version = 2,
 			},
 		},
@@ -4648,6 +4992,178 @@ local tbl =
 				version = 2,
 			},
 		},
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "Motion",
+				uuid = "3ccec983-1be4-4d9c-8b02-db4423f80119",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: keep casting while you move (TensorDrift only).\nif TensorDrift_SlidecastForceHold ~= nil then\n  TensorDrift_SlidecastForceHold = true\n  data.valxSlide = true\nend",
+							conditions = 
+							{
+								
+								{
+									"fcff85c3-43a9-c27f-98f6-9520edab46d1",
+									true,
+								},
+							},
+							name = "Force slidecast (Chill)",
+							uuid = "29a1862e-82be-4d66-a6c0-24319e7b0a6d",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: keep casting while you move (TensorDrift only).\nif TensorDrift_SlidecastForceHold ~= nil then\n  TensorDrift_SlidecastForceHold = true\n  data.valxSlide = true\nend",
+							conditions = 
+							{
+								
+								{
+									"abccff64-c0f9-3a0b-a806-a9322940f257",
+									true,
+								},
+							},
+							name = "Force slidecast (Freezing Up)",
+							uuid = "7efab20d-7fe1-40c5-afd5-43a100f26c49",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: jumping keeps you in motion for Freezing Up (2 s check after Calamity's Chill runs out).\nlocal now = Now()\nif data.valxJumpT and now - data.valxJumpT < 600 then return end\nlocal p = TensorCore.mGetPlayer()\nif p then\n  data.valxJumpT = now\n  p:Jump()\nend",
+							conditions = 
+							{
+								
+								{
+									"78fb1989-0d68-83fa-a0ba-e1b89891af4f",
+									true,
+								},
+							},
+							name = "Jump (Chill <= 1.5 s)",
+							uuid = "aac4ae7b-7cee-f5f6-8050-fc7426c006d5",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: jumping keeps you in motion for Freezing Up (2 s check after Calamity's Chill runs out).\nlocal now = Now()\nif data.valxJumpT and now - data.valxJumpT < 600 then return end\nlocal p = TensorCore.mGetPlayer()\nif p then\n  data.valxJumpT = now\n  p:Jump()\nend",
+							conditions = 
+							{
+								
+								{
+									"abccff64-c0f9-3a0b-a806-a9322940f257",
+									true,
+								},
+							},
+							name = "Jump (Freezing Up)",
+							uuid = "1a245ee6-4ecb-b6a8-97e5-7a82a65604dc",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Chill and Freezing Up are gone: release the forced slidecast this reaction set.\nif data.valxSlide then\n  TensorDrift_SlidecastForceHold = false\n  data.valxSlide = nil\nend",
+							conditions = 
+							{
+								
+								{
+									"fcff85c3-43a9-c27f-98f6-9520edab46d1",
+									false,
+								},
+								
+								{
+									"abccff64-c0f9-3a0b-a806-a9322940f257",
+									false,
+								},
+							},
+							name = "End slidecast",
+							uuid = "e19bb0c0-b698-8758-93a0-04fd5a2af06a",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							buffCheckType = 3,
+							buffDuration = 3,
+							buffID = 3822,
+							category = "Self",
+							comparator = 2,
+							name = "Chill <= 3 s",
+							uuid = "fcff85c3-43a9-c27f-98f6-9520edab46d1",
+							version = 3,
+						},
+					},
+					
+					{
+						data = 
+						{
+							buffCheckType = 3,
+							buffDuration = 1.5,
+							buffID = 3822,
+							category = "Self",
+							comparator = 2,
+							name = "Chill <= 1.5 s",
+							uuid = "78fb1989-0d68-83fa-a0ba-e1b89891af4f",
+							version = 3,
+						},
+					},
+					
+					{
+						data = 
+						{
+							buffID = 3523,
+							category = "Self",
+							name = "Freezing Up",
+							uuid = "abccff64-c0f9-3a0b-a806-a9322940f257",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "Motion",
+				loop = true,
+				mechanicTime = 3019.8,
+				name = "[Motion] Valigarmanda - Calamity's Chill / Freezing Up: jump + slidecast",
+				throttleTime = 100,
+				timeRange = true,
+				timelineIndex = 70,
+				timerEndOffset = 100,
+				timerStartOffset = 15,
+				uuid = "82764068-9d8d-0aed-a70d-fba77f8a0cfe",
+				version = 2,
+			},
+		},
 	},
 	[71] = 
 	{
@@ -5506,6 +6022,178 @@ local tbl =
 				timerEndOffset = -1,
 				timerStartOffset = -9,
 				uuid = "19186d32-5082-8bcd-b47d-d488a985196d",
+				version = 2,
+			},
+		},
+		
+		{
+			data = 
+			{
+				displayPath = "",
+				name = "Motion",
+				uuid = "de9d78a8-bc63-39f7-9a3e-91b53b14f95a",
+			},
+			objectType = "folder",
+		},
+		
+		{
+			data = 
+			{
+				actions = 
+				{
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: keep casting while you move (TensorDrift only).\nif TensorDrift_SlidecastForceHold ~= nil then\n  TensorDrift_SlidecastForceHold = true\n  data.valxSlide = true\nend",
+							conditions = 
+							{
+								
+								{
+									"e6d1a5af-7031-aff3-bafe-45bd76a6d5b9",
+									true,
+								},
+							},
+							name = "Force slidecast (Chill)",
+							uuid = "4c9355b9-7e7d-2f43-a5c6-f9ebe45c92ab",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: keep casting while you move (TensorDrift only).\nif TensorDrift_SlidecastForceHold ~= nil then\n  TensorDrift_SlidecastForceHold = true\n  data.valxSlide = true\nend",
+							conditions = 
+							{
+								
+								{
+									"a2126271-8461-8563-81d0-ba4cf4c12456",
+									true,
+								},
+							},
+							name = "Force slidecast (Freezing Up)",
+							uuid = "1c87d235-973b-4132-87b5-9d0107e8268d",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: jumping keeps you in motion for Freezing Up (2 s check after Calamity's Chill runs out).\nlocal now = Now()\nif data.valxJumpT and now - data.valxJumpT < 600 then return end\nlocal p = TensorCore.mGetPlayer()\nif p then\n  data.valxJumpT = now\n  p:Jump()\nend",
+							conditions = 
+							{
+								
+								{
+									"d9d11ca9-5595-9bc4-b62a-47050344b609",
+									true,
+								},
+							},
+							name = "Jump (Chill <= 1.5 s)",
+							uuid = "a5e4a35e-d6b5-77d3-bb49-1d5d41070037",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Lj's DMU motion pattern: jumping keeps you in motion for Freezing Up (2 s check after Calamity's Chill runs out).\nlocal now = Now()\nif data.valxJumpT and now - data.valxJumpT < 600 then return end\nlocal p = TensorCore.mGetPlayer()\nif p then\n  data.valxJumpT = now\n  p:Jump()\nend",
+							conditions = 
+							{
+								
+								{
+									"a2126271-8461-8563-81d0-ba4cf4c12456",
+									true,
+								},
+							},
+							name = "Jump (Freezing Up)",
+							uuid = "ad63b7e7-3918-bda4-be0d-b590a1d678b5",
+							version = 2.1,
+						},
+					},
+					
+					{
+						data = 
+						{
+							aType = "Lua",
+							actionLua = "-- Chill and Freezing Up are gone: release the forced slidecast this reaction set.\nif data.valxSlide then\n  TensorDrift_SlidecastForceHold = false\n  data.valxSlide = nil\nend",
+							conditions = 
+							{
+								
+								{
+									"e6d1a5af-7031-aff3-bafe-45bd76a6d5b9",
+									false,
+								},
+								
+								{
+									"a2126271-8461-8563-81d0-ba4cf4c12456",
+									false,
+								},
+							},
+							name = "End slidecast",
+							uuid = "cb856a02-6378-f466-b92c-700721725859",
+							version = 2.1,
+						},
+					},
+				},
+				conditions = 
+				{
+					
+					{
+						data = 
+						{
+							buffCheckType = 3,
+							buffDuration = 3,
+							buffID = 3822,
+							category = "Self",
+							comparator = 2,
+							name = "Chill <= 3 s",
+							uuid = "e6d1a5af-7031-aff3-bafe-45bd76a6d5b9",
+							version = 3,
+						},
+					},
+					
+					{
+						data = 
+						{
+							buffCheckType = 3,
+							buffDuration = 1.5,
+							buffID = 3822,
+							category = "Self",
+							comparator = 2,
+							name = "Chill <= 1.5 s",
+							uuid = "d9d11ca9-5595-9bc4-b62a-47050344b609",
+							version = 3,
+						},
+					},
+					
+					{
+						data = 
+						{
+							buffID = 3523,
+							category = "Self",
+							name = "Freezing Up",
+							uuid = "a2126271-8461-8563-81d0-ba4cf4c12456",
+							version = 3,
+						},
+					},
+				},
+				displayPath = "Motion",
+				loop = true,
+				mechanicTime = 3130.4,
+				name = "[Motion] Valigarmanda - Calamity's Chill / Freezing Up: jump + slidecast",
+				throttleTime = 100,
+				timeRange = true,
+				timelineIndex = 83,
+				timerEndOffset = 12,
+				timerStartOffset = -2,
+				uuid = "3108d759-f8c8-3ba3-8707-a1a7b9a5144b",
 				version = 2,
 			},
 		},
