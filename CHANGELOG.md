@@ -4,7 +4,12 @@ Newest changes first.
 
 ## 2026-11-13
 
-- **Valigarmanda EX (`ex1 autosim.lua`):** Hail of Feathers spot fixed. It used to stay in one corner, where the 4th drop lands. It now walks you round behind the six drops as they land, staying at least 21 y from each one and moving to the next point after every drop (works for either start side and either direction).
+- **Valigarmanda EX (`ex1 autosim.lua`):** Hail of Feathers spot fixed. It used to stay in one corner, where the 4th drop lands. It now follows the drops:
+  - Start in the corner opposite the first drop (first drop east: north-west corner).
+  - After the 2nd drop, run along that edge to the other corner (north-east).
+  - After the 4th drop, go down that side to the far corner (south-east).
+  - When the first feather dies, the arrow points back to its tile for Blighted Bolt.
+  - Mirrors for a west start or drops going the other way.
 - **Valigarmanda EX (`ex1 autosim.lua`):** Mountain Fire spot fixed. The arrow always pointed straight behind the tower (the middle wedge). It now follows the safe wedge each tower actually leaves (left, middle or right, as the boss turns), matching the LEFT / MIDDLE / RIGHT calls.
 - **Valigarmanda EX (`ex1 autosim.lua`):** each Volcanic Drop puddle now shows a countdown until it bursts into lava, in the same style as the Arkveld puddle timers.
 - **Valigarmanda EX (`ex1 autosim.lua`):** new Calamity's Chill motion helper, the same idea as Lj's DMU Accel Bomb motion reactions:
